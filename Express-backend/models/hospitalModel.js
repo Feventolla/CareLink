@@ -8,27 +8,37 @@ const HospitalSchema = new mongoose.Schema({
         maxlength: [20, "name can not be more than 20 characters"]
 
     },
+    generalSpecialization: {
+        type: String,
+        require: true
+
+    },
     description: {
         type: String,
+        required: true,
         minLength: [100, "Description should be more than 100 characters"]
     },
 
     address: {
-        type: [String],
+        type: String,
         require: true
     },
     phoneNumber: {
-        type: [String]
+        type: [String],
+        required: true
     },
     // open or closed 
-    status: {
-        type: String
+    availability: {
+        type: String,
+        required: true
     },
     doctors: {
-        type: [String]
+        type: [String],
+        required: true
     },
     services: {
-        type: [String]
+        type: [String],
+        required: true
     },
     photos: {
         type: [String]
@@ -41,7 +51,8 @@ const HospitalSchema = new mongoose.Schema({
         required: true
     },
     workingDay: {
-        type: [String]
+        type: [String],
+        required: true
     }
 })
 
