@@ -1,9 +1,11 @@
 const express = require('express')
 const router = express.Router()
-const { getAllHospotals, getHospital, postHospital, editHospital, deleteHospital } = require('../controllers/hospitalController')
+const HospitalController = require('../controllers/hospitalController')
 
+router.get('/getAllHospotals', HospitalController.getAllHospotals)
+router.get('/getHospital/:hospitalId', HospitalController.getHospital)
+router.post('/postHospital', HospitalController.postHospital)
+router.patch('/editHospital/:hospitalId', HospitalController.editHospital)
+router.delete('/deleteHospital/:hospitalId', HospitalController.deleteHospital)
 
-router.route('/').get(getAllHospotals).post(postHospital)
-router.route('/:hospitalId').patch(editHospital).delete(deleteHospital).get(getHospital)
-
-module.exports = router
+module.exports = router;
