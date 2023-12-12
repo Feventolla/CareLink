@@ -57,4 +57,61 @@ exports.addDoctor = async (req, res) => {
   }
 };
 
+exports.getDoctors = async (req, res) => {
+  try {
+    const doctors = await Doctor.find();
+    res.status(200).json({
+      message: "Doctors found successfully",
+      isSuccess: true,
+      value: doctors,
+      error: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "An error occurred",
+      isSuccess: false,
+      value: null,
+      error: error,
+    });
+  }
+};
 
+exports.getFood = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const food = await Food.findById(id);
+    res.status(200).json({
+      message: "Food found successfully",
+      isSuccess: true,
+      value: food,
+      error: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "An error occurred",
+      isSuccess: false,
+      value: null,
+      error: null,
+    });
+  }
+};
+
+exports.getDoctor = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const doctor = await Doctor.findById(id);
+    res.status(200).json({
+      message: "Doctor found successfully",
+      isSuccess: true,
+      value: doctor,
+      error: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "An error occurred",
+      isSuccess: false,
+      value: null,
+      error: error,
+    });
+  }
+};

@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const patientRoute = require("./router/Patient_route");
 const hospitalRoute = require("./router/hospital_route");
+const doctorRoute = require("./router/doctor");
 
 const app = express();
 app.use(cors());
@@ -26,3 +27,4 @@ app.listen(port, () => {
 
 app.use("/patient", patientRoute);
 app.use("/hospital", hospitalRoute);
+app.use("/doctor", doctorRoute);
