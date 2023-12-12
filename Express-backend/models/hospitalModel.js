@@ -1,25 +1,5 @@
 const mongoose = require('mongoose');
 
-const DoctorSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: [true, 'Must provide name'],
-        trim: true,
-        maxlength: [20, "name can not be more than 20 characters"]
-
-    },
-    imgUrl: {
-        type: String
-    },
-    speciality: {
-        type: String
-    },
-    description: {
-        type: String
-    }
-
-
-})
 const HospitalSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -28,37 +8,52 @@ const HospitalSchema = new mongoose.Schema({
         maxlength: [20, "name can not be more than 20 characters"]
 
     },
+    generalSpecialization: {
+        type: String,
+        require: true
+
+    },
     description: {
-        type: String
+        type: String,
+        required: true,
+        minLength: [100, "Description should be more than 100 characters"]
     },
 
     address: {
-        type: [String]
+        type: String,
+        require: true
     },
     phoneNumber: {
-        type: [Number]
+        type: [String],
+        required: true
     },
     // open or closed 
-    status: {
-        type: Boolean,
-        default: false
+    availability: {
+        type: String,
+        required: true
     },
     doctors: {
-        type: [DoctorSchema]
+        type: [String],
+        required: true
     },
     services: {
-        type: [String]
+        type: [String],
+        required: true
     },
     photos: {
         type: [String]
     },
     webSite: {
-        type: [String]
+        type: String
     },
     operationalHour: {
-        type: [Number]
+        type: [String],
+        required: true
     },
-
+    workingDay: {
+        type: [String],
+        required: true
+    }
 })
 
 module.exports = mongoose.model('hospitals', HospitalSchema);
