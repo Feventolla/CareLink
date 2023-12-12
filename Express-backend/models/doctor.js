@@ -14,19 +14,19 @@ const doctorSchema = new mongoose.Schema({
   },
 
   phoneNumber: {
-    type: string,
+    type: String,
     required: true,
     trim: true,
   },
 
   email: {
-    type: string,
+    type: String,
     required: true,
     trim: true,
   },
 
   specialization: {
-    type: string,
+    type: String,
     required: true,
     trim: true,
   },

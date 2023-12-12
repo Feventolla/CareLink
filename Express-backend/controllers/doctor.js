@@ -154,3 +154,31 @@ exports.updateDoctor = async (req, res) => {
     });
   }
 };
+
+exports.deleteDoctor = async (req, res) => {
+  try {
+    const doctorId = req.params.id;
+
+    // Find the doctor item by ID
+    const doctor = await Doctor.findById(doctorId);
+
+    // Find the hospital associated with this doctor
+    const hospital = await Hospital.findOne({ doctors: doctorId });
+    hospital.doctors.pull(doctorId);
+    await hospital.save();
+    await Doctor.findByIdAndRemove(doctorId);
+    res.status(200).json({
+      message: "Doctor deleted successfully",
+      isSuccess: true,
+      value: null,
+      error: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "An error occurred",
+      isSuccess: false,
+      value: null,
+      error: error,
+    });
+  }
+};
