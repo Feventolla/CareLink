@@ -10,22 +10,23 @@ const HospitalSchema = new mongoose.Schema({
 
     },
     description: {
-        type: String
+        type: String,
+        minLength: [100, "Description should be more than 100 characters"]
     },
 
     address: {
-        type: [String]
+        type: [String],
+        require: true
     },
     phoneNumber: {
-        type: [Number]
+        type: [String]
     },
     // open or closed 
     status: {
-        type: Boolean,
-        default: false
+        type: String
     },
     doctors: {
-        type: [DoctorSchema]
+        type: [String]
     },
     services: {
         type: [String]
@@ -34,11 +35,15 @@ const HospitalSchema = new mongoose.Schema({
         type: [String]
     },
     webSite: {
-        type: [String]
+        type: String
     },
     operationalHour: {
-        type: [Number]
+        type: [String],
+        required: true
     },
+    workingDay: {
+        type: [String]
+    }
 
 })
 
