@@ -55,7 +55,6 @@ const doctorSchema = new mongoose.Schema({
         required: true,
       },
     },
-    required: true,
   },
 
   yearsOfExperience: {
@@ -64,13 +63,14 @@ const doctorSchema = new mongoose.Schema({
   },
 
   photo: {
-    type: { public_id: String, url: String },
+    type: String,
     required: true,
   },
 
   gender: {
     type: String,
     enum: ["Male", "Female"],
+    required: true,
   },
 
   hospitalId: [

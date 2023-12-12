@@ -6,7 +6,7 @@ exports.addDoctor = async (req, res) => {
   try {
     const {
       firstName,
-      LastName,
+      lastName,
       phoneNumber,
       email,
       specialization,
@@ -25,12 +25,13 @@ exports.addDoctor = async (req, res) => {
           error: err,
         });
       } else {
-        photo = result.secure_url;
+        pictureUrl = result.secure_url;
+        console.log(pictureUrl, "$$$$$$");
       }
     });
     const doctor = new Doctor({
       firstName,
-      LastName,
+      lastName,
       phoneNumber,
       email,
       specialization,
@@ -38,13 +39,14 @@ exports.addDoctor = async (req, res) => {
       yearsOfExperience,
       gender,
       hospitalId,
-      photo,
+      photo: pictureUrl,
     });
     await doctor.save();
     const hospital = await Hospital.findById(hospitalId);
-
-    hospital.doctors.push(doctor._id);
-    await hospital.save();
+    if (hospital) {
+      hospital.doctors.push(doctor._id);
+      await hospital.save();
+    }
 
     res.status(201).json({
       message: "Doctor created successfully",
@@ -103,42 +105,51 @@ exports.getDoctor = async (req, res) => {
 
 exports.updateDoctor = async (req, res) => {
   try {
-    const {
-      firstName,
-      LastName,
-      phoneNumber,
-      email,
-      specialization,
-      availability,
-      yearsOfExperience,
-      gender,
-      hospitalId,
-    } = req.body;
-    await cloudinary.uploader.upload(req.file.path, (err, result) => {
-      if (err) {
-        console.log(err);
-        res.status(500).json({ message: "upload faild" });
-      } else {
-        photo = result.secure_url;
-      }
-    });
-    updatedDoctor = await Doctor.findByIdAndUpdate(
-      req.params.id,
-      {
-        firstName,
-        LastName,
-        phoneNumber,
-        email,
-        specialization,
-        availability,
-        yearsOfExperience,
-        gender,
-        hospitalId,
-        photo,
-      },
+    const doctorId = req.params.id; // Assuming the doctor ID is in the request parameters
+
+    // Check if the doctor with the given ID exists
+    const existingDoctor = await Doctor.findById(doctorId);
+    if (!existingDoctor) {
+      return res.status(404).json({
+        message: "Doctor not found",
+        isSuccess: false,
+        value: null,
+        error: null,
+      });
+    }
+
+    // Only update the fields that are present in the request body
+    const updateFields = req.body;
+    console.log(req, doctorId);
+
+    if (req.file) {
+      // If there is a new file, update the pictureUrl
+      await cloudinary.uploader.upload(req.file.path, (err, result) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).json({
+            message: "Upload failed",
+            isSuccess: false,
+            value: null,
+            error: err,
+          });
+        }
+        updateFields.photo = result.secure_url;
+      });
+    }
+
+    // Update the existing doctor with the new fields
+    const updatedDoctor = await Doctor.findByIdAndUpdate(
+      doctorId,
+      { $set: updateFields },
       { new: true }
     );
+    if (req.body.hospitalId) {
+      const hospital = await Hospital.findById(req.body.hospitalId);
 
+      hospital.doctors.push(updatedDoctor._id);
+      await hospital.save();
+    }
     res.status(200).json({
       message: "Doctor updated successfully",
       isSuccess: true,
@@ -146,11 +157,12 @@ exports.updateDoctor = async (req, res) => {
       error: null,
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       message: "An error occurred",
       isSuccess: false,
       value: null,
-      error: error,
+      error: error.message,
     });
   }
 };
@@ -158,15 +170,21 @@ exports.updateDoctor = async (req, res) => {
 exports.deleteDoctor = async (req, res) => {
   try {
     const doctorId = req.params.id;
+    console.log(doctorId);
+    const existingDoctor = await Doctor.findById(doctorId);
+    console.log(existingDoctor);
+    if (!existingDoctor) {
+      return res.status(404).json({
+        message: "Doctor not found",
+        isSuccess: false,
+        value: null,
+        error: null,
+      });
+    }
 
-    // Find the doctor item by ID
-    const doctor = await Doctor.findById(doctorId);
-
-    // Find the hospital associated with this doctor
-    const hospital = await Hospital.findOne({ doctors: doctorId });
-    hospital.doctors.pull(doctorId);
-    await hospital.save();
+    console.log("here");
     await Doctor.findByIdAndRemove(doctorId);
+    console.log("here");
     res.status(200).json({
       message: "Doctor deleted successfully",
       isSuccess: true,

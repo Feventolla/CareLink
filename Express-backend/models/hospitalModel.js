@@ -33,8 +33,8 @@ const HospitalSchema = new mongoose.Schema({
         required: true
     },
     doctors: {
-        type: [String],
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Doctor",      
     },
     services: {
         type: [String],
