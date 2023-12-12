@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const DoctorSchema = require('./doctorModel')
 
 const HospitalSchema = new mongoose.Schema({
     name: {
@@ -44,7 +43,6 @@ const HospitalSchema = new mongoose.Schema({
     workingDay: {
         type: [String]
     }
-
 })
 
 module.exports = mongoose.model('hospitals', HospitalSchema);
