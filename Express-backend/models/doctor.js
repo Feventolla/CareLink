@@ -73,12 +73,10 @@ const doctorSchema = new mongoose.Schema({
     required: true,
   },
 
-  hospitalId: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Hospital",
-    },
-  ],
+  hospitalId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Hospital",
+  },
 
   role: { type: String, default: "doctor" },
 });

@@ -4,6 +4,7 @@ const Hospital = require("../models/hospitalModel");
 
 exports.addDoctor = async (req, res) => {
   try {
+    console.log(req.body);
     const {
       firstName,
       lastName,
@@ -15,6 +16,7 @@ exports.addDoctor = async (req, res) => {
       gender,
       hospitalId,
     } = req.body;
+    console.log("here");
     await cloudinary.uploader.upload(req.file.path, (err, result) => {
       if (err) {
         console.log(err);
@@ -26,9 +28,10 @@ exports.addDoctor = async (req, res) => {
         });
       } else {
         pictureUrl = result.secure_url;
-        console.log(pictureUrl, "$$$$$$");
       }
     });
+    console.log("here");
+
     const doctor = new Doctor({
       firstName,
       lastName,
@@ -146,9 +149,10 @@ exports.updateDoctor = async (req, res) => {
     );
     if (req.body.hospitalId) {
       const hospital = await Hospital.findById(req.body.hospitalId);
-
-      hospital.doctors.push(updatedDoctor._id);
-      await hospital.save();
+      if (hospital) {
+        hospital.doctors.push(updatedDoctor._id);
+        await hospital.save();
+      }
     }
     res.status(200).json({
       message: "Doctor updated successfully",
@@ -169,10 +173,11 @@ exports.updateDoctor = async (req, res) => {
 
 exports.deleteDoctor = async (req, res) => {
   try {
-    const doctorId = req.params.id;
-    console.log(doctorId);
-    const existingDoctor = await Doctor.findById(doctorId);
-    console.log(existingDoctor);
+    const { id } = req.params;
+    console.log(id);
+    const existingDoctor = await Doctor.findById(id);
+
+
     if (!existingDoctor) {
       return res.status(404).json({
         message: "Doctor not found",
@@ -182,9 +187,14 @@ exports.deleteDoctor = async (req, res) => {
       });
     }
 
-    console.log("here");
-    await Doctor.findByIdAndRemove(doctorId);
-    console.log("here");
+    const hospital = await Hospital.findOne({ doctors: id });
+    if (hospital) {
+      hospital.doctors.pull(id);
+      await hospital.save();
+    }
+
+    const res = await Doctor.findByIdAndDelete(id);
+
     res.status(200).json({
       message: "Doctor deleted successfully",
       isSuccess: true,
