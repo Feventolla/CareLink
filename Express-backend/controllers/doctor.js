@@ -4,7 +4,6 @@ const Hospital = require("../models/hospitalModel");
 
 exports.addDoctor = async (req, res) => {
   try {
-    console.log(req.body);
     const {
       firstName,
       lastName,
@@ -16,10 +15,8 @@ exports.addDoctor = async (req, res) => {
       gender,
       hospitalId,
     } = req.body;
-    console.log("here");
     await cloudinary.uploader.upload(req.file.path, (err, result) => {
       if (err) {
-        console.log(err);
         res.status(500).json({
           message: "upload faild",
           isSuccess: false,
@@ -30,7 +27,6 @@ exports.addDoctor = async (req, res) => {
         pictureUrl = result.secure_url;
       }
     });
-    console.log("here");
 
     const doctor = new Doctor({
       firstName,
@@ -123,13 +119,11 @@ exports.updateDoctor = async (req, res) => {
 
     // Only update the fields that are present in the request body
     const updateFields = req.body;
-    console.log(req, doctorId);
 
     if (req.file) {
       // If there is a new file, update the pictureUrl
       await cloudinary.uploader.upload(req.file.path, (err, result) => {
         if (err) {
-          console.log(err);
           return res.status(500).json({
             message: "Upload failed",
             isSuccess: false,
@@ -148,6 +142,12 @@ exports.updateDoctor = async (req, res) => {
       { new: true }
     );
     if (req.body.hospitalId) {
+      const oldHospital = await Hospital.findOne({ doctors: doctorId });
+      if (oldHospital) {
+        oldHospital.doctors.pull(doctorId);
+        await oldHospital.save();
+      }
+
       const hospital = await Hospital.findById(req.body.hospitalId);
       if (hospital) {
         hospital.doctors.push(updatedDoctor._id);
@@ -161,12 +161,11 @@ exports.updateDoctor = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({
       message: "An error occurred",
       isSuccess: false,
       value: null,
-      error: error.message,
+      error: error,
     });
   }
 };
@@ -174,9 +173,7 @@ exports.updateDoctor = async (req, res) => {
 exports.deleteDoctor = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(id);
     const existingDoctor = await Doctor.findById(id);
-
 
     if (!existingDoctor) {
       return res.status(404).json({
@@ -193,7 +190,7 @@ exports.deleteDoctor = async (req, res) => {
       await hospital.save();
     }
 
-    const res = await Doctor.findByIdAndDelete(id);
+    await Doctor.findByIdAndDelete(id);
 
     res.status(200).json({
       message: "Doctor deleted successfully",

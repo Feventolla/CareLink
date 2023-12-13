@@ -76,6 +76,7 @@ const doctorSchema = new mongoose.Schema({
   hospitalId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Hospital",
+    required: true,
   },
 
   role: { type: String, default: "doctor" },
