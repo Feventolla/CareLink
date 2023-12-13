@@ -5,7 +5,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Icon2 from "react-native-vector-icons/MaterialIcons";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Landingpage from "./screens/home/landingpage";
-import HomeScreen from "./screens/home/home";
 import ProfileScreen from "./screens/home/profile";
 import ChatScreen from "./screens/home/chatbot_convo";
 import Detaildoctor from "./screens/home/detail_doctor";
