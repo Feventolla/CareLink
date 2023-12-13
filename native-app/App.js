@@ -1,21 +1,48 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import Landingpage from "./screens/home/landingpage";
-import Routing from "./screens/home/routing";
+import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
+import Icon2 from "react-native-vector-icons/MaterialIcons";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-
+import Landingpage from "./screens/home/landingpage";
 import HomeScreen from "./screens/home/home";
 import ProfileScreen from "./screens/home/profile";
+import ChatScreen from "./screens/home/chatbot_convo";
+import Detaildoctor from "./screens/home/detail_doctor";
+
 const Tab = createMaterialBottomTabNavigator();
+const HomeStack = createStackNavigator();
+
+const HomeStackScreen = ({ navigation }) => (
+  <HomeStack.Navigator initialRouteName="Home">
+    <HomeStack.Screen
+      name="Home"
+      component={Landingpage}
+      options={{ headerShown: false }}
+    />
+    <HomeStack.Screen
+      name="Chatbot"
+      component={ChatScreen}
+      options={{
+        // headerShown: false,
+        headerLeft: () => (
+          <Icon2
+            onPress={() => navigation.goBack()}
+            name="keyboard-arrow-left"
+            color="black"
+            size={30}
+          />
+        ),
+      }}
+    />
+  </HomeStack.Navigator>
+);
 
 export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator
         initialRouteName="Home"
-        // activeColor="#ffffff"
         inactiveColor="#a0a0a0"
         barStyle={{ backgroundColor: "white" }}
         tabBarOptions={{
@@ -24,7 +51,7 @@ export default function App() {
       >
         <Tab.Screen
           name="Home"
-          component={Landingpage}
+          component={HomeStackScreen} // Use the HomeStackScreen as the component
           options={{
             tabBarLabel: "",
             tabBarIcon: ({ color }) => (
@@ -34,7 +61,7 @@ export default function App() {
         />
         <Tab.Screen
           name="Hospital"
-          component={HomeScreen}
+          component={Detaildoctor}
           options={{
             tabBarLabel: "",
             tabBarIcon: ({ color }) => (
@@ -54,19 +81,5 @@ export default function App() {
         />
       </Tab.Navigator>
     </NavigationContainer>
-    // <Routing style={styles.container} />
-    // <View style={styles.container}>
-    //   <Text>Open up App.js to start working on your app!</Text>
-    //   <StatusBar style="auto" />
-    // </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    // alignItems: 'center',
-    // justifyContent: 'center',
-  },
-});
