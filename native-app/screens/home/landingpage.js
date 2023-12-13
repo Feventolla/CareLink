@@ -1,8 +1,17 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TextInput,
+  ScrollView,
+} from "react-native";
+// import { ScrollView } from "react-native-gesture-handler";
 // import { NavigationContainer } from "@react-navigation/native";
 // import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 // import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 // import HomeScreen from "../../screens/home/home";
 // import ProfileScreen from "../../screens/home/profile";
@@ -10,7 +19,7 @@ import { View, Text, Image, StyleSheet } from "react-native";
 
 const Landingpage = () => {
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.heroContainer}>
         <Text style={styles.heroText_care}>
           Care<Text style={styles.heroText}>Link</Text>
@@ -38,8 +47,25 @@ const Landingpage = () => {
         />
       </View>
       <Text style={styles.hosp_search}>Find Hospitals Nearby </Text>
+      <Text style={styles.hosp_search}>Find Hospitals Nearby </Text>
+      <Text style={styles.hosp_search}>Find Hospitals Nearby </Text>
+      <Text style={styles.hosp_search}>Find Hospitals Nearby </Text>
+      <View style={styles.searchContainer}>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search..."
+          // onChangeText={handleSearch}
+          // value={searchText}
+        />
+        <Icon
+          name="search"
+          size={30}
+          color="#C276F0"
+          style={styles.searchIcon}
+        />
+      </View>
       <Text style={styles.hosp_aval}>Hospitals Available here</Text>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -125,6 +151,24 @@ const styles = StyleSheet.create({
     fontSize: 35,
     textAlign: "center",
     fontWeight: "bold",
+  },
+  searchContainer: {
+    position: "relative",
+  },
+  searchInput: {
+    height: 50,
+    width: 280,
+    backgroundColor: "white",
+    borderRadius: 20,
+    // borderColor: "#ffffff",
+    // borderWidth: 1,
+    paddingLeft: 30, // Adjusted padding to accommodate the icon
+    paddingRight: 10,
+  },
+  searchIcon: {
+    position: "absolute",
+    top: 10,
+    right: 10,
   },
 });
 
