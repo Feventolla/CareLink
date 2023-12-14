@@ -16,6 +16,8 @@ import OnboardingPage2 from "./screens/onboarding/OnboardingPage2";
 import OnboardingPage3 from "./screens/onboarding/OnboardingPage3";
 import OTPVerificationPage from "./screens/otpPage";
 import Resetpassword from "./screens/resetpassword";
+import HospitalListPage from "./screens/hospital/HospitalList";
+import HospitalDetailPage from "./screens/hospital/HospitalDetail";
 
 const Tab = createMaterialBottomTabNavigator();
 const HomeStack = createStackNavigator();
@@ -83,6 +85,12 @@ const RootStack = ({ navigation }) => (
       component={OTPVerificationPage}
       options={{ headerShown: false }}
     />
+
+    <Stack.Screen
+      name="Hospital_detail"
+      component={HospitalDetailPage}
+      options={{ headerShown: false }}
+    />
     <Stack.Screen
       name="Reset"
       component={Resetpassword}
@@ -122,7 +130,7 @@ const MainAppStack = () => (
     />
     <Tab.Screen
       name="Hospital"
-      component={Detaildoctor}
+      component={HospitalListPage}
       options={{
         tabBarLabel: "",
         tabBarIcon: ({ color }) => (

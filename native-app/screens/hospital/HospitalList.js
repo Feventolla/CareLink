@@ -20,11 +20,11 @@ const gap = 10;
 const availableSpace = screenWidth - (numColumns - 1) * gap;
 const itemSize = availableSpace / numColumns;
 
-const HospitalListPage = () => {
+const HospitalListPage = ({ navigation }) => {
   const [showFilter, setShowFilter] = useState(false);
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   const navigateToHospitalDetail = (hospitalId) => {
-    navigation.navigate("HospitalDetailPage");
+    navigation.navigate("Hospital_detail");
   };
 
   const openFilter = () => {
