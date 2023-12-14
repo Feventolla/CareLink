@@ -97,7 +97,7 @@ const RegistrationPage = ({ navigation }) => {
           <TextInput
             style={styles.input}
             placeholder="Enter your Gender"
-            keyboardType="gender"
+            keyboardType="default"
             value={formData.gender}
             onChangeText={(text) => handleInputChange("gender", text)}
           />
@@ -127,6 +127,7 @@ const RegistrationPage = ({ navigation }) => {
             onChangeText={(text) => handleInputChange("height", text)}
           />
 
+          <Text style={styles.label}>Photo</Text>
           <View style={styles.file}>
             <TouchableOpacity onPress={pickImage}>
               <Text style={styles.picktext}>Pick Image</Text>
@@ -166,7 +167,7 @@ const styles = StyleSheet.create({
     // justifyContent: "center",
     // alignItems: "center",
     padding: 20,
-    backgroundColor: "#EDE5F2",
+    backgroundColor: "#EFE9F4",
   },
   formScrollView: {
     // flexGrow: 1,
@@ -223,12 +224,12 @@ const styles = StyleSheet.create({
     borderBottomColor: "#d3d3d3",
   },
   file: {
-    backgroundColor: "white",
+    backgroundColor: "#EDE5F2",
     borderColor: "gray",
     borderWidth: 0.5,
     padding: 10,
-    marginTop: 20,
-    // marginBottom: 10,
+    marginTop: 10,
+    marginLeft: 10,
     borderRadius: 10,
     width: 200,
     // height: 100,
@@ -260,6 +261,7 @@ const styles = StyleSheet.create({
   },
   logincolor: {
     color: "#C276F0",
+    textDecorationLine: "underline",
   },
 });
 export default RegistrationPage;

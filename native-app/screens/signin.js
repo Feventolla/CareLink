@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     // justifyContent: "center",
     // alignItems: "center",
     padding: 20,
-    backgroundColor: "#EDE5F2",
+    backgroundColor: "#EFE9F4",
   },
   formScrollView: {
     // flexGrow: 1,
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#d3d3d3",
   },
   forgot: {
-    color: "blue",
+    color: "#f26f6f",
     textAlign: "right",
   },
 
@@ -162,6 +162,7 @@ const styles = StyleSheet.create({
   },
   logincolor: {
     color: "#C276F0",
+    textDecorationLine: "underline",
   },
 });
 export default Loginpage;
