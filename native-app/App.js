@@ -9,6 +9,10 @@ import Landingpage from "./screens/home/landingpage";
 import ProfileScreen from "./screens/home/profile";
 import ChatScreen from "./screens/home/chatbot_convo";
 import Detaildoctor from "./screens/home/detail_doctor";
+import OnboardingPage1 from './screens/onboarding/OnboardingPage1'
+import OnboardingPage2 from './screens/onboarding/OnboardingPage2'
+import OnboardingPage3 from './screens/onboarding/OnboardingPage3'
+import ProfilePage from "./screens/home/profile";
 
 
 const Tab = createMaterialBottomTabNavigator();
@@ -72,7 +76,7 @@ export default function App() {
         />
         <Tab.Screen
           name="Profile"
-          component={ProfileScreen}
+          component={OnboardingPage2}
           options={{
             tabBarLabel: "",
             tabBarIcon: ({ color }) => (

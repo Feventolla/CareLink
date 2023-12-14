@@ -7,7 +7,7 @@ const OnboardingPage3 = () => {
   const navigation = useNavigation();
 
   const handleGetStarted = () => {
-    // for now nilu
+    
     console.log('pressed!');
   };
 
@@ -31,7 +31,7 @@ const OnboardingPage3 = () => {
         <Text style={styles.description}>Acquire information on what to do</Text>
 
     
-        <Image source={require('./assets/image3.png')} style={styles.image} />
+        <Image source={require('../../assets/image3.png')} style={styles.image} />
 
     
         <TouchableOpacity style={styles.getStartedButton} onPress={handleGetStarted}>
