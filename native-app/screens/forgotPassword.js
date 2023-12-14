@@ -52,7 +52,7 @@ const Forgotpassword = () => {
       </View>
       <View style={styles.bottombutton}>
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Login</Text>
+          <Text style={styles.buttonText}>send code</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
