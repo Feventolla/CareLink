@@ -10,6 +10,7 @@ import ChatScreen from "./screens/home/chatbot_convo";
 import Detaildoctor from "./screens/home/detail_doctor";
 import RegistrationPage from "./screens/signup";
 import Loginpage from "./screens/signin";
+import Forgotpassword from "./screens/forgotPassword";
 
 const Tab = createMaterialBottomTabNavigator();
 const HomeStack = createStackNavigator();
@@ -50,6 +51,11 @@ const RootStack = ({ navigation }) => (
     <Stack.Screen
       name="Signup"
       component={RegistrationPage}
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name="Forgot"
+      component={Forgotpassword}
       options={{ headerShown: false }}
     />
     <Stack.Screen
