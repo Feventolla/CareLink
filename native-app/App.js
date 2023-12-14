@@ -76,7 +76,7 @@ export default function App() {
         />
         <Tab.Screen
           name="Profile"
-          component={OnboardingPage2}
+          component={OnboardingPage3}
           options={{
             tabBarLabel: "",
             tabBarIcon: ({ color }) => (

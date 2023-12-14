@@ -12,13 +12,13 @@ const OnboardingPage2 = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Top Bar with Skip Text, Grey Horizontal Bar Icons */}
+      
       <View style={styles.topBar}>
         <View style={styles.barsContainer}>
           <View style={styles.bar} />
-          <View style={styles.bar} />
           <View style={[styles.bar, styles.activeBar]} />
-          {/* Add more bars as needed */}
+          <View style={styles.bar} />
+          
         </View>
 
         <TouchableOpacity style={styles.skipButton} onPress={handleSkipPress}>
@@ -26,7 +26,7 @@ const OnboardingPage2 = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      {/* CareLink Text */}
+      
       <View style={styles.textContainer}>
         <Text style={styles.careLinkText}>
           Chat<Text style={styles.linkText}>Bot</Text>
@@ -34,15 +34,15 @@ const OnboardingPage2 = ({ navigation }) => {
         <Text style={styles.subText}>Talk with our chatbot</Text>
       </View>
 
-      {/* Image */}
+      
       <Image
         source={require('../../assets/image2.png')}
         style={styles.image}
       />
 
-      {/* Circular Next Icon */}
+      
       <TouchableOpacity style={styles.nextButton} onPress={handleNextPress}>
-        {/* Your circular next icon */}
+       
         <Text>Next</Text>
       </TouchableOpacity>
     </View>

@@ -1,87 +1,112 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
-const OnboardingPage3 = () => {
-  const navigation = useNavigation();
+const OnboardingPage3 = ({ navigation }) => {
+  const handleNextPress = () => {
 
-  const handleGetStarted = () => {
-    
-    console.log('pressed!');
   };
 
   return (
     <View style={styles.container}>
-      
+    
       <View style={styles.topBar}>
-        <View style={styles.bar} />
-        <View style={styles.bar} />
-        <View style={[styles.bar, styles.activeBar]} />
+        <View style={styles.barsContainer}>
+          <View style={styles.bar} />
+          <View style={styles.bar} />
+          <View style={[styles.bar, styles.activeBar]} />
+        </View>
       </View>
 
-     
-      <View style={styles.content}>
-       
-        <Text style={styles.title}>
-          <Text style={styles.blackText}>Get</Text>
-          <Text style={styles.purpleText}> Info</Text>
+      
+      <View style={styles.textContainer}>
+        <Text style={styles.careLinkText}>
+          Get<Text style={styles.linkText}> Info</Text>
         </Text>
-
-        <Text style={styles.description}>Acquire information on what to do</Text>
-
-    
-        <Image source={require('../../assets/image3.png')} style={styles.image} />
-
-    
-        <TouchableOpacity style={styles.getStartedButton} onPress={handleGetStarted}>
-          <Icon name="arrow-forward" size={24} color="white" style={styles.icon} />
-          <Text style={styles.getStartedButtonText}>Get started</Text>
-        </TouchableOpacity>
+        <Text style={styles.subText}>Acquire information on what to do</Text>
       </View>
+
+   
+      <Image
+        source={require('../../assets/image3.png')}
+        style={styles.image}
+      />
+
+      
+      <TouchableOpacity style={styles.nextButton} onPress={handleNextPress}>
+        <View style={styles.nextButtonContent}>
+          <Text style={styles.nextButtonText}>Get Started</Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-
-
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-
-  description: {
-    fontSize: 16,
-    color: '#808080',
-    marginBottom: 20,
+  topBar: {
+    alignItems: 'center',
+    marginTop: 20,
   },
-
-  image: {
-    width: '80%', 
-    height: 200, 
-    resizeMode: 'contain', 
-    marginBottom: 20,
-  },
-
-  getStartedButton: {
-    backgroundColor: '#8B5CBF',
-    borderRadius: 20,
-    paddingVertical: 15,
+  barsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  bar: {
+    width: 100,
+    bottom: 90,
+    height: 5,
+    backgroundColor: '#D3D3D3',
+    marginHorizontal: 5,
+    borderRadius: 5,
+  },
+  activeBar: {
+    backgroundColor: '#C276F0', 
+  },
+  textContainer: {
+    alignItems: 'flex-start',
+    marginLeft: 20,
+  },
+  careLinkText: {
+    fontSize: 45,
+    fontWeight: 'bold',
+    color: '#C276F0',
+    right:70,
+  },
+  linkText: {
+    color: 'black',
+  },
+  subText: {
+    fontSize: 14,
+    color: 'black',
+    right: 65,
+  },
+  image: {
+    marginTop: 20,
+  },
+  nextButton: {
+    position: 'absolute',
+    bottom: 20,
+    width: 200,
+    height: 60,
+    backgroundColor: '#C276F0', 
+    borderRadius: 30,
     justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5,
   },
-
-  getStartedButtonText: {
+  nextButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  nextButtonText: {
     color: 'white',
-    fontSize: 18,
-    marginLeft: 10,
-  },
-
-  icon: {
-    marginRight: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 5,
   },
 });
 
