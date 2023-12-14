@@ -11,9 +11,9 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 // import ImagePicker from "react-native-image-picker";
 import { SvgXml } from "react-native-svg";
-import { SvgContent } from "./svg_content/loginSvg";
+import { SvgContent } from "./svg_content/resetSvg";
 
-const Loginpage = ({ navigation }) => {
+const Resetpassword = ({ navigation }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -25,17 +25,17 @@ const Loginpage = ({ navigation }) => {
 
   const handleLogin = () => {
     // Handle the login logic here with formData
-    console.log("Login Form Data:", formData);
+    console.log("reset Form Data:", formData);
 
     // For demonstration, navigate to "MainApp"
-    navigation.navigate("MainApp");
+    navigation.navigate("Signin");
   };
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
       <View style={styles.header}>
         <Image style={styles.avatar} source={require("../assets/logo.jpg")} />
-        <Text style={styles.title}>Login to your account</Text>
-        <SvgXml xml={SvgContent} height={300} width={700} style={styles.svg} />
+        <Text style={styles.title}>Reset your password</Text>
+        <SvgXml xml={SvgContent} height={250} width={600} style={styles.svg} />
       </View>
       <View style={styles.formScrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.form}>
@@ -56,29 +56,10 @@ const Loginpage = ({ navigation }) => {
             onChangeText={(text) => handleInputChange("password", text)}
           />
         </View>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Forgot");
-          }}
-        >
-          <Text style={styles.forgot}>forgot password?</Text>
-        </TouchableOpacity>
       </View>
       <View style={styles.bottombutton}>
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.footer}
-          onPress={() => {
-            navigation.navigate("Signup");
-          }}
-        >
-          <Text style={styles.footerText}>
-            Don't have an account?{" "}
-            <Text style={styles.logincolor}>Register</Text>
-          </Text>
+          <Text style={styles.buttonText}>reset</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -117,6 +98,7 @@ const styles = StyleSheet.create({
   title: {
     marginTop: 10,
     fontSize: 25,
+    marginBottom: 20,
   },
 
   label: {
@@ -135,20 +117,21 @@ const styles = StyleSheet.create({
     borderBottomColor: "#d3d3d3",
   },
   forgot: {
-    color: "#f26f6f",
+    color: "blue",
     textAlign: "right",
   },
 
   button: {
     backgroundColor: "#C276F0",
     padding: 10,
-    marginTop: 20,
+    marginTop: 80,
     borderRadius: 7,
   },
   buttonText: {
     color: "white",
     textAlign: "center",
     fontWeight: "bold",
+    fontSize: 20,
   },
 
   footer: {
@@ -162,7 +145,6 @@ const styles = StyleSheet.create({
   },
   logincolor: {
     color: "#C276F0",
-    textDecorationLine: "underline",
   },
 });
-export default Loginpage;
+export default Resetpassword;

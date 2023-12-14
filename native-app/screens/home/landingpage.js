@@ -112,7 +112,7 @@ const Landingpage = ({ navigation }) => {
                 <Text style={styles.cardDescription}>{card.description}</Text>
                 <TouchableOpacity
                   style={styles.actionButton}
-                  onPress={() => console.log(`Card ${card.id} pressed`)}
+                  onPress={() => navigation.navigate("Hospital_detail")}
                 >
                   <Text style={styles.actionButtonText}>Read More</Text>
                 </TouchableOpacity>
