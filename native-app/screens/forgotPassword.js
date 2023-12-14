@@ -12,7 +12,7 @@ import { FontAwesome } from "@expo/vector-icons";
 // import ImagePicker from "react-native-image-picker";
 import { SvgXml } from "react-native-svg";
 import { SvgContent } from "./svg_content/loginSvg";
-const Forgotpassword = () => {
+const Forgotpassword = ({ navigation }) => {
   const [formData, setFormData] = useState({
     email: "",
   });
@@ -25,7 +25,7 @@ const Forgotpassword = () => {
     // Handle the login logic here with formData
     console.log("forgot Form Data:", formData);
 
-    // navigation.navigate("MainApp");
+    navigation.navigate("OTP");
   };
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
