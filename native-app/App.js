@@ -15,6 +15,7 @@ import OnboardingPage1 from "./screens/onboarding/OnboardingPage1";
 import OnboardingPage2 from "./screens/onboarding/OnboardingPage2";
 import OnboardingPage3 from "./screens/onboarding/OnboardingPage3";
 import OTPVerificationPage from "./screens/otpPage";
+import Resetpassword from "./screens/resetpassword";
 
 const Tab = createMaterialBottomTabNavigator();
 const HomeStack = createStackNavigator();
@@ -80,6 +81,11 @@ const RootStack = ({ navigation }) => (
     <Stack.Screen
       name="OTP"
       component={OTPVerificationPage}
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name="Reset"
+      component={Resetpassword}
       options={{ headerShown: false }}
     />
     <Stack.Screen

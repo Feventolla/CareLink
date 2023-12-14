@@ -12,7 +12,7 @@ import {
 import { SvgXml } from "react-native-svg";
 import { SvgContent } from "./svg_content/otpSvg";
 
-const OTPVerificationPage = () => {
+const OTPVerificationPage = ({ navigation }) => {
   const [otp, setOtp] = useState(["", "", "", ""]); // Array to store OTP digits
   const otpInputRefs = Array(4).fill(React.createRef());
 
@@ -37,7 +37,9 @@ const OTPVerificationPage = () => {
 
   const handleSubmit = () => {
     const enteredOtp = otp.join("");
-    Alert.alert("Entered OTP", enteredOtp);
+    // Alert.alert("Entered OTP", enteredOtp);
+    navigation.navigate("Reset");
+
     // Add logic to verify OTP with the server or perform other actions
   };
 

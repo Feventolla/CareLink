@@ -25,17 +25,17 @@ const Resetpassword = ({ navigation }) => {
 
   const handleLogin = () => {
     // Handle the login logic here with formData
-    console.log("Login Form Data:", formData);
+    console.log("reset Form Data:", formData);
 
     // For demonstration, navigate to "MainApp"
-    navigation.navigate("MainApp");
+    navigation.navigate("Signin");
   };
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
       <View style={styles.header}>
         <Image style={styles.avatar} source={require("../assets/logo.jpg")} />
-        <Text style={styles.title}>Reset to your password</Text>
-        <SvgXml xml={SvgContent} height={300} width={700} style={styles.svg} />
+        <Text style={styles.title}>Reset your password</Text>
+        <SvgXml xml={SvgContent} height={250} width={600} style={styles.svg} />
       </View>
       <View style={styles.formScrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.form}>
@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
   title: {
     marginTop: 10,
     fontSize: 25,
+    marginBottom: 20,
   },
 
   label: {
@@ -123,13 +124,14 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "#C276F0",
     padding: 10,
-    marginTop: 20,
+    marginTop: 80,
     borderRadius: 7,
   },
   buttonText: {
     color: "white",
     textAlign: "center",
     fontWeight: "bold",
+    fontSize: 20,
   },
 
   footer: {
