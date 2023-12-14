@@ -8,9 +8,17 @@ import Landingpage from "./screens/home/landingpage";
 import ProfileScreen from "./screens/home/profile";
 import ChatScreen from "./screens/home/chatbot_convo";
 import Detaildoctor from "./screens/home/detail_doctor";
+<<<<<<< HEAD
 import RegistrationPage from "./screens/signup";
 import Loginpage from "./screens/signin";
 import Forgotpassword from "./screens/forgotPassword";
+=======
+import OnboardingPage1 from './screens/onboarding/OnboardingPage1'
+import OnboardingPage2 from './screens/onboarding/OnboardingPage2'
+import OnboardingPage3 from './screens/onboarding/OnboardingPage3'
+import ProfilePage from "./screens/home/profile";
+
+>>>>>>> e9682fae473071643885a24c399692ee1f6d70cd
 
 const Tab = createMaterialBottomTabNavigator();
 const HomeStack = createStackNavigator();
@@ -134,7 +142,49 @@ const MainAppStack = () => (
 export default function App() {
   return (
     <NavigationContainer>
+<<<<<<< HEAD
       <RootStack />
+=======
+      <Tab.Navigator
+        initialRouteName="Home"
+        inactiveColor="#a0a0a0"
+        barStyle={{ backgroundColor: "white" }}
+        tabBarOptions={{
+          showLabel: false,
+        }}
+      >
+        <Tab.Screen
+          name="Home"
+          component={HomeStackScreen} // Use the HomeStackScreen as the component
+          options={{
+            tabBarLabel: "",
+            tabBarIcon: ({ color }) => (
+              <Icon name="home" color={color} size={26} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Hospital"
+          component={Detaildoctor}
+          options={{
+            tabBarLabel: "",
+            tabBarIcon: ({ color }) => (
+              <Icon name="hospital" color={color} size={26} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Profile"
+          component={ProfilePage}
+          options={{
+            tabBarLabel: "",
+            tabBarIcon: ({ color }) => (
+              <Icon name="account" color={color} size={26} />
+            ),
+          }}
+        />
+      </Tab.Navigator>
+>>>>>>> e9682fae473071643885a24c399692ee1f6d70cd
     </NavigationContainer>
   );
 }
