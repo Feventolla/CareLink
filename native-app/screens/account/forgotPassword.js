@@ -11,12 +11,10 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 // import ImagePicker from "react-native-image-picker";
 import { SvgXml } from "react-native-svg";
-import { SvgContent } from "./svg_content/resetSvg";
-
-const Resetpassword = ({ navigation }) => {
+import { SvgContent } from "../../screens/svg_content/loginSvg";
+const Forgotpassword = ({ navigation }) => {
   const [formData, setFormData] = useState({
     email: "",
-    password: "",
   });
 
   const handleInputChange = (field, value) => {
@@ -25,17 +23,23 @@ const Resetpassword = ({ navigation }) => {
 
   const handleLogin = () => {
     // Handle the login logic here with formData
-    console.log("reset Form Data:", formData);
+    console.log("forgot Form Data:", formData);
 
-    // For demonstration, navigate to "MainApp"
-    navigation.navigate("Signin");
+    navigation.navigate("OTP");
   };
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
       <View style={styles.header}>
-        <Image style={styles.avatar} source={require("../assets/logo.jpg")} />
-        <Text style={styles.title}>Reset your password</Text>
-        <SvgXml xml={SvgContent} height={250} width={600} style={styles.svg} />
+        <Image
+          style={styles.avatar}
+          source={require("../../assets/logo.jpg")}
+        />
+        <Text style={styles.title}>Enter your email</Text>
+        <Text style={styles.subTitle}>
+          we will sent you an otp on your email address
+        </Text>
+
+        <SvgXml xml={SvgContent} height={300} width={700} style={styles.svg} />
       </View>
       <View style={styles.formScrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.form}>
@@ -47,25 +51,16 @@ const Resetpassword = ({ navigation }) => {
             value={formData.email}
             onChangeText={(text) => handleInputChange("email", text)}
           />
-          <Text style={styles.label}>Password</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter your Password"
-            secureTextEntry={true}
-            value={formData.password}
-            onChangeText={(text) => handleInputChange("password", text)}
-          />
         </View>
       </View>
       <View style={styles.bottombutton}>
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>reset</Text>
+          <Text style={styles.buttonText}>send code</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -98,7 +93,12 @@ const styles = StyleSheet.create({
   title: {
     marginTop: 10,
     fontSize: 25,
-    marginBottom: 20,
+  },
+  subTitle: {
+    marginTop: 10,
+    fontSize: 15,
+    color: "gray",
+    textAlign: "center",
   },
 
   label: {
@@ -124,14 +124,13 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "#C276F0",
     padding: 10,
-    marginTop: 80,
+    marginTop: 20,
     borderRadius: 7,
   },
   buttonText: {
     color: "white",
     textAlign: "center",
     fontWeight: "bold",
-    fontSize: 20,
   },
 
   footer: {
@@ -147,4 +146,5 @@ const styles = StyleSheet.create({
     color: "#C276F0",
   },
 });
-export default Resetpassword;
+
+export default Forgotpassword;

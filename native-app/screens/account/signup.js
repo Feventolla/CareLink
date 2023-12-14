@@ -52,7 +52,10 @@ const RegistrationPage = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Image style={styles.avatar} source={require("../assets/logo.jpg")} />
+        <Image
+          style={styles.avatar}
+          source={require("../../assets/logo.jpg")}
+        />
         <Text style={styles.title}>Let's Get Started</Text>
         <Text style={styles.subTitle}>Create Your new Account</Text>
       </View>

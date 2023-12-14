@@ -10,7 +10,7 @@ import {
   Image,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
-import { SvgContent } from "./svg_content/otpSvg";
+import { SvgContent } from "../svg_content/otpSvg";
 
 const OTPVerificationPage = ({ navigation }) => {
   const [otp, setOtp] = useState(["", "", "", ""]); // Array to store OTP digits
@@ -46,7 +46,10 @@ const OTPVerificationPage = ({ navigation }) => {
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
       <View style={styles.header}>
-        <Image style={styles.avatar} source={require("../assets/logo.jpg")} />
+        <Image
+          style={styles.avatar}
+          source={require("../../assets/logo.jpg")}
+        />
         <Text style={styles.title}>Check your email</Text>
         <Text style={styles.subTitle}>
           We've sent an otp code to the email on your device
@@ -55,7 +58,7 @@ const OTPVerificationPage = ({ navigation }) => {
           style={styles.image}
           height={150}
           width={400}
-          source={require("../assets/email-sent.png")}
+          source={require("../../assets/email-sent.png")}
         />
         {/* <SvgXml xml={SvgContent} height={150} width={400} style={styles.svg} /> */}
       </View>
