@@ -11,10 +11,12 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 // import ImagePicker from "react-native-image-picker";
 import { SvgXml } from "react-native-svg";
-import { SvgContent } from "./svg_content/loginSvg";
-const Forgotpassword = ({ navigation }) => {
+import { SvgContent } from "../../screens/svg_content/loginSvg";
+
+const Loginpage = ({ navigation }) => {
   const [formData, setFormData] = useState({
     email: "",
+    password: "",
   });
 
   const handleInputChange = (field, value) => {
@@ -23,19 +25,19 @@ const Forgotpassword = ({ navigation }) => {
 
   const handleLogin = () => {
     // Handle the login logic here with formData
-    console.log("forgot Form Data:", formData);
+    console.log("Login Form Data:", formData);
 
-    navigation.navigate("OTP");
+    // For demonstration, navigate to "MainApp"
+    navigation.navigate("MainApp");
   };
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
       <View style={styles.header}>
-        <Image style={styles.avatar} source={require("../assets/logo.jpg")} />
-        <Text style={styles.title}>Enter your email</Text>
-        <Text style={styles.subTitle}>
-          we will sent you an otp on your email address
-        </Text>
-
+        <Image
+          style={styles.avatar}
+          source={require("../../assets/logo.jpg")}
+        />
+        <Text style={styles.title}>Login to your account</Text>
         <SvgXml xml={SvgContent} height={300} width={700} style={styles.svg} />
       </View>
       <View style={styles.formScrollView} showsVerticalScrollIndicator={false}>
@@ -48,16 +50,44 @@ const Forgotpassword = ({ navigation }) => {
             value={formData.email}
             onChangeText={(text) => handleInputChange("email", text)}
           />
+          <Text style={styles.label}>Password</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter your Password"
+            secureTextEntry={true}
+            value={formData.password}
+            onChangeText={(text) => handleInputChange("password", text)}
+          />
         </View>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Forgot");
+          }}
+        >
+          <Text style={styles.forgot}>forgot password?</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.bottombutton}>
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>send code</Text>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.footer}
+          onPress={() => {
+            navigation.navigate("Signup");
+          }}
+        >
+          <Text style={styles.footerText}>
+            Don't have an account?{" "}
+            <Text style={styles.logincolor}>Register</Text>
+          </Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -91,12 +121,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 25,
   },
-  subTitle: {
-    marginTop: 10,
-    fontSize: 15,
-    color: "gray",
-    textAlign: "center",
-  },
 
   label: {
     color: "#092C4C",
@@ -114,7 +138,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#d3d3d3",
   },
   forgot: {
-    color: "blue",
+    color: "#f26f6f",
     textAlign: "right",
   },
 
@@ -141,7 +165,7 @@ const styles = StyleSheet.create({
   },
   logincolor: {
     color: "#C276F0",
+    textDecorationLine: "underline",
   },
 });
-
-export default Forgotpassword;
+export default Loginpage;

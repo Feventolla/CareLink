@@ -52,7 +52,10 @@ const RegistrationPage = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Image style={styles.avatar} source={require("../assets/logo.jpg")} />
+        <Image
+          style={styles.avatar}
+          source={require("../../assets/logo.jpg")}
+        />
         <Text style={styles.title}>Let's Get Started</Text>
         <Text style={styles.subTitle}>Create Your new Account</Text>
       </View>
@@ -65,7 +68,7 @@ const RegistrationPage = ({ navigation }) => {
           <TextInput
             style={styles.input}
             placeholder="Enter your Firstname"
-            keyboardType="first-name"
+            keyboardType="default"
             value={formData.firstname}
             onChangeText={(text) => handleInputChange("firstname", text)}
           />
@@ -73,7 +76,7 @@ const RegistrationPage = ({ navigation }) => {
           <TextInput
             style={styles.input}
             placeholder="Enter your Lastname"
-            keyboardType="last-name"
+            keyboardType="default"
             value={formData.lastname}
             onChangeText={(text) => handleInputChange("lastname", text)}
           />
@@ -106,7 +109,7 @@ const RegistrationPage = ({ navigation }) => {
           <TextInput
             style={styles.input}
             placeholder="Enter your Age"
-            keyboardType="decimal-pad"
+            keyboardType="number-pad"
             value={formData.age}
             onChangeText={(text) => handleInputChange("age", text)}
           />
