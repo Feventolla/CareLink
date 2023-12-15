@@ -152,13 +152,13 @@ const Admindashboard = () => {
             <div className="flex font-semibold text-[#C276F0]">Dashboard</div>
           </div>
 
-          <div className="flex flex-col w-full">
-            <div className="text-xl font-semibold pb-4 md:pb-10">
+          <div className="flex flex-col w-full bg-[#FAFAFA] pl-3">
+            <div className="text-xl font-semibold pb-4 md:pb-7">
               Hospitals Information
             </div>
             <div className="flex flex-col md:flex-row justify-between md:space-x-4 mb-5">
               <div className="mb-4 md:mb-0">
-                <button className="bg-[#C276F0] text-white font-bold py-2 px-6 rounded">
+                <button className="bg-[#C276F0] text-white font-bold py-2 px-10 rounded">
                   Add Hospital
                 </button>
               </div>
@@ -230,7 +230,7 @@ const Admindashboard = () => {
             <RxExit />
             <div>Logout</div>
           </div>
-          <div className="mt-4 md:mt-0 md:ml-10">
+          <div className="mt-4 md:mt-0 ml-2 md:ml-24">
             {Array.from({ length: totalPages }, (_, index) => index + 1).map(
               (page) => (
                 <button
