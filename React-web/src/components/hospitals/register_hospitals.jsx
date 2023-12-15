@@ -1,6 +1,15 @@
 import React from 'react'
 
 function RegisterHospitals() {
+    const options = [
+        {value: "Monday", label:"Monday"},
+        {value: "Tuesday", label:"Tuesday"},
+        {value: "Wednesday", label:"Wednesday"},
+        {value: "Thursday", label:"Thursday"},
+        {value: "Friday", label:"Friday"},
+        {value: "Saturday", label:"Saturday"},
+        {value: "Sunday", label:"Sunday"}
+    ]
   return (
     <div>
     <form action="">
@@ -59,6 +68,10 @@ function RegisterHospitals() {
         <label htmlFor="services">Services</label>
         <input type="text" required placeholder="CTScan, MRI" />
         <br />
+        <div>
+               <Select option={options}>Working days</Select>
+            </div>
+
         <label htmlFor="operational hours">Operational Hours</label>
         <input type="number" required placeholder="8" />
         <br />
@@ -66,6 +79,7 @@ function RegisterHospitals() {
         <label htmlFor="photo">Photo</label>
         <input type="file" />
         <br />
+        <button type='submit'>Add Hospital</button>
     </form>
 </div>
   )

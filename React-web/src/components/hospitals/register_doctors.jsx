@@ -1,6 +1,15 @@
 import React from 'react'
 
 function AddDoctors() {
+    const options = [
+        {value: "Monday", label:"Monday"},
+        {value: "Tuesday", label:"Tuesday"},
+        {value: "Wednesday", label:"Wednesday"},
+        {value: "Thursday", label:"Thursday"},
+        {value: "Friday", label:"Friday"},
+        {value: "Saturday", label:"Saturday"},
+        {value: "Sunday", label:"Sunday"}
+    ]
   return (
     <div>
         <form action="">
@@ -44,7 +53,9 @@ function AddDoctors() {
                     <option value="female">Female</option>
                 </select>
             </div>
-
+            <div>
+               <Select option={options}>Availability</Select>
+            </div>
             <div>
             <label htmlFor="startTime">Start Time</label>
             <input type="time" required/>
@@ -55,6 +66,7 @@ function AddDoctors() {
             <label htmlFor="photo">Photo</label>
             <input type="file" />
             <br />
+            <button type='submit'>Add Doctor</button>
         </form>
     </div>
   )
