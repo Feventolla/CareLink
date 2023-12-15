@@ -1,13 +1,16 @@
-import { useState } from "react";
-import Dashboard from "./component/DoctorDetail/DoctorDetail";
+
+import Admindashboard from "./components/adminDashboard";
+// import './App.css'
+
+
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <div>
-      <Dashboard />
-    </div>
+
+    <>
+      <Admindashboard />
+    </>
+
   );
 }
 
