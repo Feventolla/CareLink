@@ -63,7 +63,7 @@ const Dashboard = () => {
         <h3 className="text-xl sm:text-2xl mb-16 text-center font-semibold mt-16">
           Available Doctors
         </h3>
-        <div className="mb-4 md:mb-0">
+        <div className="mb-5">
           <button
             className="bg-[#C276F0] text-white font-bold py-2 px-10 rounded"
             onClick={handleAddDoctor}
