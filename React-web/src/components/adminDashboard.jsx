@@ -141,12 +141,12 @@ const Admindashboard = () => {
           <div className="text-4xl font-bold pt-5">
             <span className="text-[#C276F0]">Care</span>Link
           </div>
-          <div className="flex items-center justify-center w-full text-3xl text-[#3E435D] font-semibold pt-10 ">
+          <div className="flex bg-[#FAFAFA] items-center justify-center w-full text-3xl text-[#3E435D] font-semibold pt-10 pb-10 ml-6 ">
             Welcome, Dagim
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-16 pt-6">
+        <div className="flex flex-col md:flex-row gap-16 ">
           <div className="flex flex-row gap-3">
             <RxDashboard className="text-[#C276F0] mt-1" />
             <div className="flex font-semibold text-[#C276F0]">Dashboard</div>
