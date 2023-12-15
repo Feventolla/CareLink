@@ -1,4 +1,4 @@
-const Patient = require("../models/patient_model");
+const Patient = require("../models/patient");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const jwt_secret = process.env.JWT_SECRTE;
@@ -52,9 +52,19 @@ const Register = async (req, res) => {
     });
 
     await patient.save();
-    res.status(201).json({ message: "User registered", patient });
+    res.status(201).json({
+      message: "User registered",
+      isSuccess: true,
+      value: patient,
+      error: error,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: "An Error occurred",
+      isSuccess: false,
+      value: null,
+      error: error,
+    });
   }
 };
 
@@ -82,9 +92,19 @@ const Login = async (req, res) => {
       { expiresIn: "7d" }
     );
 
-    res.status(200).json({ message: "user logged in", token, patient });
+    res.status(200).json({
+      message: "user logged in",
+      isSuccess: true,
+      value: { token, Patient },
+      error: error,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: "An Error occurred",
+      isSuccess: false,
+      value: null,
+      error: error,
+    });
   }
 };
 
@@ -97,9 +117,19 @@ const getPatient = async (req, res) => {
       res.status(500).json({ message: "patient not found" });
     }
 
-    res.status(200).json({ message: "patient fetched", patient });
+    res.status(200).json({
+      message: "patient fetched",
+      isSuccess: true,
+      value: patient,
+      error: error,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: "An Error occurred",
+      isSuccess: false,
+      value: null,
+      error: error,
+    });
   }
 };
 
@@ -109,47 +139,68 @@ const getAllPatients = async (req, res) => {
 
     res.status(200).json({ message: "patients fetched", patients });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: "An Error occurred",
+      isSuccess: false,
+      value: null,
+      error: error,
+    });
   }
 };
 
 const editProfile = async (req, res) => {
   try {
-    const {
-      firstname,
-      lastname,
-      gender,
-      age,
-      height,
-      weight,
-      email,
-      password,
-      photo,
-    } = req.body;
     const { patientId } = req.params;
-    console.log(patientId);
-    const patient = await Patient.findByIdAndUpdate(
+
+    // Check if the patient with the given ID exists
+    const existingPatient = await Patient.findById(patientId);
+    if (!existingPatient) {
+      return res.status(404).json({
+        message: "Patient not found",
+        isSuccess: false,
+        value: null,
+        error: null,
+      });
+    }
+
+    // Only update the fields that are present in the request body
+    const updateFields = req.body;
+
+    if (req.file) {
+      // If there is a new file, update the pictureUrl
+      await cloudinary.uploader.upload(req.file.path, (err, result) => {
+        if (err) {
+          return res.status(500).json({
+            message: "Upload failed",
+            isSuccess: false,
+            value: null,
+            error: err,
+          });
+        }
+        updateFields.photo = result.secure_url;
+      });
+    }
+
+    // Update the existing patient with the new fields
+    const updatedPatient = await Patient.findByIdAndUpdate(
       patientId,
-      {
-        firstname,
-        lastname,
-        gender,
-        age,
-        height,
-        weight,
-        photo,
-      },
+      { $set: updateFields },
       { new: true }
     );
 
-    if (!patient) {
-      res.status(404).json({ message: "Patient not found" });
-    }
-
-    // await patient.save()
-    res.status(200).json({ message: "User uodated successfully", patient });
+    res.status(200).json({
+      message: "Patient updated successfully",
+      isSuccess: true,
+      value: updatedPatient,
+      error: null,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: "An error occurred",
+      isSuccess: false,
+      value: null,
+      error: error,
+    });
   }
 };
 
@@ -162,9 +213,19 @@ const deletePatient = async (req, res) => {
       res.status(404).json({ message: "patinet not found" });
     }
 
-    res.status(200).json({ message: "patient deleted successfully" });
+    res.status(200).json({
+      message: "patient deleted successfully",
+      isSuccess: true,
+      value: null,
+      error: error,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: "An Error occurred",
+      isSuccess: false,
+      value: null,
+      error: error,
+    });
   }
 };
 
@@ -196,7 +257,12 @@ const forgetPassword = async (req, res) => {
       .status(200)
       .json({ message: "Reset password email sent successfully", otpCode });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: "An Error occurred",
+      isSuccess: false,
+      value: null,
+      error: error,
+    });
   }
 };
 
@@ -226,9 +292,19 @@ const resetPassword = async (req, res) => {
 
     await patient.save();
 
-    res.status(200).json({ message: "rest password successfully" });
+    res.status(200).json({
+      message: "rest password successfully",
+      isSuccess: true,
+      value: null,
+      error: error,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: "An Error occurred",
+      isSuccess: false,
+      value: null,
+      error: error,
+    });
   }
 };
 

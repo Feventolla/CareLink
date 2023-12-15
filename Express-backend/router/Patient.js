@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const PatientController = require("../controllers/PatientController");
+const PatientController = require("../controllers/Patient");
 const upload = require("../middleware/multer");
 
 router.post("/signup", upload.single("photo"), PatientController.Register);
