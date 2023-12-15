@@ -1,5 +1,5 @@
-import React from "react";
-import DocImage from "../../assets/images/doctor/doc5.jpeg";
+/* eslint-disable react/prop-types */
+import DocImage from "../../../assets/images/doctor/doc5.jpeg";
 import { BiEdit } from "react-icons/bi";
 
 const DoctorCard = ({ doctorData }) => {
