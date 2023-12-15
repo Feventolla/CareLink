@@ -1,12 +1,14 @@
 import { useState } from "react";
-import image1 from "../assets/hero-hosp.png";
-import edit from "../assets/edit.svg";
+import image1 from "../../assets/hero-hosp.png";
+import edit from "../../assets/edit.svg";
 import { RxDashboard, RxExit } from "react-icons/rx";
+import { useNavigate } from "react-router-dom";
 
 const Admindashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
+  const navigate = useNavigate();
 
   const data = [
     {
@@ -111,6 +113,13 @@ const Admindashboard = () => {
   const filteredData = data.filter((card) =>
     card.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  const HandleDetailHospital = (id) => {
+    console.log(` card with id ${id} clicked`);
+    navigate("/detailHospital");
+  };
+  const handleAddHospital = () => {
+    navigate("/addHospital");
+  };
   const handleDelete = (id) => {
     console.log(`Delete card with id ${id}`);
   };
@@ -155,7 +164,10 @@ const Admindashboard = () => {
             </div>
             <div className="flex flex-col md:flex-row justify-between md:space-x-4 mb-5">
               <div className="mb-4 md:mb-0">
-                <button className="bg-[#C276F0] text-white font-bold py-2 px-10 rounded">
+                <button
+                  className="bg-[#C276F0] text-white font-bold py-2 px-10 rounded"
+                  onClick={handleAddHospital}
+                >
                   Add Hospital
                 </button>
               </div>
@@ -175,7 +187,8 @@ const Admindashboard = () => {
                 {currentData.map((card) => (
                   <div
                     key={card.id}
-                    className="bg-white p-4 border rounded-2xl shadow "
+                    className="bg-white p-4 border rounded-2xl shadow cursor-pointer "
+                    onClick={HandleDetailHospital}
                   >
                     <div className="flex flex-row items-center space-x-3">
                       <div className="">

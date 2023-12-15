@@ -1,9 +1,13 @@
-import React from "react";
 import DoctorCard from "./DoctorCard";
 import Sidebar from "../common/SideBar";
 import { LuLogOut } from "react-icons/lu";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+  const handleAddDoctor = () => {
+    navigate("/addDoctor");
+  };
   const doctorsData = [
     {
       name: "Jon Doe",
@@ -59,6 +63,14 @@ const Dashboard = () => {
         <h3 className="text-xl sm:text-2xl mb-16 text-center font-semibold mt-16">
           Available Doctors
         </h3>
+        <div className="mb-4 md:mb-0">
+          <button
+            className="bg-[#C276F0] text-white font-bold py-2 px-10 rounded"
+            onClick={handleAddDoctor}
+          >
+            Add Doctor
+          </button>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {doctorsData.map((data, index) => (
             <DoctorCard key={index} doctorData={data} />

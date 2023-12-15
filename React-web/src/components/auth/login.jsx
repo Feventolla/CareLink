@@ -1,23 +1,26 @@
-import React from 'react'
+import { useNavigate } from "react-router-dom";
 
- function Login() {
+function Login() {
+  const navigate = useNavigate();
+  const handlesubmit = () => {
+    navigate("/adminDashboard");
+  };
   return (
     <div>
-        <form action="">
-            <label htmlFor="email">Email</label>
-            <input type="email" required/>
+      <form onSubmit={handlesubmit}>
+        <label htmlFor="email">Email</label>
+        <input type="email" />
 
-            <label htmlFor="password">Password</label>
-            <input type="password"  required/>
-            
-            <label htmlFor="name">Name</label>
-            <input type="text" required/>
+        <label htmlFor="password">Password</label>
+        <input type="password" />
 
-            <button type="submit">Submit</button>
-        </form>
-      </div>
-  )
+        <label htmlFor="name">Name</label>
+        <input type="text" />
+
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  );
 }
-
 
 export default Login;
