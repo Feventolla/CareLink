@@ -1,6 +1,6 @@
 const cloudinary = require("../middleware/cloudinary");
 const Doctor = require("../models/doctor");
-const Hospital = require("../models/hospitalModel");
+const Hospital = require("../models/hospital");
 
 exports.addDoctor = async (req, res) => {
   try {
@@ -104,7 +104,7 @@ exports.getDoctor = async (req, res) => {
 
 exports.updateDoctor = async (req, res) => {
   try {
-    const doctorId = req.params.id; // Assuming the doctor ID is in the request parameters
+    const doctorId = req.params.id; 
 
     // Check if the doctor with the given ID exists
     const existingDoctor = await Doctor.findById(doctorId);

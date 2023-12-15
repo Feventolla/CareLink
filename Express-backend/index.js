@@ -2,8 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 require("dotenv").config();
-const patientRoute = require("./router/Patient_route");
-const hospitalRoute = require("./router/hospital_route");
+const patientRoute = require("./router/Patient");
+const hospitalRoute = require("./router/hospital");
 const doctorRoute = require("./router/doctor");
 
 const app = express();
