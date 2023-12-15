@@ -112,16 +112,13 @@ const Admindashboard = () => {
     card.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
   const handleDelete = (id) => {
-    // Implement delete logic here
     console.log(`Delete card with id ${id}`);
   };
 
   const handleEdit = (id) => {
-    // Implement edit logic here
     console.log(`Edit card with id ${id}`);
   };
   const handleLogout = () => {
-    // Implement edit logic here
     console.log("logout");
   };
 
