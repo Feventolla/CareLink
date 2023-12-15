@@ -27,9 +27,31 @@ const HospitalSchema = new mongoose.Schema({
   },
   // open or closed
   availability: {
-    type: String,
-    required: true,
+    type: {
+      day: {
+        type: [String],
+        enum: [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+          "Sunday",
+        ],
+        required: true,
+      },
+      startTime: {
+        type: String,
+        required: true,
+      },
+      endTime: {
+        type: String,
+        required: true,
+      },
+    },
   },
+
   doctors: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -41,19 +63,12 @@ const HospitalSchema = new mongoose.Schema({
     type: [String],
     required: true,
   },
-  photos: {
-    type: [String],
+  photo: {
+    type: String,
+    required: true,
   },
   webSite: {
     type: String,
-  },
-  operationalHour: {
-    type: [String],
-    required: true,
-  },
-  workingDay: {
-    type: [String],
-    required: true,
   },
 });
 
