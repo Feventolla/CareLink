@@ -163,10 +163,7 @@ function AddDoctors() {
         <form onSubmit={handleAddHospital}>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="flex flex-col">
-              <label
-                htmlFor="name"
-                className="text-[#8D8D99] text-sm font-semibold mb-2"
-              >
+              <label htmlFor="name" className="text-sm font-semibold mb-2">
                 First Name
               </label>
               <input
@@ -175,63 +172,51 @@ function AddDoctors() {
                 type="text"
                 required
                 placeholder="John"
-                className="py-2 px-2 rounded-lg border placeholder-[#1B1B1B] max-w-lg mb-6 focus:outline-none focus:ring-1 focus:border-[#035ECF]"
+                className="py-2 px-2 rounded-lg border max-w-lg mb-6 focus:outline-none focus:ring-1 focus:border-[#035ECF]"
               />
 
-              <label
-                className="text-[#8D8D99] text-sm font-semibold mb-2"
-                htmlFor="lastName"
-              >
+              <label className="text-sm font-semibold mb-2" htmlFor="lastName">
                 Last Name
               </label>
               <input
                 name="lastName"
                 onChange={handleInputChange}
-                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border placeholder-[#1B1B1B] max-w-lg mb-6"
+                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
                 type="text"
                 required
                 placeholder="Doe"
               />
 
-              <label
-                className="text-[#8D8D99] text-sm font-semibold mb-2"
-                htmlFor="email"
-              >
+              <label className="text-sm font-semibold mb-2" htmlFor="email">
                 email
               </label>
               <input
                 name="email"
                 onChange={handleInputChange}
-                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border placeholder-[#1B1B1B] max-w-lg mb-6"
+                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
                 type="email"
                 required
                 placeholder="johndoe45@gmail.com"
               />
 
-              <label
-                className="text-[#8D8D99] text-sm font-semibold mb-2"
-                htmlFor="startTime"
-              >
+              <label className="text-sm font-semibold mb-2" htmlFor="startTime">
                 Start Time
               </label>
               <input
                 name="startTime"
                 onChange={handleInputChange}
-                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border placeholder-[#1B1B1B] max-w-lg mb-6"
+                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
                 type="time"
                 required
                 placeholder="08:00 AM"
               />
-              <label
-                className="text-[#8D8D99] text-sm font-semibold mb-2"
-                htmlFor="endTime"
-              >
+              <label className="text-sm font-semibold mb-2" htmlFor="endTime">
                 End Time
               </label>
               <input
                 name="endTime"
                 onChange={handleInputChange}
-                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border placeholder-[#1B1B1B] max-w-lg mb-6"
+                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
                 type="time"
                 required
                 placeholder="6:00 PM"
@@ -239,7 +224,7 @@ function AddDoctors() {
             </div>
             <div className="flex flex-col">
               <label
-                className="text-[#8D8D99] text-sm font-semibold mb-2"
+                className="text-sm font-semibold mb-2"
                 htmlFor="specialization"
               >
                 Specialization
@@ -247,13 +232,13 @@ function AddDoctors() {
               <input
                 name="specialization"
                 onChange={handleInputChange}
-                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border placeholder-[#1B1B1B] max-w-lg mb-6"
+                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
                 type="text"
                 placeholder="www.tkuranbesa.com"
               />
 
               <label
-                className="text-[#8D8D99] text-sm font-semibold mb-2"
+                className="text-sm font-semibold mb-2"
                 htmlFor="phoneNumber"
               >
                 Contact
@@ -261,7 +246,7 @@ function AddDoctors() {
               <input
                 name="phoneNumber"
                 onChange={handleInputChange}
-                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border placeholder-[#1B1B1B] max-w-lg mb-6"
+                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
                 type="tel"
                 required
                 placeholder="+251 967 765 789"
@@ -269,7 +254,7 @@ function AddDoctors() {
               />
 
               <label
-                className="text-[#8D8D99] text-sm font-semibold mb-2"
+                className="text-sm font-semibold mb-2"
                 htmlFor="yearsOfExperience"
               >
                 Years Of Experience
@@ -277,17 +262,14 @@ function AddDoctors() {
               <input
                 name="yearsOfExperience"
                 onChange={handleInputChange}
-                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border placeholder-[#1B1B1B] max-w-lg mb-6"
+                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
                 type="number"
                 required
                 placeholder="5"
                 min="0"
               />
 
-              <label
-                className="text-[#8D8D99] text-sm font-semibold mb-2"
-                htmlFor="day"
-              >
+              <label className="text-sm font-semibold mb-2" htmlFor="day">
                 working days
               </label>
               <div className="flex space-x-2 flex-wrap mb-4">
@@ -307,16 +289,13 @@ function AddDoctors() {
                 ))}
               </div>
 
-              <label
-                className="text-[#8D8D99] text-sm font-semibold mb-2"
-                htmlFor="photo"
-              >
+              <label className="text-sm font-semibold mb-2" htmlFor="photo">
                 Photo
               </label>
               <input
                 name="photo"
                 onChange={handleFileChange}
-                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border placeholder-[#1B1B1B] max-w-lg mb-6"
+                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
                 type="file"
               />
             </div>

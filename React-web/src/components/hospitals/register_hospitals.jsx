@@ -96,10 +96,7 @@ function RegisterHospitals() {
         <form onSubmit={handleAddHospital}>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="flex flex-col">
-              <label
-                htmlFor="name"
-                className="text-[#8D8D99] text-sm font-semibold mb-2"
-              >
+              <label htmlFor="name" className="text-sm font-semibold mb-2">
                 Hospital Name
               </label>
               <input
@@ -108,11 +105,11 @@ function RegisterHospitals() {
                 type="text"
                 required
                 placeholder="Tkur Anbesa"
-                className="py-2 px-2 rounded-lg border placeholder-[#1B1B1B] max-w-lg mb-6 focus:outline-none focus:ring-1 focus:border-[#035ECF]"
+                className="py-2 px-2 rounded-lg border max-w-lg mb-6 focus:outline-none focus:ring-1 focus:border-[#035ECF]"
               />
 
               <label
-                className="text-[#8D8D99] text-sm font-semibold mb-2"
+                className="text-sm font-semibold mb-2"
                 htmlFor="generalSecialization"
               >
                 Specialization
@@ -120,14 +117,14 @@ function RegisterHospitals() {
               <input
                 name="generalSecialization"
                 onChange={handleInputChange}
-                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border placeholder-[#1B1B1B] max-w-lg mb-6"
+                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
                 type="text"
                 required
                 placeholder="General Hospital"
               />
 
               <label
-                className="text-[#8D8D99] text-sm font-semibold mb-2"
+                className="text-sm font-semibold mb-2"
                 htmlFor="description"
               >
                 About Hospital
@@ -135,58 +132,25 @@ function RegisterHospitals() {
               <input
                 name="description"
                 onChange={handleInputChange}
-                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border placeholder-[#1B1B1B] max-w-lg mb-6"
+                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
                 type="text"
                 required
                 placeholder="write here about the hospital"
               />
 
-              <label
-                className="text-[#8D8D99] text-sm font-semibold mb-2"
-                htmlFor="startTime"
-              >
-                Opening Time
-              </label>
-              <input
-                name="startTime"
-                onChange={handleInputChange}
-                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border placeholder-[#1B1B1B] max-w-lg mb-6"
-                type="time"
-                required
-                placeholder="08:00 AM"
-              />
-              <label
-                className="text-[#8D8D99] text-sm font-semibold mb-2"
-                htmlFor="endTime"
-              >
-                Closing Time
-              </label>
-              <input
-                name="endTime"
-                onChange={handleInputChange}
-                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border placeholder-[#1B1B1B] max-w-lg mb-6"
-                type="time"
-                required
-                placeholder="6:00 PM "
-              />
-            </div>
-            <div className="flex flex-col">
-              <label
-                className="text-[#8D8D99] text-sm font-semibold mb-2"
-                htmlFor="website"
-              >
+              <label className="text-sm font-semibold mb-2" htmlFor="website">
                 Website
               </label>
               <input
                 name="website"
                 onChange={handleInputChange}
-                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border placeholder-[#1B1B1B] max-w-lg mb-6"
+                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
                 type="url"
                 placeholder="www.tkuranbesa.com"
               />
 
               <label
-                className="text-[#8D8D99] text-sm font-semibold mb-2"
+                className="text-sm font-semibold mb-2"
                 htmlFor="phoneNumber"
               >
                 Contact
@@ -194,31 +158,15 @@ function RegisterHospitals() {
               <input
                 name="phoneNumber"
                 onChange={handleInputChange}
-                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border placeholder-[#1B1B1B] max-w-lg mb-6"
+                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
                 type="tel"
                 required
                 placeholder="+251 967 765 789"
                 // pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}-[0-9]{3}"
               />
-
-              <label
-                className="text-[#8D8D99] text-sm font-semibold mb-2"
-                htmlFor="services"
-              >
-                Services
-              </label>
-              <input
-                name="services"
-                onChange={handleInputChange}
-                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border placeholder-[#1B1B1B] max-w-lg mb-6"
-                type="text"
-                required
-                placeholder="CTScan, MRI"
-              />
-              <label
-                className="text-[#8D8D99] text-sm font-semibold mb-3"
-                htmlFor="day"
-              >
+            </div>
+            <div className="flex flex-col">
+              <label className="text-sm font-semibold mb-3" htmlFor="day">
                 Working Day
               </label>
 
@@ -238,16 +186,46 @@ function RegisterHospitals() {
                   </button>
                 ))}
               </div>
-              <label
-                className="text-[#8D8D99] text-sm font-semibold mb-2"
-                htmlFor="photo"
-              >
+              <label className="text-sm font-semibold mb-2" htmlFor="startTime">
+                Opening Time
+              </label>
+              <input
+                name="startTime"
+                onChange={handleInputChange}
+                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
+                type="time"
+                required
+                placeholder="08:00 AM"
+              />
+              <label className="text-sm font-semibold mb-2" htmlFor="endTime">
+                Closing Time
+              </label>
+              <input
+                name="endTime"
+                onChange={handleInputChange}
+                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
+                type="time"
+                required
+                placeholder="6:00 PM "
+              />
+              <label className="text-sm font-semibold mb-2" htmlFor="services">
+                Services
+              </label>
+              <input
+                name="services"
+                onChange={handleInputChange}
+                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
+                type="text"
+                required
+                placeholder="CTScan, MRI"
+              />
+              <label className="text-sm font-semibold mb-2" htmlFor="photo">
                 Photo
               </label>
               <input
                 name="photo"
                 onChange={handleFileChange}
-                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border placeholder-[#1B1B1B] max-w-lg mb-6"
+                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
                 type="file"
               />
             </div>
