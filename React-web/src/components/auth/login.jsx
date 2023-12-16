@@ -78,12 +78,57 @@
 // export default Login;
 
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function Login() {
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Validate Name
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
+    }
+
+    // Validate Email
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Invalid email address";
+    }
+
+    // Validate Password
+    if (!formData.password.trim()) {
+      newErrors.password = "Password is required";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handlesubmit = (e) => {
     e.preventDefault();
-    navigate("/adminDashboard");
+
+    if (validateForm()) {
+      // Proceed with form submission
+      navigate("/adminDashboard");
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   return (
@@ -95,14 +140,14 @@ function Login() {
           </div>
         </div>
 
-        <div className="w-[40em] h-full bg-[#FAFAFA]  ">
-          <h1 className="text-3xl font-semibold flex items-center justify-center text-[#C276F0] mt-40 ">
+        <div className="md:w-[40em] bg-[#FAFAFA] p-8 ">
+          <h1 className="text-3xl font-semibold flex items-center justify-center text-[#C276F0] mt-8 md:mt-40">
             Admin Login
           </h1>
 
           <form
             onSubmit={handlesubmit}
-            className="flex flex-col gap-4 p-10 pl-32 "
+            className="flex flex-col p-4 md:p-10 pl-2 md:pl-32"
           >
             <div className="flex flex-col gap-3">
               <label htmlFor="name">Name:</label>
@@ -111,10 +156,18 @@ function Login() {
                 placeholder="Maria Stephen"
                 name="name"
                 id="name"
-                className="input input-bordered max-w-lg p-3 border-solid border-2 border-gray-300 rounded-xl"
+                value={formData.name}
+                onChange={handleInputChange}
+                className={`input input-bordered max-w-lg p-3 border-solid border-2 border-gray-300 rounded-xl ${
+                  errors.name ? "border-red-500" : ""
+                }`}
               />
+              {errors.name && (
+                <span className="text-red-500 text-sm">{errors.name}</span>
+              )}
             </div>
 
+            {/* Email Input */}
             <div className="flex flex-col gap-3">
               <label htmlFor="email">Email:</label>
               <input
@@ -122,10 +175,18 @@ function Login() {
                 placeholder="maria@email.com"
                 name="email"
                 id="email"
-                className="input input-bordered max-w-lg p-3 border-solid border-2 border-gray-300 rounded-xl"
+                value={formData.email}
+                onChange={handleInputChange}
+                className={`input input-bordered max-w-lg p-3 border-solid border-2 border-gray-300 rounded-xl ${
+                  errors.email ? "border-red-500" : ""
+                }`}
               />
+              {errors.email && (
+                <span className="text-red-500 text-sm">{errors.email}</span>
+              )}
             </div>
 
+            {/* Password Input */}
             <div className="flex flex-col gap-3">
               <label htmlFor="password">Password:</label>
               <input
@@ -133,10 +194,16 @@ function Login() {
                 placeholder="+251-923-123-13"
                 name="password"
                 id="password"
-                className="input input-bordered max-w-lg p-3 border-solid border-2 border-gray-300 rounded-xl"
+                value={formData.password}
+                onChange={handleInputChange}
+                className={`input input-bordered max-w-lg p-3 border-solid border-2 border-gray-300 rounded-xl ${
+                  errors.password ? "border-red-500" : ""
+                }`}
               />
+              {errors.password && (
+                <span className="text-red-500 text-sm">{errors.password}</span>
+              )}
             </div>
-
             <button className="bg-[#C276F0] text-white font-bold py-2 px-5 rounded-lg">
               Login
             </button>
@@ -144,7 +211,7 @@ function Login() {
         </div>
       </div>
 
-      <div className="flex-1 bg-[#C276F0] rounded-tl-[7em] rounded-bl-[7em]"></div>
+      <div className="  md:flex-1 bg-[#C276F0] rounded-tl-[7em] rounded-bl-[7em]"></div>
     </main>
   );
 }
