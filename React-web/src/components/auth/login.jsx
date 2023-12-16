@@ -132,77 +132,81 @@ function Login() {
   };
 
   return (
-    <main className="flex h-screen w-screen text-black">
-      <div className="flex flex-col md:flex-row h-full">
-        <div className="md:w-1/4 bg-[#FAFAFA] flex items-center justify-center">
-          <div className="text-3xl font-semibold text-[#C276F0] pt-10 pl-10  bg-white  h-full w-48">
-            Care<span className="text-black">Link</span>
-          </div>
-        </div>
-
-        <div className="md:w-3/4 bg-[#FAFAFA] p-8 ">
-          <h1 className="text-3xl font-semibold flex items-center justify-center text-[#C276F0] mt-8 md:mt-40">
-            Admin Login
-          </h1>
-
-          <form
-            onSubmit={handlesubmit}
-            className="flex flex-col p-4 md:p-10 pl-2 md:pl-32"
-          >
-            <div className="flex flex-col gap-3 ">
-              <label htmlFor="name">Name:</label>
-              <input
-                type="text"
-                placeholder="Maria Stephen"
-                name="name"
-                id="name"
-                className={`input input-bordered max-w-lg p-3 border-solid border-2 border-gray-300 rounded-xl ${
-                  errors.name ? "border-red-500" : ""
-                }`}
-              />
-            </div>
-            <div className="flex flex-col gap-3">
-              <label htmlFor="email">Email:</label>
-              <input
-                type="text"
-                placeholder="maria@email.com"
-                name="email"
-                id="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className={`input input-bordered max-w-lg p-3 border-solid border-2 border-gray-300 rounded-xl ${
-                  errors.email ? "border-red-500" : ""
-                }`}
-              />
-              {errors.email && (
-                <span className="text-red-500 text-sm">{errors.email}</span>
-              )}
-            </div>
-            <div className="flex flex-col gap-3">
-              <label htmlFor="password">Password:</label>
-              <input
-                type="password"
-                placeholder="+251-923-123-13"
-                name="password"
-                id="password"
-                value={formData.password}
-                onChange={handleInputChange}
-                className={`input input-bordered max-w-lg p-3 border-solid border-2 border-gray-300 rounded-xl ${
-                  errors.password ? "border-red-500" : ""
-                }`}
-              />
-              {errors.password && (
-                <span className="text-red-500 text-sm">{errors.password}</span>
-              )}
-            </div>
-            <button className="bg-[#C276F0] text-white font-bold py-2 px-5 rounded-lg">
-              Login
-            </button>
-          </form>
+    <main className="flex flex-col md:flex-row h-screen w-screen text-black ml-10 md:ml-2">
+      <div className="w-1/4 bg-[#FAFAFA] flex items-center justify-center">
+        <div className="text-3xl font-semibold text-[#C276F0] pt-10 pl-10 bg-white h-full w-48">
+          Care<span className="text-black">Link</span>
         </div>
       </div>
 
-      <div className="  md:flex-1 bg-[#C276F0] rounded-tl-[7em] rounded-bl-[7em]"></div>
+      <div className="w-[30em] md:w-3/4 bg-[#FAFAFA] p-8 md:p-10">
+        <h1 className="text-3xl font-semibold flex items-center justify-center text-[#C276F0] mt-8 md:mt-32">
+          Admin Login
+        </h1>
+
+        <form
+          onSubmit={handlesubmit}
+          className="flex flex-col gap-4 p-4 md:p-10"
+        >
+          <div className="flex flex-col gap-3">
+            <label htmlFor="name">Name:</label>
+            <input
+              type="text"
+              placeholder="Maria Stephen"
+              name="name"
+              id="name"
+              className={`input input-bordered max-w-lg p-3 border-solid border-2 border-gray-300 rounded-xl ${
+                errors.name ? "border-red-500" : ""
+              }`}
+            />
+            {errors.name && (
+              <span className="text-red-500 text-sm">{errors.name}</span>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <label htmlFor="email">Email:</label>
+            <input
+              type="text"
+              placeholder="maria@email.com"
+              name="email"
+              id="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              className={`input input-bordered max-w-lg p-3 border-solid border-2 border-gray-300 rounded-xl ${
+                errors.email ? "border-red-500" : ""
+              }`}
+            />
+            {errors.email && (
+              <span className="text-red-500 text-sm">{errors.email}</span>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <label htmlFor="password">Password:</label>
+            <input
+              type="password"
+              placeholder="+251-923-123-13"
+              name="password"
+              id="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              className={`input input-bordered max-w-lg p-3 border-solid border-2 border-gray-300 rounded-xl ${
+                errors.password ? "border-red-500" : ""
+              }`}
+            />
+            {errors.password && (
+              <span className="text-red-500 text-sm">{errors.password}</span>
+            )}
+          </div>
+
+          <button className="bg-[#C276F0] text-white font-bold py-2 px-5 max-w-lg rounded-lg">
+            Login
+          </button>
+        </form>
+      </div>
+
+      <div className=" w-0  bg-[#C276F0] rounded-tl-[7em] rounded-bl-[7em] lg:w-[60em] h-screen"></div>
     </main>
   );
 }
