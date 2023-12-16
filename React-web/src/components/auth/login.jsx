@@ -140,7 +140,7 @@ function Login() {
           </div>
         </div>
 
-        <div className="md:w-[40em] bg-[#FAFAFA] p-8 ">
+        <div className="md:w-3/4 bg-[#FAFAFA] p-8 ">
           <h1 className="text-3xl font-semibold flex items-center justify-center text-[#C276F0] mt-8 md:mt-40">
             Admin Login
           </h1>
@@ -149,25 +149,18 @@ function Login() {
             onSubmit={handlesubmit}
             className="flex flex-col p-4 md:p-10 pl-2 md:pl-32"
           >
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 ">
               <label htmlFor="name">Name:</label>
               <input
                 type="text"
                 placeholder="Maria Stephen"
                 name="name"
                 id="name"
-                value={formData.name}
-                onChange={handleInputChange}
                 className={`input input-bordered max-w-lg p-3 border-solid border-2 border-gray-300 rounded-xl ${
                   errors.name ? "border-red-500" : ""
                 }`}
               />
-              {errors.name && (
-                <span className="text-red-500 text-sm">{errors.name}</span>
-              )}
             </div>
-
-            {/* Email Input */}
             <div className="flex flex-col gap-3">
               <label htmlFor="email">Email:</label>
               <input
@@ -185,8 +178,6 @@ function Login() {
                 <span className="text-red-500 text-sm">{errors.email}</span>
               )}
             </div>
-
-            {/* Password Input */}
             <div className="flex flex-col gap-3">
               <label htmlFor="password">Password:</label>
               <input
