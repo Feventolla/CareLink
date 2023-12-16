@@ -1,50 +1,11 @@
 import { useNavigate } from "react-router-dom";
 
-// import herobackimage from "../../assets/dragon-scales.svg";
-
-// import image from "../../assets/edit.svg";
-// import Sidebar from "../dashboard/common/SideBar";
-
 function Login() {
   const navigate = useNavigate();
   const handlesubmit = () => {
     navigate("/adminDashboard");
   };
 
-  // const [ErrorMessage, setErrorMessage] = useState("");
-  // const login = async (e) => {
-  //   e.preventDefault();
-
-  //   const formData = new FormData(e.target);
-  //   const data = {
-  //     email: formData.get("email"),
-  //     password: formData.get("password"),
-  //   };
-  //   try {
-  //     const res = await fetch("http://localhost:4000/login", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(data),
-  //     });
-  //     const result = await res.json();
-  //     if (res.status == 200) {
-  //       console.log("logging in -", result.role);
-  //       if (result.role == "user") {
-  //         router.push(`/dashboard/user/${result.foundUser.name}  `);
-  //         localStorage.setItem("userToken", result.token);
-  //       } else {
-  //         router.push("/dashboard/merchant");
-  //         localStorage.setItem("merToken", result.token);
-  //       }
-  //     } else {
-  //       setErrorMessage(result.message);
-  //     }
-  //   } catch (error) {
-  //     console.log(error.message);
-  //   }
-  // };
   return (
     <main className="flex h-screen w-screen text-black">
       {/* Left Section - Form */}
