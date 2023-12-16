@@ -17,7 +17,6 @@ const Register = async (req, res) => {
       weight,
       email,
       password,
-      photo,
     } = req.body;
     await cloudinary.uploader.upload(req.file.path, (err, result) => {
       if (err) {
@@ -56,7 +55,7 @@ const Register = async (req, res) => {
       message: "User registered",
       isSuccess: true,
       value: patient,
-      error: error,
+      error: null,
     });
   } catch (error) {
     res.status(500).json({
@@ -96,7 +95,7 @@ const Login = async (req, res) => {
       message: "user logged in",
       isSuccess: true,
       value: { token, Patient },
-      error: error,
+      error: null,
     });
   } catch (error) {
     res.status(500).json({
@@ -121,7 +120,7 @@ const getPatient = async (req, res) => {
       message: "patient fetched",
       isSuccess: true,
       value: patient,
-      error: error,
+      error: null,
     });
   } catch (error) {
     res.status(500).json({
@@ -150,7 +149,7 @@ const getAllPatients = async (req, res) => {
 
 const editProfile = async (req, res) => {
   try {
-    const { patientId } = req.params;
+    const patientId = req.params.patientId;
 
     // Check if the patient with the given ID exists
     const existingPatient = await Patient.findById(patientId);
@@ -187,6 +186,7 @@ const editProfile = async (req, res) => {
       { $set: updateFields },
       { new: true }
     );
+    // await updatedPatient.save();
 
     res.status(200).json({
       message: "Patient updated successfully",
@@ -217,7 +217,7 @@ const deletePatient = async (req, res) => {
       message: "patient deleted successfully",
       isSuccess: true,
       value: null,
-      error: error,
+      error: null,
     });
   } catch (error) {
     res.status(500).json({

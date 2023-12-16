@@ -104,7 +104,7 @@ exports.getDoctor = async (req, res) => {
 
 exports.updateDoctor = async (req, res) => {
   try {
-    const doctorId = req.params.id; 
+    const doctorId = req.params.id;
 
     // Check if the doctor with the given ID exists
     const existingDoctor = await Doctor.findById(doctorId);

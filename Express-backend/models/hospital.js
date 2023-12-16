@@ -22,7 +22,7 @@ const HospitalSchema = new mongoose.Schema({
     require: true,
   },
   phoneNumber: {
-    type: [String],
+    type: String,
     required: true,
   },
   // open or closed
