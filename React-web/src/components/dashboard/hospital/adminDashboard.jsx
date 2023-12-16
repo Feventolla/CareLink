@@ -1,6 +1,6 @@
 import { useState } from "react";
-import image1 from "../../assets/hero-hosp.png";
-import edit from "../../assets/edit.svg";
+import image1 from "../../../assets/hero-hosp.png";
+import edit from "../../../assets/edit.svg";
 import { RxDashboard, RxExit } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
 
@@ -113,7 +113,7 @@ const Admindashboard = () => {
   const filteredData = data.filter((card) =>
     card.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  const HandleDetailHospital = (id) => {
+  const handleDetailHospital = (id) => {
     console.log(` card with id ${id} clicked`);
     navigate("/detailHospital");
   };
@@ -126,6 +126,7 @@ const Admindashboard = () => {
 
   const handleEdit = (id) => {
     console.log(`Edit card with id ${id}`);
+    navigate("/editHospital");
   };
   const handleLogout = () => {
     console.log("logout");
@@ -187,8 +188,7 @@ const Admindashboard = () => {
                 {currentData.map((card) => (
                   <div
                     key={card.id}
-                    className="bg-white p-4 border rounded-2xl shadow cursor-pointer "
-                    onClick={HandleDetailHospital}
+                    className="bg-white p-4 border rounded-2xl shadow"
                   >
                     <div className="flex flex-row items-center space-x-3">
                       <div className="">
@@ -203,7 +203,7 @@ const Admindashboard = () => {
                       </div>
                       <div
                         onClick={() => handleEdit(card.id)}
-                        className="flex items-end"
+                        className="flex items-end cursor-pointer"
                       >
                         <img
                           src={edit}
@@ -214,10 +214,15 @@ const Admindashboard = () => {
                       </div>
                     </div>
                     <div className="card-content">
-                      <p className="py-5">{card.description}</p>
+                      <p
+                        className="py-5 cursor-pointer"
+                        onClick={handleDetailHospital}
+                      >
+                        {card.description}
+                      </p>
                       <button
                         onClick={() => handleDelete(card.id)}
-                        className="text-red-300 text-md"
+                        className="text-red-300 text-md cursor-pointer"
                       >
                         Delete Hospital
                       </button>
