@@ -118,6 +118,7 @@ function Login() {
     e.preventDefault();
 
     if (validateForm()) {
+      console.log(formData);
       // Proceed with form submission
       navigate("/adminDashboard");
     }
@@ -155,6 +156,8 @@ function Login() {
               placeholder="Maria Stephen"
               name="name"
               id="name"
+              value={formData.name}
+              onChange={handleInputChange}
               className={`input input-bordered max-w-lg p-3 border-solid border-2 border-gray-300 rounded-xl ${
                 errors.name ? "border-red-500" : ""
               }`}
