@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Image,
@@ -9,7 +9,7 @@ import {
   FlatList,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { useFocusEffect, useRoute } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import { useHospitalQuery } from "../../services/Hospital/hospital-api";
 import { useDoctorQuery } from "../../services/Doctors/doctor-api";
 
@@ -18,49 +18,68 @@ const HospitalDetailPage = ({ navigation }) => {
   const { id } = route.params;
   const { data, isLoading, error } = useHospitalQuery(id);
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     const fetchData = async () => {
-  //       // Fetch data for the second query inside this function
-  //       const {
-  //         data: data2,
-  //         isLoading: isLoading2,
-  //         error: error2,
-  //       } = useDoctorQuery(data?.hospital?.doctor);
-  //       console.log("data2", data2);
-  //     };
+  const [doctorData, setDoctorData] = useState([]);
 
-  //     fetchData();
+  useEffect(() => {
+    const fetchDoctorData = async () => {
+      if (data) {
+        const doctorIds = data.hospital.doctors || [];
+        const promises = doctorIds.map((doctorId) => useDoctorQuery(doctorId));
+        const resolvedDoctorData = await Promise.all(promises);
+        setDoctorData(resolvedDoctorData.map((query) => query.data));
+      }
+    };
 
-  //     // Cleanup function (optional)
-  //     return () => {
-  //       // Perform cleanup if needed
-  //     };
-  //   }, [id]) // Depend on the id or any other variable that may change
-  // );
-
+    fetchDoctorData();
+  }, [data]);
   if (isLoading) {
     return <Text>IS LOADING</Text>;
   }
   if (error) {
     return <Text>Something happend</Text>;
   }
+
   const hospital = data.hospital;
+  // // console.log(error);
+
+  // const doctorQueries = hospital.doctors.map((doctorId) => {
+  //   return useDoctorQuery(doctorId);
+  // });
+
+  // const areAnyDoctorsLoading = doctorQueries.some((query) => query.isLoading);
+  // const hasAnyDoctorError = doctorQueries.some((query) => query.error);
+
+  // if (areAnyDoctorsLoading) {
+  //   return <Text>Loading doctors...</Text>;
+  // }
+
+  // if (hasAnyDoctorError) {
+  //   return (
+  //     <div className="w-3/4 mx-auto mt-16">
+  //       <Error message="Error occurred while loading doctors data." />
+  //     </div>
+  //   );
+  // }
+
+  // const doctorData = doctorQueries.map((query) => query.data);
+  console.log(doctorData);
 
   // const [showFullDescription, setShowFullDescription] = useState(false);
   // const toggleDescription = () => {
   //   setShowFullDescription(!showFullDescription);
   // };
 
-  const renderDoctorItem = ({ item }) => (
-    <View style={styles.doctorCard}>
-      <Image source={{ uri: item.value.photo }} style={styles.doctorImage} />
-      <View style={styles.doctorData}>
-        <Text style={styles.doctorName}>{item.value.firstName}</Text>
-        <Text style={styles.doctorSpecialty}>{item.value.specialization}</Text>
-      </View>
-    </View>
-  );
+  // const renderDoctorItem = ({ item }) => {
+  //   return (
+  //     <View style={styles.doctorCard}>
+  //       <Image source={{ uri: item.value.photo }} style={styles.doctorImage} />
+  //       <View style={styles.doctorData}>
+  //         <Text style={styles.doctorName}>{item.value.name}</Text>
+  //         <Text style={styles.doctorSpecialty}>{item.value.specialty}</Text>
+  //       </View>
+  //     </View>
+  //   );
+  // };
 
   return (
     <View style={styles.container}>
@@ -84,61 +103,29 @@ const HospitalDetailPage = ({ navigation }) => {
               <Text style={styles.visitGalleryButtonText}>Visit Gallery</Text>
             </TouchableOpacity>
           </View>
-          <FlatList
-            data={hospital.doctors}
-            keyExtractor={(doctorId) => doctorId}
-            renderItem={({ item: doctorId }) => {
-              const {
-                data: doctorData,
-                isLoading: doctorLoading,
-                error: doctorError,
-              } = useDoctorQuery(doctorId);
-              console.log("doctorData", doctorData);
 
-              if (doctorLoading) {
-                return <Text>Loading doctor...</Text>;
-              }
-
-              if (doctorError) {
-                return <Text>Error loading doctor data</Text>;
-              }
-
-              return renderDoctorItem({ item: doctorData });
-            }}
-            showsVerticalScrollIndicator={false}
-            ListHeaderComponent={() => (
-              <>
-                <ScrollView
-                  showsVerticalScrollIndicator={false}
-                  style={{ flex: 1 }}
-                >
-                  {/* <Text style={styles.descriptionText}>
-                    {showFullDescription
-                      ? hospitalData.description
-                      : `${hospitalData.description.slice(0, 150)}...`}
-                    {"  "}
-                    {!showFullDescription && (
-                      <Text
-                        style={styles.seeMoreButton}
-                        onPress={toggleDescription}
-                      >
-                        See More
-                      </Text>
-                    )}
-                    {showFullDescription && (
-                      <Text
-                        style={styles.seeMoreButton}
-                        onPress={toggleDescription}
-                      >
-                        Show Less
-                      </Text>
-                    )} 
-                  </Text>*/}
-                </ScrollView>
-                <Text style={styles.sectionTitle}>Available Doctors</Text>
-              </>
+          <ScrollView>
+            {doctorData && doctorData.length > 0 ? (
+              doctorData.map((doctor, index) => (
+                <View key={index} style={styles.doctorCard}>
+                  <Image
+                    source={{ uri: doctor.value.photo }}
+                    style={styles.doctorImage}
+                  />
+                  <View style={styles.doctorData}>
+                    <Text style={styles.doctorName}>
+                      {doctor.value.firstName}
+                    </Text>
+                    <Text style={styles.doctorSpecialty}>
+                      {doctor.value.specialization}
+                    </Text>
+                  </View>
+                </View>
+              ))
+            ) : (
+              <Text style={styles.noDoctor}>No Doctors Available</Text>
             )}
-          />
+          </ScrollView>
         </View>
       </View>
     </View>
@@ -191,6 +178,12 @@ const styles = StyleSheet.create({
     color: "#C276F0",
     fontWeight: "bold",
     fontSize: 15,
+  },
+  noDoctor: {
+    color: "red",
+    fontWeight: "bold",
+    fontSize: 25,
+    textAlign: "center",
   },
   descriptionText: {
     fontSize: 14,
