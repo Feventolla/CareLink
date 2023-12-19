@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../common/SideBar";
 import { LuLogOut } from "react-icons/lu";
+import { useCreateDoctorMutation } from "../../../store/doctor/doctor-api";
 
 function AddDoctor() {
   const initialState = {
@@ -10,7 +11,6 @@ function AddDoctor() {
     email: "",
     specialization: "",
     phoneNumber: "",
-    day: [],
     startTime: "",
     endTime: "",
     yearsOfExperience: "",
@@ -20,6 +20,7 @@ function AddDoctor() {
   };
   const [formData, setFormData] = useState(initialState);
   const [selectedDays, setSelectedDays] = useState([]);
+  const [createDoctor, { isLoading }] = useCreateDoctorMutation();
 
   const navigate = useNavigate();
   const handleInputChange = (e) => {
@@ -40,13 +41,48 @@ function AddDoctor() {
   const handleAddDoctor = async (e) => {
     e.preventDefault();
 
+    const {
+      firstName,
+      lastName,
+      email,
+      specialization,
+      phoneNumber,
+      startTime,
+      endTime,
+      yearsOfExperience,
+      gender,
+      photo,
+      hospitalId,
+    } = formData;
     const formDataToSend = new FormData();
-    for (const key in formData) {
-      formDataToSend.append(key, formData[key]);
+    formDataToSend.append("firstName", firstName);
+    formDataToSend.append("lastName", lastName);
+    formDataToSend.append("specialization", specialization);
+    formDataToSend.append("phoneNumber", phoneNumber);
+    formDataToSend.append("email", email);
+    formDataToSend.append("yearsOfExperience", yearsOfExperience);
+    formDataToSend.append("gender", "Female");
+    formDataToSend.append("hospitalId", "657de1e18f64ea904f2340da");
+
+    if (photo) {
+      formDataToSend.append("photo", photo, photo.name);
     }
-    console.log(formData, "the form data");
-    setFormData(initialState);
-    navigate("/detailHospital");
+
+    for (const day in selectedDays) {
+      formDataToSend.append("availability[day][]", selectedDays[day]);
+    }
+    formDataToSend.append("availability[startTime]", startTime);
+    formDataToSend.append("availability[endTime]", endTime);
+    console.log(formDataToSend);
+    try {
+      const response = await createDoctor(formDataToSend).unwrap();
+      console.log(response);
+      setFormData(initialState);
+      navigate("/detailHospital");
+    } catch (error) {
+      // setBackendError(`An error occurred : ${error.data.title}`);
+      console.log("An error occurred", error);
+    }
   };
   const options = [
     { value: "Monday", label: "Monday" },
@@ -132,7 +168,7 @@ function AddDoctor() {
                 onChange={handleInputChange}
                 className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
                 type="text"
-                placeholder="www.tkuranbesa.com"
+                placeholder="Dental"
               />
 
               <label
@@ -150,6 +186,21 @@ function AddDoctor() {
                 placeholder="+251 967 765 789"
                 // pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}-[0-9]{3}"
               />
+              <label className="text-sm font-semibold mb-2" htmlFor="gender">
+                Gender
+              </label>
+              <select
+                name="gender"
+                onChange={handleInputChange}
+                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
+                required
+              >
+                <option value="" disabled selected>
+                  Select Gender
+                </option>
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+              </select>
             </div>
             <div className="flex flex-col">
               <label

@@ -2,13 +2,15 @@ import DoctorCard from "./DoctorCard";
 import Sidebar from "../common/SideBar";
 import { LuLogOut } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
+import { useGetDoctorsQuery } from "../../../store/doctor/doctor-api";
 
 const Dashboard = () => {
+  const { data: doctors, error, isLoading } = useGetDoctorsQuery();
   const navigate = useNavigate();
   const handleAddDoctor = () => {
     navigate("/addDoctor");
   };
-  const doctorsData = [
+  const doctorsDatas = [
     {
       name: "Jon Doe",
       description:
@@ -45,6 +47,17 @@ const Dashboard = () => {
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed, qui deleniti quisquam ullam ad officiis? description:",
     },
   ];
+
+  if (isLoading) {
+    return <div>Loading</div>;
+  }
+
+  if (error) {
+    return <div>Error</div>;
+  }
+
+  console.log(doctors);
+  const doctorsData = doctors.value;
   return (
     <div className="grid grid-cols-7 bg-[rgb(250,250,250)] relative">
       <h1 className="text-3xl font-semibold text-[#C276F0] block sm:hidden ml-8 mt-8">

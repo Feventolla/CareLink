@@ -3,14 +3,23 @@ import image1 from "../../../assets/hero-hosp.png";
 import edit from "../../../assets/edit.svg";
 import { RxDashboard, RxExit } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
+import { useGetHospitalsQuery } from "../../../store/hospital/hispital";
 
 const Admindashboard = () => {
+  const { data: hospitals, error, isLoading } = useGetHospitalsQuery();
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
   const navigate = useNavigate();
-
-  const data = [
+  if (isLoading) {
+    return <div>Loading</div>;
+  }
+  if (error) {
+    return <div>Error</div>;
+  }
+  console.log(hospitals);
+  const hospitalData = hospitals.value;
+  const hospitalDatas = [
     {
       id: 1,
       title: "Card 1",
@@ -110,8 +119,8 @@ const Admindashboard = () => {
       imageUrl: { image1 },
     },
   ];
-  const filteredData = data.filter((card) =>
-    card.title.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredhospitalData = hospitalData.filter((card) =>
+    card.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
   const handleDetailHospital = (id) => {
     console.log(` card with id ${id} clicked`);
@@ -135,12 +144,16 @@ const Admindashboard = () => {
   // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentData = filteredData.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const currenthospitalData = filteredhospitalData.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+  const totalPages = Math.ceil(filteredhospitalData.length / itemsPerPage);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
   return (
     <main className="bg-white text-black min-h-screen max-w-full">
       <div className="p-5">
@@ -183,26 +196,26 @@ const Admindashboard = () => {
               </div>
             </div>
 
-            {currentData.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 shadow-sm">
-                {currentData.map((card) => (
+            {currenthospitalData.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 shadow-sm relative">
+                {currenthospitalData.map((card) => (
                   <div
-                    key={card.id}
+                    key={card._id}
                     className="bg-white p-4 border rounded-2xl shadow"
                   >
                     <div className="flex flex-row items-center space-x-3">
                       <div className="">
                         <img
-                          src={card.imageUrl.image1}
+                          src={card.photo}
                           alt="Card"
-                          className="w-14 rounded-lg"
+                          className="w-14 h-9 rounded-lg"
                         />
                       </div>
                       <div className="flex-grow">
-                        <h3 className="text-xl font-semibold">{card.title}</h3>
+                        <h3 className="text-xl font-semibold">{card.name}</h3>
                       </div>
                       <div
-                        onClick={() => handleEdit(card.id)}
+                        onClick={() => handleEdit(card._id)}
                         className="flex items-end cursor-pointer"
                       >
                         <img

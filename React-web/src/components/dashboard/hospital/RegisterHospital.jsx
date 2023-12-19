@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../common/SideBar";
 import { LuLogOut } from "react-icons/lu";
+import { useCreateHospitalMutation } from "../../../store/hospital/hispital";
 
 function RegisterHospital() {
   const initialState = {
@@ -10,17 +11,16 @@ function RegisterHospital() {
     description: "",
     address: "",
     phoneNumber: "",
-    day: [],
     startTime: "",
     endTime: "",
     services: "",
     webSite: "",
     photo: null,
-    doctors: "",
   };
   const [formData, setFormData] = useState(initialState);
   const [selectedDays, setSelectedDays] = useState([]);
-
+  // const [backendError, setBackendError] = useState("");
+  const [createHospital, { isLoading }] = useCreateHospitalMutation();
   const navigate = useNavigate();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -40,21 +40,45 @@ function RegisterHospital() {
   const handleAddHospital = async (e) => {
     e.preventDefault();
 
+    const {
+      name,
+      generalSpecialization,
+      description,
+      address,
+      webSite,
+      phoneNumber,
+      startTime,
+      services,
+      endTime,
+      photo,
+    } = formData;
     const formDataToSend = new FormData();
-    for (const key in formData) {
-      if (key === "day") {
-        for (const d in selectedDays) {
-          formDataToSend.append(`availability[${key}][]`, d);
-        }
-      } else if (key === "startTime" || key === "endTime") {
-        formDataToSend.append(`availability[${key}]`, formData[key]);
-      } else {
-        formDataToSend.append(key, formData[key]);
-      }
+    formDataToSend.append("name", name);
+    formDataToSend.append("generalSpecialization", generalSpecialization);
+    formDataToSend.append("description", description);
+    formDataToSend.append("address", address);
+    formDataToSend.append("webSite", webSite);
+    formDataToSend.append("phoneNumber", phoneNumber);
+    formDataToSend.append("services", services);
+    if (photo) {
+      formDataToSend.append("photo", photo, photo.name);
     }
-    console.log(formData, "the form data");
-    setFormData(initialState);
-    navigate("/adminDashboard");
+
+    for (const day in selectedDays) {
+      formDataToSend.append("availability[day][]", selectedDays[day]);
+    }
+    formDataToSend.append("availability[startTime]", startTime);
+    formDataToSend.append("availability[endTime]", endTime);
+    console.log(formDataToSend);
+    try {
+      const response = await createHospital(formDataToSend).unwrap();
+      console.log(response);
+      setFormData(initialState);
+      navigate("/adminDashboard");
+    } catch (error) {
+      // setBackendError(`An error occurred : ${error.data.title}`);
+      console.log("An error occurred", error);
+    }
   };
   const options = [
     { value: "Monday", label: "Monday" },
@@ -96,6 +120,7 @@ function RegisterHospital() {
         <form onSubmit={handleAddHospital}>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="flex flex-col">
+              {/* {backEndError && <p className="text-red-500">{backEndError}</p>} */}
               <label htmlFor="name" className="text-sm font-semibold mb-2">
                 Hospital Name
               </label>
@@ -110,17 +135,17 @@ function RegisterHospital() {
 
               <label
                 className="text-sm font-semibold mb-2"
-                htmlFor="generalSecialization"
+                htmlFor="generalSpecialization"
               >
-                Specialization
+                General Specialization
               </label>
               <input
-                name="generalSecialization"
+                name="generalSpecialization"
                 onChange={handleInputChange}
                 className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
                 type="text"
                 required
-                placeholder="General Hospital"
+                placeholder="General Specialization"
               />
 
               <label
@@ -137,12 +162,22 @@ function RegisterHospital() {
                 required
                 placeholder="write here about the hospital"
               />
-
-              <label className="text-sm font-semibold mb-2" htmlFor="website">
-                Website
+              <label className="text-sm font-semibold mb-2" htmlFor="address">
+                Address
               </label>
               <input
-                name="website"
+                name="address"
+                onChange={handleInputChange}
+                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
+                type="text"
+                placeholder="Addis Ababa, Arada Subcity"
+              />
+
+              <label className="text-sm font-semibold mb-2" htmlFor="webSite">
+                webSite
+              </label>
+              <input
+                name="webSite"
                 onChange={handleInputChange}
                 className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
                 type="url"
