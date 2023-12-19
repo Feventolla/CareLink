@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 // import ImagePicker from "react-native-image-picker";
-import { SvgXml } from "react-native-svg";
+// import { SvgXml } from "react-native-svg";
 import { SvgContent } from "../../screens/svg_content/loginSvg";
 const Forgotpassword = ({ navigation }) => {
   const [formData, setFormData] = useState({
@@ -39,7 +39,7 @@ const Forgotpassword = ({ navigation }) => {
           we will sent you an otp on your email address
         </Text>
 
-        <SvgXml xml={SvgContent} height={300} width={700} style={styles.svg} />
+        {/* <SvgXml xml={SvgContent} height={300} width={700} style={styles.svg} /> */}
       </View>
       <View style={styles.formScrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.form}>

@@ -18,35 +18,13 @@ import OTPVerificationPage from "./screens/account/otpPage";
 import Resetpassword from "./screens/account/resetpassword";
 import HospitalListPage from "./screens/hospital/HospitalList";
 import HospitalDetailPage from "./screens/hospital/HospitalDetail";
+import { Provider } from "react-redux";
+import { store } from "./store";
 
 const Tab = createMaterialBottomTabNavigator();
 const HomeStack = createStackNavigator();
 const Stack = createStackNavigator();
 const AuthStack = createStackNavigator();
-
-const HomeStackScreen = ({ navigation }) => (
-  <HomeStack.Navigator initialRouteName="Home">
-    <HomeStack.Screen
-      name="Home"
-      component={Landingpage}
-      options={{ headerShown: false }}
-    />
-    <HomeStack.Screen
-      name="Chatbot"
-      component={ChatScreen}
-      options={{
-        headerLeft: () => (
-          <Icon2
-            onPress={() => navigation.navigate("Profile")}
-            name="keyboard-arrow-left"
-            color="black"
-            size={30}
-          />
-        ),
-      }}
-    />
-  </HomeStack.Navigator>
-);
 
 const RootStack = ({ navigation }) => (
   <Stack.Navigator initialRouteName="Onboarding_one">
@@ -171,9 +149,11 @@ const MainAppStack = () => (
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <RootStack />
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <RootStack />
+      </NavigationContainer>
+    </Provider>
   );
 }
 

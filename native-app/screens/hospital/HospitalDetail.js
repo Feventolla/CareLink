@@ -9,68 +9,55 @@ import {
   FlatList,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useRoute } from "@react-navigation/native";
+import { useHospitalQuery } from "../../services/Hospital/hospital-api";
+import { useDoctorQuery } from "../../services/Doctors/doctor-api";
 
-const HospitalDetailPage = ({ hospitalId }) => {
-  const hospitalData = {
-    id: "1",
-    title: "Dagmawi Minilik Hospital",
-    address: "King Street, Arada, Arat Killo",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras volutpat lectus pellentesque sollicitudin egestas. Praesent pharetra ullamcorper urna ut fringilla. Integer ornare sit amet est at tempus. si Praesent pharetra ullamcorper urna ut fringilla. Integer lal ornare sit amet est at tempus. Praesent pharetra te leyy ullamcorper urna at ut fringilla. Integer ornare sit amet est at tempus. Praesent he pharetra ullamcorper urna ut fringilla. di dy Integer ornare sit amet est at tempus. Praesent ko pharetra ullamcorper par urna ut fringilla. Integer ornare sit amet est at tempus.",
-  };
+const HospitalDetailPage = ({ navigation }) => {
+  const route = useRoute();
+  const { id } = route.params;
+  const { data, isLoading, error } = useHospitalQuery(id);
 
-  const doctorsData = [
-    {
-      id: "1",
-      name: "Dr. John Doe",
-      specialty: "Cardiologist",
-      imageUrl: require("../../assets/images/hospital/doc3.jpg"),
-    },
-    {
-      id: "2",
-      name: "Dr. Jane Smith",
-      specialty: "Orthopedic",
-      imageUrl: require("../../assets/images/hospital/doc4.jpg"),
-    },
-    {
-      id: "3",
-      name: "Dr. Jane Smith",
-      specialty: "Orthopedic",
-      imageUrl: require("../../assets/images/hospital/doc5.jpeg"),
-    },
-    {
-      id: "4",
-      name: "Dr. Jane Smith",
-      specialty: "Orthopedic",
-      imageUrl: require("../../assets/images/hospital/doc6.jpeg"),
-    },
-    {
-      id: "5",
-      name: "Dr. Jane Smith",
-      specialty: "Orthopedic",
-      imageUrl: require("../../assets/images/hospital/doc6.jpeg"),
-    },
-    {
-      id: "6",
-      name: "Dr. Jane Smith",
-      specialty: "Orthopedic",
-      imageUrl: require("../../assets/images/hospital/doc6.jpeg"),
-    },
-  ];
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const fetchData = async () => {
+  //       // Fetch data for the second query inside this function
+  //       const {
+  //         data: data2,
+  //         isLoading: isLoading2,
+  //         error: error2,
+  //       } = useDoctorQuery(data?.hospital?.doctor);
+  //       console.log("data2", data2);
+  //     };
 
-  const navigation = useNavigation();
-  const [showFullDescription, setShowFullDescription] = useState(false);
-  const toggleDescription = () => {
-    setShowFullDescription(!showFullDescription);
-  };
+  //     fetchData();
+
+  //     // Cleanup function (optional)
+  //     return () => {
+  //       // Perform cleanup if needed
+  //     };
+  //   }, [id]) // Depend on the id or any other variable that may change
+  // );
+
+  if (isLoading) {
+    return <Text>IS LOADING</Text>;
+  }
+  if (error) {
+    return <Text>Something happend</Text>;
+  }
+  const hospital = data.hospital;
+
+  // const [showFullDescription, setShowFullDescription] = useState(false);
+  // const toggleDescription = () => {
+  //   setShowFullDescription(!showFullDescription);
+  // };
 
   const renderDoctorItem = ({ item }) => (
     <View style={styles.doctorCard}>
-      <Image source={item.imageUrl} style={styles.doctorImage} />
+      <Image source={{ uri: item.value.photo }} style={styles.doctorImage} />
       <View style={styles.doctorData}>
-        <Text style={styles.doctorName}>{item.name}</Text>
-        <Text style={styles.doctorSpecialty}>{item.specialty}</Text>
+        <Text style={styles.doctorName}>{item.value.firstName}</Text>
+        <Text style={styles.doctorSpecialty}>{item.value.specialization}</Text>
       </View>
     </View>
   );
@@ -83,17 +70,14 @@ const HospitalDetailPage = ({ hospitalId }) => {
       >
         <Icon name="arrow-back" size={30} color="black" />
       </TouchableOpacity>
-      <Image
-        source={require("../../assets/images/hospital/hos2.jpeg")}
-        style={styles.image}
-      />
+      <Image source={{ uri: hospital.photo }} style={styles.image} />
       <View style={styles.overlayContainer}>
         <View style={styles.hospitalCard}>
-          <Text style={styles.hospitalTitle}>{hospitalData.title}</Text>
+          <Text style={styles.hospitalTitle}>{hospital.name}</Text>
           <View style={styles.location}>
             <View style={{ flexDirection: "row" }}>
               <Icon name="location-on" size={15} color="#C276F0" />
-              <Text style={styles.addressText}>{hospitalData.address}</Text>
+              <Text style={styles.addressText}>{hospital.address}</Text>
             </View>
 
             <TouchableOpacity>
@@ -101,9 +85,26 @@ const HospitalDetailPage = ({ hospitalId }) => {
             </TouchableOpacity>
           </View>
           <FlatList
-            data={doctorsData}
-            keyExtractor={(item) => item.id}
-            renderItem={renderDoctorItem}
+            data={hospital.doctors}
+            keyExtractor={(doctorId) => doctorId}
+            renderItem={({ item: doctorId }) => {
+              const {
+                data: doctorData,
+                isLoading: doctorLoading,
+                error: doctorError,
+              } = useDoctorQuery(doctorId);
+              console.log("doctorData", doctorData);
+
+              if (doctorLoading) {
+                return <Text>Loading doctor...</Text>;
+              }
+
+              if (doctorError) {
+                return <Text>Error loading doctor data</Text>;
+              }
+
+              return renderDoctorItem({ item: doctorData });
+            }}
             showsVerticalScrollIndicator={false}
             ListHeaderComponent={() => (
               <>
@@ -111,7 +112,7 @@ const HospitalDetailPage = ({ hospitalId }) => {
                   showsVerticalScrollIndicator={false}
                   style={{ flex: 1 }}
                 >
-                  <Text style={styles.descriptionText}>
+                  {/* <Text style={styles.descriptionText}>
                     {showFullDescription
                       ? hospitalData.description
                       : `${hospitalData.description.slice(0, 150)}...`}
@@ -131,8 +132,8 @@ const HospitalDetailPage = ({ hospitalId }) => {
                       >
                         Show Less
                       </Text>
-                    )}
-                  </Text>
+                    )} 
+                  </Text>*/}
                 </ScrollView>
                 <Text style={styles.sectionTitle}>Available Doctors</Text>
               </>

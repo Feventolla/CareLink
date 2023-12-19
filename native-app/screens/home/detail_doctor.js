@@ -9,12 +9,16 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 const Detaildoctor = () => {
+  const { data, isLoading, error, isSuccess } = useHospitalQuery();
+
+  if (isLoading) {
+    return <Text>IS LOADING</Text>;
+  }
+  const hospital = data.value;
+  console.log(hospital);
   return (
     <View style={styles.container}>
-      <Image
-        source={require("../../assets/doc1-hero.jpg")}
-        style={styles.image}
-      />
+      <Image source={{ uri: hospital.photo }} style={styles.image} />
       <View style={styles.overlayContainer}>
         <ScrollView>
           <Text style={styles.docname}>Dr. Linda</Text>

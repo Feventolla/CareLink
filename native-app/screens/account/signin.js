@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 // import ImagePicker from "react-native-image-picker";
-import { SvgXml } from "react-native-svg";
+// import { SvgXml } from "react-native-svg";
 import { SvgContent } from "../../screens/svg_content/loginSvg";
 
 const Loginpage = ({ navigation }) => {
@@ -38,7 +38,7 @@ const Loginpage = ({ navigation }) => {
           source={require("../../assets/logo.jpg")}
         />
         <Text style={styles.title}>Login to your account</Text>
-        <SvgXml xml={SvgContent} height={300} width={700} style={styles.svg} />
+        {/* <SvgXml xml={SvgContent} height={300} width={700} style={styles.svg} /> */}
       </View>
       <View style={styles.formScrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.form}>
