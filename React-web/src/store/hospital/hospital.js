@@ -39,6 +39,7 @@ export const hospitalApiSlice = createApi({
         method: "PATCH",
         body: hospital,
       }),
+      invalidatesTags: ["Hospital"],
     }),
   }),
 });

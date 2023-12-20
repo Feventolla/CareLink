@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../common/SideBar";
 import { LuLogOut } from "react-icons/lu";
-import { useCreateHospitalMutation } from "../../../store/hospital/hispital";
+import { useCreateHospitalMutation } from "../../../store/hospital/hospital";
 
 function RegisterHospital() {
   const initialState = {
@@ -13,15 +13,55 @@ function RegisterHospital() {
     phoneNumber: "",
     startTime: "",
     endTime: "",
-    services: "",
     webSite: "",
     photo: null,
   };
   const [formData, setFormData] = useState(initialState);
   const [selectedDays, setSelectedDays] = useState([]);
-  // const [backendError, setBackendError] = useState("");
+  const [selectedServices, setSelectedServices] = useState([]);
   const [createHospital, { isLoading }] = useCreateHospitalMutation();
   const navigate = useNavigate();
+
+  const options = [
+    { value: "Monday", label: "Monday" },
+    { value: "Tuesday", label: "Tuesday" },
+    { value: "Wednesday", label: "Wednesday" },
+    { value: "Thursday", label: "Thursday" },
+    { value: "Friday", label: "Friday" },
+    { value: "Saturday", label: "Saturday" },
+    { value: "Sunday", label: "Sunday" },
+  ];
+
+  const hospitlaServices = [
+    "Emergency",
+    "Maternity",
+    "Radiolgy",
+    "Cardiology",
+    "sergury",
+    "Laboratory",
+    "Physiotherapy",
+  ];
+
+  const toggleDay = (selectedDay) => {
+    setSelectedDays((prevSelectedDays) => {
+      if (prevSelectedDays.includes(selectedDay)) {
+        return prevSelectedDays.filter((day) => day !== selectedDay);
+      } else {
+        return [...prevSelectedDays, selectedDay];
+      }
+    });
+  };
+
+  const toggleService = (selectedService) => {
+    setSelectedServices((prevSelectedServices) => {
+      if (prevSelectedServices.includes(selectedService)) {
+        return prevSelectedServices.filter((day) => day !== selectedService);
+      } else {
+        return [...prevSelectedServices, selectedService];
+      }
+    });
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -37,6 +77,7 @@ function RegisterHospital() {
       photo: file,
     });
   };
+
   const handleAddHospital = async (e) => {
     e.preventDefault();
 
@@ -48,7 +89,6 @@ function RegisterHospital() {
       webSite,
       phoneNumber,
       startTime,
-      services,
       endTime,
       photo,
     } = formData;
@@ -59,11 +99,13 @@ function RegisterHospital() {
     formDataToSend.append("address", address);
     formDataToSend.append("webSite", webSite);
     formDataToSend.append("phoneNumber", phoneNumber);
-    formDataToSend.append("services", services);
     if (photo) {
       formDataToSend.append("photo", photo, photo.name);
     }
 
+    for (const service in selectedServices) {
+      formDataToSend.append("services[]", selectedServices[service]);
+    }
     for (const day in selectedDays) {
       formDataToSend.append("availability[day][]", selectedDays[day]);
     }
@@ -79,24 +121,6 @@ function RegisterHospital() {
       // setBackendError(`An error occurred : ${error.data.title}`);
       console.log("An error occurred", error);
     }
-  };
-  const options = [
-    { value: "Monday", label: "Monday" },
-    { value: "Tuesday", label: "Tuesday" },
-    { value: "Wednesday", label: "Wednesday" },
-    { value: "Thursday", label: "Thursday" },
-    { value: "Friday", label: "Friday" },
-    { value: "Saturday", label: "Saturday" },
-    { value: "Sunday", label: "Sunday" },
-  ];
-  const toggleDay = (selectedDay) => {
-    setSelectedDays((prevSelectedDays) => {
-      if (prevSelectedDays.includes(selectedDay)) {
-        return prevSelectedDays.filter((day) => day !== selectedDay);
-      } else {
-        return [...prevSelectedDays, selectedDay];
-      }
-    });
   };
 
   return (
@@ -201,6 +225,26 @@ function RegisterHospital() {
               />
             </div>
             <div className="flex flex-col">
+              <label className="text-sm font-semibold mb-3" htmlFor="services">
+                Services
+              </label>
+
+              <div className="flex space-x-2 flex-wrap mb-4">
+                {hospitlaServices.map((service, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => toggleService(service)}
+                    className={`py-1 px-2 rounded-lg text-xs mb-2 ${
+                      selectedServices.includes(service)
+                        ? "bg-[#C276F0] text-white"
+                        : "bg-white border border-[#C276F0] text-[#C276F0]"
+                    }`}
+                  >
+                    {service}
+                  </button>
+                ))}
+              </div>
               <label className="text-sm font-semibold mb-3" htmlFor="day">
                 Working Day
               </label>
@@ -243,17 +287,7 @@ function RegisterHospital() {
                 required
                 placeholder="6:00 PM "
               />
-              <label className="text-sm font-semibold mb-2" htmlFor="services">
-                Services
-              </label>
-              <input
-                name="services"
-                onChange={handleInputChange}
-                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
-                type="text"
-                required
-                placeholder="CTScan, MRI"
-              />
+
               <label className="text-sm font-semibold mb-2" htmlFor="photo">
                 Photo
               </label>

@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { doctorApiSlice } from "./doctor/doctor-api";
-import { hospitalApiSlice } from "./hospital/hispital";
+import { hospitalApiSlice } from "./hospital/hospital";
 export const store = configureStore({
   reducer: {
     [doctorApiSlice.reducerPath]: doctorApiSlice.reducer,

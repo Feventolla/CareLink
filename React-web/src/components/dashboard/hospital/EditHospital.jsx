@@ -1,26 +1,70 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Sidebar from "../common/SideBar";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useGetHospitalQuery } from "../../../store/hospital/hospital";
+import { useUpdateHospitalMutation } from "../../../store/hospital/hospital";
 import { LuLogOut } from "react-icons/lu";
+import Sidebar from "../common/SideBar";
+import EditLoading from "../common/EditLoading";
 
 function EditHospital() {
-  const initialState = {
-    name: "Temp Hospital",
-    generalSpecialization: "Temp generalSpecialization",
-    description: "Temp description",
-    address: "Temp address",
-    phoneNumber: "Temp phoneNumber",
-    day: ["Monday", "Wednesday"],
-    startTime: "09:00:00",
-    endTime: "12:00:00",
-    services: "Temp services",
-    webSite: "Temp Website",
-    photo: "",
-  };
-  const [formData, setFormData] = useState(initialState);
-  const [selectedDays, setSelectedDays] = useState(formData.day || []);
+  const [updateHospital, { isLoaing: isUpdating }] =
+    useUpdateHospitalMutation();
+
+  const { hospitalId } = useParams();
+
+  const {
+    data: response,
+    isLoading,
+    error,
+  } = useGetHospitalQuery(hospitalId.toString());
+
+  const [formData, setFormData] = useState({});
+  const [selectedDays, setSelectedDays] = useState([]);
+  const [selectedServices, setSelectedServices] = useState([]);
+
+  useEffect(() => {
+    if (response) {
+      const curr = response.hospital;
+      const currHospital = {
+        name: curr.name,
+        generalSpecialization: curr.generalSpecialization,
+        description: curr.description,
+        address: curr.address,
+        webSite: curr.webSite,
+        phoneNumber: curr.phoneNumber,
+        startTime: curr.availability.startTime,
+        endTime: curr.availability.endTime,
+        photo: "",
+      };
+      setFormData(currHospital);
+      setSelectedDays(curr.availability.day);
+
+      setSelectedServices(curr.services);
+    }
+  }, [response, hospitalId]);
 
   const navigate = useNavigate();
+
+  const toggleDay = (selectedDay) => {
+    setSelectedDays((prevSelectedDays) => {
+      if (prevSelectedDays.includes(selectedDay)) {
+        return prevSelectedDays.filter((day) => day !== selectedDay);
+      } else {
+        return [...prevSelectedDays, selectedDay];
+      }
+    });
+  };
+
+  const toggleService = (selectedService) => {
+    setSelectedServices((prevSelectedServices) => {
+      if (prevSelectedServices.includes(selectedService)) {
+        return prevSelectedServices.filter((day) => day !== selectedService);
+      } else {
+        return [...prevSelectedServices, selectedService];
+      }
+    });
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -36,25 +80,7 @@ function EditHospital() {
       photo: file,
     });
   };
-  const handleEditHospital = async (e) => {
-    e.preventDefault();
 
-    const formDataToSend = new FormData();
-    for (const key in formData) {
-      if (key === "day") {
-        for (const d in selectedDays) {
-          formDataToSend.append(`availability[${key}][]`, d);
-        }
-      } else if (key === "startTime" || key === "endTime") {
-        formDataToSend.append(`availability[${key}]`, formData[key]);
-      } else {
-        formDataToSend.append(key, formData[key]);
-      }
-    }
-    console.log(formData, "the form data");
-    setFormData(initialState);
-    navigate("/adminDashboard");
-  };
   const options = [
     { value: "Monday", label: "Monday" },
     { value: "Tuesday", label: "Tuesday" },
@@ -64,15 +90,71 @@ function EditHospital() {
     { value: "Saturday", label: "Saturday" },
     { value: "Sunday", label: "Sunday" },
   ];
-  const toggleDay = (selectedDay) => {
-    setSelectedDays((prevSelectedDays) => {
-      if (prevSelectedDays.includes(selectedDay)) {
-        return prevSelectedDays.filter((day) => day !== selectedDay);
-      } else {
-        return [...prevSelectedDays, selectedDay];
-      }
-    });
+  const hospitlaServices = [
+    "Emergency",
+    "Maternity",
+    "Radiolgy",
+    "Cardiology",
+    "sergury",
+    "Laboratory",
+    "Physiotherapy",
+  ];
+
+  const handleEditHospital = async (e) => {
+    console.log(formData);
+    e.preventDefault();
+
+    const {
+      name,
+      generalSpecialization,
+      description,
+      address,
+      webSite,
+      phoneNumber,
+      startTime,
+      endTime,
+      photo,
+    } = formData;
+    const formDataToSend = new FormData();
+    formDataToSend.append("name", name);
+    formDataToSend.append("generalSpecialization", generalSpecialization);
+    formDataToSend.append("description", description);
+    formDataToSend.append("address", address);
+    formDataToSend.append("webSite", webSite);
+    formDataToSend.append("phoneNumber", phoneNumber);
+    if (photo) {
+      formDataToSend.append("photo", photo, photo.name);
+    }
+
+    for (const service in selectedServices) {
+      formDataToSend.append("services[]", selectedServices[service]);
+    }
+    for (const day in selectedDays) {
+      formDataToSend.append("availability[day][]", selectedDays[day]);
+    }
+    formDataToSend.append("availability[startTime]", startTime);
+    formDataToSend.append("availability[endTime]", endTime);
+
+    try {
+      const response = await updateHospital({
+        hospital: formDataToSend,
+        id: hospitalId,
+      }).unwrap();
+
+      setFormData({});
+      navigate("/adminDashboard");
+    } catch (error) {
+      // setBackendError(`An error occurred : ${error.data.title}`);
+      console.log("An error occurred", error);
+    }
   };
+
+  if (isLoading) {
+    return <EditLoading />;
+  }
+  if (error) {
+    return <div>Error</div>;
+  }
 
   return (
     <div className="grid grid-cols-7 bg-[rgb(250,250,250)] relative">
@@ -89,7 +171,7 @@ function EditHospital() {
         <h1 className="sm:text-center font-bold text-2xl sm:p-10 mb-6 sm:pb-0">
           Hospital Information
         </h1>
-        <h2 className="pb-6 sm:pb-10 text-lg sm:text-xl font-bold">
+        <h2 className="pb-6 sm:p b-10 text-lg sm:text-xl font-bold">
           Edit Hospital
         </h2>
         <form onSubmit={handleEditHospital}>
@@ -140,11 +222,11 @@ function EditHospital() {
                 placeholder="write here about the hospital"
               />
 
-              <label className="text-sm font-semibold mb-2" htmlFor="website">
+              <label className="text-sm font-semibold mb-2" htmlFor="webSite">
                 Website
               </label>
               <input
-                name="website"
+                name="webSite"
                 value={formData.webSite}
                 onChange={handleInputChange}
                 className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
@@ -170,6 +252,26 @@ function EditHospital() {
               />
             </div>
             <div className="flex flex-col">
+              <label className="text-sm font-semibold mb-3" htmlFor="services">
+                Services
+              </label>
+
+              <div className="flex space-x-2 flex-wrap mb-4">
+                {hospitlaServices.map((service, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => toggleService(service)}
+                    className={`py-1 px-2 rounded-lg text-xs mb-2 ${
+                      selectedServices.includes(service)
+                        ? "bg-[#C276F0] text-white"
+                        : "bg-white border border-[#C276F0] text-[#C276F0]"
+                    }`}
+                  >
+                    {service}
+                  </button>
+                ))}
+              </div>
               <label className="text-sm font-semibold mb-3" htmlFor="day">
                 Working Day
               </label>
@@ -214,24 +316,11 @@ function EditHospital() {
                 required
                 placeholder="6:00 PM "
               />
-              <label className="text-sm font-semibold mb-2" htmlFor="services">
-                Services
-              </label>
-              <input
-                name="services"
-                value={formData.services}
-                onChange={handleInputChange}
-                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
-                type="text"
-                required
-                placeholder="CTScan, MRI"
-              />
               <label className="text-sm font-semibold mb-2" htmlFor="photo">
                 Photo
               </label>
               <input
                 name="photo"
-                value={formData.photo}
                 onChange={handleFileChange}
                 className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
                 type="file"
@@ -242,7 +331,7 @@ function EditHospital() {
             type="submit"
             className="bg-[#C276F0] py-2 px-16 text-white rounded-full shadow-md hover:shadow-lg hover:opacity-70 transition duration-300"
           >
-            Add Hospital
+            Update Hospital
           </button>
         </form>
       </div>

@@ -1,25 +1,39 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Sidebar from "../common/SideBar";
 import { LuLogOut } from "react-icons/lu";
+import { useGetDoctorQuery } from "../../../store/doctor/doctor-api";
+import { useUpdateDoctorMutation } from "../../../store/doctor/doctor-api";
 
 function EditDoctor() {
-  const initialState = {
-    firstName: "Temp Name",
-    lastName: "Temp Last",
-    email: "Temp email",
-    specialization: "Temp specialization",
-    phoneNumber: "Temp num",
-    day: ["Monday", "Sunday"],
-    startTime: "03:32:00",
-    endTime: "03:32:00",
-    yearsOfExperience: 6,
-    gender: "Female",
-    photo: "",
-    hospitalId: "453534hj",
-  };
-  const [formData, setFormData] = useState(initialState);
-  const [selectedDays, setSelectedDays] = useState(formData.day || []);
+  const [updateDoctor, { isLoaing: isUpdating }] = useUpdateDoctorMutation();
+  const { doctorId } = useParams();
+  console.log(doctorId);
+  const { data: response, isLoading, error } = useGetDoctorQuery(doctorId);
+
+  const [formData, setFormData] = useState({});
+  const [selectedDays, setSelectedDays] = useState([]);
+
+  useEffect(() => {
+    if (response) {
+      const curr = response.value;
+      console.log(curr, "the doc");
+      const currHospital = {
+        firstName: curr.firstName,
+        lastName: curr.lastName,
+        email: curr.email,
+        specialization: curr.specialization,
+        phoneNumber: curr.phoneNumber,
+        startTime: curr.availability.startTime,
+        endTime: curr.availability.endTime,
+        yearsOfExperience: curr.yearsOfExperience,
+        gender: curr.gender,
+        hospitalId: curr.hospitalId,
+      };
+      setFormData(currHospital);
+      setSelectedDays(curr.availability.day);
+    }
+  }, [response, doctorId]);
 
   const navigate = useNavigate();
   const handleInputChange = (e) => {
@@ -40,13 +54,51 @@ function EditDoctor() {
   const handleEditDoctor = async (e) => {
     e.preventDefault();
 
+    const {
+      firstName,
+      lastName,
+      email,
+      specialization,
+      phoneNumber,
+      startTime,
+      endTime,
+      yearsOfExperience,
+      gender,
+      photo,
+      hospitalId,
+    } = formData;
     const formDataToSend = new FormData();
-    for (const key in formData) {
-      formDataToSend.append(key, formData[key]);
+    formDataToSend.append("firstName", firstName);
+    formDataToSend.append("lastName", lastName);
+    formDataToSend.append("specialization", specialization);
+    formDataToSend.append("phoneNumber", phoneNumber);
+    formDataToSend.append("email", email);
+    formDataToSend.append("yearsOfExperience", yearsOfExperience);
+    formDataToSend.append("gender", gender);
+    formDataToSend.append("hospitalId", hospitalId);
+
+    if (photo) {
+      formDataToSend.append("photo", photo, photo.name);
     }
-    console.log(formData, "the form data");
-    setFormData(initialState);
-    navigate("/detailHospital");
+
+    for (const day in selectedDays) {
+      formDataToSend.append("availability[day][]", selectedDays[day]);
+    }
+    formDataToSend.append("availability[startTime]", startTime);
+    formDataToSend.append("availability[endTime]", endTime);
+    console.log(formDataToSend);
+    try {
+      const response = await updateDoctor({
+        doctor: formDataToSend,
+        id: doctorId,
+      }).unwrap();
+      console.log(response);
+      setFormData({});
+      navigate(`/detailHospital/${hospitalId}`);
+    } catch (error) {
+      // setBackendError(`An error occurred : ${error.data.title}`);
+      console.log("An error occurred", error);
+    }
   };
   const options = [
     { value: "Monday", label: "Monday" },
@@ -66,6 +118,14 @@ function EditDoctor() {
       }
     });
   };
+
+  if (isLoading) {
+    return <div>Loading</div>;
+  }
+
+  if (error) {
+    return <div>Error</div>;
+  }
 
   return (
     <div className="grid grid-cols-7 bg-[rgb(250,250,250)] relative">
@@ -223,7 +283,6 @@ function EditDoctor() {
               </label>
               <input
                 name="photo"
-                value={formData.photo}
                 onChange={handleFileChange}
                 className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
                 type="file"
@@ -234,7 +293,7 @@ function EditDoctor() {
             type="submit"
             className="bg-[#C276F0] py-2 px-16 text-white rounded-full shadow-md hover:shadow-lg hover:opacity-70"
           >
-            Edit Hospital
+            Edit Doctor
           </button>
         </form>
       </div>

@@ -34,11 +34,12 @@ export const doctorApiSlice = createApi({
       invalidatesTags: ["Doctor"],
     }),
     updateDoctor: builder.mutation({
-      query: ({ Doctor, id }) => ({
+      query: ({ doctor, id }) => ({
         url: `/editDoctor/${id}`,
         method: "PATCH",
-        body: Doctor,
+        body: doctor,
       }),
+      invalidatesTags: ["Doctor"],
     }),
   }),
 });
