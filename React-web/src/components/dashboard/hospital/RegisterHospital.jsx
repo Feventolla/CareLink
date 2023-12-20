@@ -92,6 +92,7 @@ function RegisterHospital() {
       endTime,
       photo,
     } = formData;
+
     const formDataToSend = new FormData();
     formDataToSend.append("name", name);
     formDataToSend.append("generalSpecialization", generalSpecialization);

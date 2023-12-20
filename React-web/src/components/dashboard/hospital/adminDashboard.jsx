@@ -167,7 +167,7 @@ const Admindashboard = () => {
                     </div>
                     <div className="card-content">
                       <p
-                        className="py-5 cursor-pointer text-sm"
+                        className="py-5 cursor-pointer text-sm mb-4"
                         onClick={() => handleDetailHospital(card._id)}
                       >
                         {card.description}
@@ -175,7 +175,7 @@ const Admindashboard = () => {
                       <div className="bottom-4 right-3 absolute">
                         <button
                           onClick={() => handleDelete(card._id)}
-                          className="text-red-500 text-sm cursor-pointer "
+                          className="text-red-500 text-sm cursor-pointer"
                         >
                           Delete Hospital
                         </button>

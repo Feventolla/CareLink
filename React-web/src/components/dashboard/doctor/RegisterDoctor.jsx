@@ -12,7 +12,7 @@ function AddDoctor() {
     firstName: "",
     lastName: "",
     email: "",
-    specialization: "", 
+    specialization: "",
     phoneNumber: "",
     startTime: "",
     endTime: "",
@@ -55,6 +55,7 @@ function AddDoctor() {
       gender,
       photo,
     } = formData;
+    
     const formDataToSend = new FormData();
     formDataToSend.append("firstName", firstName);
     formDataToSend.append("lastName", lastName);
