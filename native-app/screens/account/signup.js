@@ -11,6 +11,7 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 // import ImagePicker from "react-native-image-picker";
 import * as ImagePicker from "expo-image-picker";
+import { useSignupMutation } from "../../services/Auth/auth-api";
 
 const RegistrationPage = ({ navigation }) => {
   const [formData, setFormData] = useState({
@@ -23,17 +24,25 @@ const RegistrationPage = ({ navigation }) => {
     weight: "",
     height: "",
   });
+  const [signup, { data, isLoading, isError, isSuccess }] = useSignupMutation();
 
   const handleInputChange = (field, value) => {
     setFormData((prevData) => ({ ...prevData, [field]: value }));
   };
 
-  const handleRegister = () => {
-    // Handle the login logic here with formData
-    console.log("Login Form Data:", formData);
-
-    // For demonstration, navigate to "MainApp"
-    navigation.navigate("Signin");
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    const credentials = formData;
+    console.log("registered user Form Data:", formData);
+    try {
+      await signup(credentials).unwrap();
+      console.log("credentials", credentials);
+      // Signup successful
+      // Redirect or show success message
+    } catch (error) {
+      console.log("error", error);
+    }
+    // navigation.navigate("Signin");
   };
   const [selectedImage, setSelectedImage] = useState(null);
 

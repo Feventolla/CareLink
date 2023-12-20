@@ -62,98 +62,93 @@ const Landingpage = ({ navigation }) => {
   // console.log(hospitals);
 
   return (
-    <View>
-      <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.heroContainer}>
-          <Text style={styles.heroText_care}>
-            Care<Text style={styles.heroText}>Link</Text>
-          </Text>
-          <Image
-            source={require("../../assets/hero-doc.png")}
-            style={styles.profileImage}
-          />
-        </View>
-
-        <View style={styles.heroImagesMainContainer}>
-          <View style={styles.heroImagesContainer}>
-            <Image
-              source={require("../../assets/doc3-hero.jpg")}
-              style={styles.heroImage}
-            />
-            <Image
-              source={require("../../assets/hospital-hero.jpg")}
-              style={styles.heroImage2}
-            />
-          </View>
-          <Image
-            source={require("../../assets/doc2-hero.jpg")}
-            style={styles.heroImage3}
-          />
-        </View>
-        <Text style={styles.hosp_search}>Find Hospitals Nearby </Text>
-
-        <View style={styles.searchContainer}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search hospitals..."
-            // onChangeText={handleSearch}
-            // value={searchText}
-          />
-          <Icon
-            name="search"
-            size={30}
-            color="#C276F0"
-            style={styles.searchIcon}
-          />
-        </View>
-        <Text style={styles.hosp_aval}>Hospitals Available here</Text>
-        <Text style={styles.hosp_avaldesc}>
-          Find various articles about health here
+    // <View>
+    <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.heroContainer}>
+        <Text style={styles.heroText_care}>
+          Care<Text style={styles.heroText}>Link</Text>
         </Text>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.container_card}
-        >
-          {hospitals.map((hospital) => (
-            <TouchableOpacity
-              style={styles.card}
-              onPress={() => console.log(`Card ${hospital._id} pressed`)}
-              key={hospital._id}
-            >
-              <Image
-                source={{ uri: hospital.photo }}
-                style={styles.cardImage}
-              />
-              <View style={styles.cardContent}>
-                <Text style={styles.cardTitle}>{hospital.name}</Text>
-                <Text style={styles.cardDescription}>
-                  {hospital.description}
-                </Text>
-                <TouchableOpacity
-                  style={styles.actionButton}
-                  onPress={() => {
-                    navigation.navigate("Hospital_detail", {
-                      id: hospital._id,
-                    });
-                    // handleDetailPage(hospital._id)
-                  }}
-                >
-                  <Text style={styles.actionButtonText}>Read More</Text>
-                </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+        <Image
+          source={require("../../assets/hero-doc.png")}
+          style={styles.profileImage}
+        />
+      </View>
+
+      <View style={styles.heroImagesMainContainer}>
+        <View style={styles.heroImagesContainer}>
+          <Image
+            source={require("../../assets/doc3-hero.jpg")}
+            style={styles.heroImage}
+          />
+          <Image
+            source={require("../../assets/hospital-hero.jpg")}
+            style={styles.heroImage2}
+          />
+        </View>
+        <Image
+          source={require("../../assets/doc2-hero.jpg")}
+          style={styles.heroImage3}
+        />
+      </View>
+      <Text style={styles.hosp_search}>Find Hospitals Nearby </Text>
+
+      <View style={styles.searchContainer}>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search hospitals..."
+          // onChangeText={handleSearch}
+          // value={searchText}
+        />
+        <Icon
+          name="search"
+          size={30}
+          color="#C276F0"
+          style={styles.searchIcon}
+        />
+      </View>
+      <Text style={styles.hosp_aval}>Hospitals Available here</Text>
+      <Text style={styles.hosp_avaldesc}>
+        Find various articles about health here
+      </Text>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.container_card}
+      >
+        {hospitals.map((hospital) => (
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => console.log(`Card ${hospital._id} pressed`)}
+            key={hospital._id}
+          >
+            <Image source={{ uri: hospital.photo }} style={styles.cardImage} />
+            <View style={styles.cardContent}>
+              <Text style={styles.cardTitle}>{hospital.name}</Text>
+              <Text style={styles.cardDescription}>{hospital.description}</Text>
+              <TouchableOpacity
+                style={styles.actionButton}
+                onPress={() => {
+                  navigation.navigate("Hospital_detail", {
+                    id: hospital._id,
+                  });
+                  // handleDetailPage(hospital._id)
+                }}
+              >
+                <Text style={styles.actionButtonText}>Read More</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        ))}
       </ScrollView>
-      {/* <ActionButton
-        buttonColor="#C276F0"
-        onPress={handleFabPress}
-        renderIcon={() => <Icon name="child-care" style={styles.fabIcon} />}
-      /> */}
-    </View>
+    </ScrollView>
   );
 };
+// <ActionButton
+//       buttonColor="#C276F0"
+//       onPress={handleFabPress}
+//       renderIcon={() => <Icon name="child-care" style={styles.fabIcon} />}
+//     />
+//   </View>
 
 const styles = StyleSheet.create({
   container: {
