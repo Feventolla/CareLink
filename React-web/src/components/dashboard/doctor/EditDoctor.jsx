@@ -4,6 +4,7 @@ import Sidebar from "../common/SideBar";
 import { LuLogOut } from "react-icons/lu";
 import { useGetDoctorQuery } from "../../../store/doctor/doctor-api";
 import { useUpdateDoctorMutation } from "../../../store/doctor/doctor-api";
+import EditLoading from "../common/EditLoading";
 
 function EditDoctor() {
   const [updateDoctor, { isLoaing: isUpdating }] = useUpdateDoctorMutation();
@@ -120,11 +121,11 @@ function EditDoctor() {
   };
 
   if (isLoading) {
-    return <div>Loading</div>;
+    return <EditLoading />;
   }
 
   if (error) {
-    return <div>Error</div>;
+    return <Error message={"An Error occurred while getting the hospital"} />;
   }
 
   return (
@@ -293,7 +294,7 @@ function EditDoctor() {
             type="submit"
             className="bg-[#C276F0] py-2 px-16 text-white rounded-full shadow-md hover:shadow-lg hover:opacity-70"
           >
-            Edit Doctor
+            {isUpdating ? <p>Updating... </p> : <p>Edit Doctor </p>}
           </button>
         </form>
       </div>

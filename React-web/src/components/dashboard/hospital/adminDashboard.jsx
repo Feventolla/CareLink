@@ -1,7 +1,5 @@
-import { useState, useRef } from "react";
-import image1 from "../../../assets/hero-hosp.png";
+import { useState } from "react";
 import edit from "../../../assets/edit.svg";
-import { RxDashboard, RxExit } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
 import { useGetHospitalsQuery } from "../../../store/hospital/hospital";
 import { useDeleteHospitalMutation } from "../../../store/hospital/hospital";
@@ -44,7 +42,7 @@ const Admindashboard = () => {
   if (isLoading) {
     return (
       <div>
-        <div className="grid grid-cols-7 bg-[rgb(250,250,250)] relative min-h-screen">
+        <div className="grid grid-cols-7 bg-[rgb(250,250,250)] min-h-screen">
           <h1 className="text-3xl font-semibold text-[#C276F0] block sm:hidden ml-8 mt-8">
             Care<span className="text-black">Link</span>
           </h1>
@@ -62,7 +60,7 @@ const Admindashboard = () => {
     );
   }
   if (error) {
-    return <div>Error</div>;
+    return <Error message={"An Error occurred while getting the hospitals"} />;
   }
   console.log(hospitals);
   const hospitalData = hospitals.value;
@@ -98,24 +96,22 @@ const Admindashboard = () => {
   };
 
   return (
-    <main className="bg-white text-black min-h-screen max-w-full">
-      <div className="p-5">
-        <div className="flex flex-row ">
-          <div className="text-4xl font-bold pt-5">
-            <span className="text-[#C276F0]">Care</span>Link
-          </div>
-          <div className="flex bg-[#FAFAFA] items-center justify-center w-full text-3xl text-[#3E435D] font-semibold pt-10 pb-10 ml-6 ">
-            Welcome, Dagim
-          </div>
-        </div>
+    <main className="grid grid-cols-7 bg-[rgb(250,250,250)] text-black min-h-screen max-w-full">
+      <h1 className="text-3xl font-semibold text-[#C276F0] block sm:hidden ml-8 mt-8">
+        Care<span className="text-black">Link</span>
+      </h1>
+      <div className="flex flex-row absolute top-10 right-2 gap-2 sm:hidden">
+        <LuLogOut color="#131313" className="mt-1" />
+        <p className="text-[#131313]">Log Out</p>
+      </div>
 
+      <Sidebar className="col-span-1 hidden sm:block" />
+      <div className="p-5 col-span-7 m-10 ml-8 sm:ml-56 mr-8">
         <div className="flex flex-col md:flex-row gap-16 ">
-          <div className="flex flex-row gap-3">
-            <RxDashboard className="text-[#C276F0] mt-1" />
-            <div className="flex font-semibold text-[#C276F0]">Dashboard</div>
-          </div>
-
           <div className="flex flex-col w-full bg-[#FAFAFA] pl-3">
+            <div className="flex bg-[#FAFAFA] items-center justify-center w-full text-3xl text-[#3E435D] font-semibold pt-10 pb-10 ml-6 ">
+              Welcome, Dagim
+            </div>
             <div className="text-xl font-semibold pb-4 md:pb-7">
               Hospitals Information
             </div>
@@ -140,7 +136,7 @@ const Admindashboard = () => {
             </div>
 
             {currenthospitalData.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 shadow-sm relative">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 shadow-sm">
                 {currenthospitalData.map((card) => (
                   <div
                     key={card._id}
@@ -171,15 +167,15 @@ const Admindashboard = () => {
                     </div>
                     <div className="card-content">
                       <p
-                        className="py-5 cursor-pointer"
+                        className="py-5 cursor-pointer text-sm"
                         onClick={() => handleDetailHospital(card._id)}
                       >
                         {card.description}
                       </p>
-                      <div className="flex justify-end ">
+                      <div className="bottom-4 right-3 absolute">
                         <button
                           onClick={() => handleDelete(card._id)}
-                          className="text-red-500 text-sm cursor-pointer"
+                          className="text-red-500 text-sm cursor-pointer "
                         >
                           Delete Hospital
                         </button>
@@ -189,37 +185,28 @@ const Admindashboard = () => {
                 ))}
               </div>
             ) : (
-              <div className="flex text-3xl justify-center mt-4 text-red-700 ">
+              <div className="flex text-3xl justify-center mt-4">
                 Oops, No Hospital Found
               </div>
             )}
           </div>
         </div>
-        <div className="flex flex-col md:flex-row  mt-4">
-          <div
-            className="flex flex-row gap-2 cursor-pointer"
-            onClick={() => handleLogout()}
-          >
-            <RxExit />
-            <div>Logout</div>
-          </div>
-          <div className="mt-4 md:mt-0 ml-2 md:ml-24">
-            {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-              (page) => (
-                <button
-                  key={page}
-                  onClick={() => handlePageChange(page)}
-                  className={`mx-2 px-4 py-2 ${
-                    currentPage === page
-                      ? "bg-[#C276F0] text-white"
-                      : "bg-gray-200"
-                  } rounded-lg`}
-                >
-                  {page}
-                </button>
-              )
-            )}
-          </div>
+        <div className="mt-4 md:mt-4 ml-2 md:ml-2">
+          {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+            (page) => (
+              <button
+                key={page}
+                onClick={() => handlePageChange(page)}
+                className={`mx-2 px-4 py-2 ${
+                  currentPage === page
+                    ? "bg-[#C276F0] text-white"
+                    : "bg-gray-200"
+                } rounded-lg`}
+              >
+                {page}
+              </button>
+            )
+          )}
         </div>
       </div>
       {confirmDelete && (

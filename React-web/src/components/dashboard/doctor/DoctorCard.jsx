@@ -8,27 +8,30 @@ import {
 } from "../../../store/doctor/doctor-api";
 import { useGetHospitalQuery } from "../../../store/hospital/hospital";
 import Modal from "../common/Modal";
-import IsDoctorCardLoading from "./IsDoctorCardLoading";
+import Error from "../common/Error";
 
 const DoctorCard = ({ doctorId, hospitalId }) => {
   const navigate = useNavigate();
-  const handleEditDoctor = () => {
-    navigate(`/editDoctor/${doctorId}`);
-  };
   const [deleteDoctor, { isLoading: isDeleting }] = useDeleteDoctorMutation();
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [selectedDoctorId, setSelectedDoctorId] = useState(null);
+  const { refetch: refetchHospitalData } = useGetHospitalQuery(hospitalId);
+  const { data: response, isLoading, error } = useGetDoctorQuery(doctorId);
+
+  const handleEditDoctor = () => {
+    navigate(`/editDoctor/${doctorId}`);
+  };
+
   const handleDelete = async (id) => {
     setConfirmDelete(true);
     setSelectedDoctorId(id);
   };
-  const { refetch: refetchHospitalData } = useGetHospitalQuery(hospitalId);
+
   const handleConfirmDelete = async () => {
     try {
       await deleteDoctor(selectedDoctorId);
       refetchHospitalData();
     } catch (error) {
-      // Handle contest deletion error
       alert("An error occurred while deleting the contest", error);
     }
     setConfirmDelete(false);
@@ -39,18 +42,21 @@ const DoctorCard = ({ doctorId, hospitalId }) => {
     setConfirmDelete(false);
     setSelectedDoctorId(null);
   };
-  const { data: response, isLoading, error } = useGetDoctorQuery(doctorId);
+
   if (isLoading) {
     return;
   }
+
   if (error) {
-    <div>Error</div>;
+    <Error message={"An Error occurred while getting the doctor"} />;
   }
 
   const doctor = response.value;
+
   if (!doctor) {
     return;
   }
+
   return (
     <div className="bg-white py-4 px-6 rounded-lg shadow-lg relative">
       <BiEdit
@@ -64,8 +70,8 @@ const DoctorCard = ({ doctorId, hospitalId }) => {
         className="w-24 h-20 object-cover mb-4 rounded-xl mx-auto"
       />
       <h4 className="font-bold mb-4">{doctor.firstName}</h4>
-      <p className="text-gray-600 text-sm">{doctor.specialization}</p>
-      <div className="flex justify-end mt-4">
+      <p className="text-gray-600 text-sm mb-4">{doctor.specialization}</p>
+      <div className="flex justify-end mt-4 absolute bottom-4 right-4">
         <button
           className="text-red-500 text-sm cursor-pointer"
           onClick={() => handleDelete(doctor._id)}

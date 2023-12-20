@@ -36,7 +36,7 @@ const DoctorDetail = () => {
   }
 
   if (error) {
-    return <div>Error</div>;
+    return <Error message={"An Error occurred while getting the hospital"} />;
   }
 
   const hospitalData = response.hospital;

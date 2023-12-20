@@ -153,7 +153,7 @@ function EditHospital() {
     return <EditLoading />;
   }
   if (error) {
-    return <div>Error</div>;
+    return <Error message={"An Error occurred while getting the hospital"} />;
   }
 
   return (
@@ -331,7 +331,7 @@ function EditHospital() {
             type="submit"
             className="bg-[#C276F0] py-2 px-16 text-white rounded-full shadow-md hover:shadow-lg hover:opacity-70 transition duration-300"
           >
-            Update Hospital
+            {isUpdating ? <p>Updating...</p> : <p>Edit Hospital</p>}
           </button>
         </form>
       </div>
