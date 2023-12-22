@@ -7,21 +7,6 @@ export const userApi = createApi({
   // Adjust the base URL accordingly
   endpoints: (builder) => ({
     signup: builder.mutation({
-      // query: (formData) => {
-      //   console.log("hererrrrr");
-      //   console.log(formData);
-      //   // const body = new FormData();
-      //   // Object.entries(formData).forEach(([key, value]) => {
-      //   //   body.append(key, value);
-      //   //   console.log("body", body);
-      //   // });
-
-      //   return {
-      // url: "/patient/signup",
-      //     method: "POST",
-      //     body: formData,
-      //   };
-      // },
       query: (credentials) => ({
         url: "/patient/signup",
         method: "POST",

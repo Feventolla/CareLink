@@ -7,11 +7,11 @@ import {
   StyleSheet,
   Image,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { Platform } from "react-native";
 
-// import ImagePicker from "react-native-image-picker";
 import * as ImagePicker from "expo-image-picker";
 import { useSignupMutation } from "../../services/Auth/auth-api";
 
@@ -27,8 +27,28 @@ const RegistrationPage = ({ navigation }) => {
     height: "",
   });
   const [selectedImage, setSelectedImage] = useState(null);
-
   const [signup, { isLoading }] = useSignupMutation();
+  const [validationErrors, setErrors] = useState({});
+  const [EmailError, setEmailError] = useState();
+
+  const [selectedGender, setSelectedGender] = useState(null);
+
+  const handleGenderSelection = (gender) => {
+    setSelectedGender(gender);
+  };
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.signupContainer}>
+          <ActivityIndicator size="large" color="#C276F0" />
+          <Text>Registering User...</Text>
+        </View>
+        {/* Render the blurred signup page */}
+        <View style={styles.blurOverlay} />
+      </View>
+    );
+  }
 
   const handleInputChange = (field, value) => {
     setFormData((prevFormData) => ({
@@ -37,47 +57,89 @@ const RegistrationPage = ({ navigation }) => {
     }));
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Validate Name
+    if (!formData.firstname.trim()) {
+      newErrors.name = "First Name is required,Please enter FirstName";
+    }
+    if (!formData.lastname.trim()) {
+      newErrors.name = "Last Name is required ,Please enter LastName";
+    }
+    if (!formData.weight.trim()) {
+      newErrors.name = "Weight is required ,Please enter Weight value";
+    }
+    if (!formData.height.trim()) {
+      newErrors.name = "height is required ,Please enter Height value";
+    }
+    if (!formData.age.trim()) {
+      newErrors.name = "Age is required ,Please enter an Age";
+    }
+    // if (!formData.gender.trim()) {
+    //   newErrors.name = "Gender is required ,Please enter your Gender";
+    // }
+
+    // Validate Email
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required ,Please enter an email";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Invalid email address";
+    }
+
+    // Validate Password
+    if (!formData.password.trim()) {
+      newErrors.password = "Password is required ,Please enter a password";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleRegister = async () => {
-    try {
-      const {
-        firstname,
-        lastname,
-        email,
-        password,
-        gender,
-        age,
-        weight,
-        height,
-      } = formData;
-      const photo = selectedImage;
+    if (validateForm()) {
+      try {
+        const {
+          firstname,
+          lastname,
+          email,
+          password,
 
-      // Perform validation or any other necessary checks on the input values
+          age,
+          weight,
+          height,
+        } = formData;
+        const photo = selectedImage;
 
-      const signupData = new FormData();
-      signupData.append("firstname", firstname);
-      signupData.append("lastname", lastname);
-      signupData.append("email", email);
-      signupData.append("password", password);
-      signupData.append("gender", gender);
-      signupData.append("age", String(age));
-      signupData.append("weight", String(weight));
-      signupData.append("height", String(height));
-      signupData.append("photo", {
-        uri: photo,
-        type: "image/jpeg", // Adjust the file type as needed
-        name: "profile.jpg", // Adjust the file name as needed
-      });
-      console.log("signupData", signupData);
+        // Perform validation or any other necessary checks on the input values
 
-      const response = await signup(signupData).unwrap();
+        const signupData = new FormData();
+        signupData.append("firstname", firstname);
+        signupData.append("lastname", lastname);
+        signupData.append("email", email);
+        signupData.append("password", password);
+        signupData.append("gender", selectedGender);
+        signupData.append("age", String(age));
+        signupData.append("weight", String(weight));
+        signupData.append("height", String(height));
+        signupData.append("photo", {
+          uri: photo,
+          type: "image/jpeg",
+          name: "profile.jpg",
+        });
+        console.log("signupData", signupData);
 
-      // Handle successful registration response
-      console.log("Registration successful:", response);
+        const response = await signup(signupData).unwrap();
 
-      // Navigate to another screen or perform any other necessary action
-    } catch (error) {
-      // Handle registration error
-      console.log("Registration error:", error);
+        // Handle successful registration response
+        console.log("Registration successful:", response);
+
+        // Navigate to another screen or perform any other necessary action
+      } catch (error) {
+        // Handle registration error
+        console.log("Registration error:", error);
+        setEmailError(error.data.message);
+      }
     }
   };
 
@@ -107,79 +169,148 @@ const RegistrationPage = ({ navigation }) => {
           style={styles.avatar}
           source={require("../../assets/logo.jpg")}
         />
-        <Text style={styles.title}>Let's Get Started</Text>
-        <Text style={styles.subTitle}>Create Your new Account</Text>
       </View>
       <ScrollView
         style={styles.formScrollView}
         showsVerticalScrollIndicator={false}
       >
+        <Text style={styles.title}>Let's Get Started</Text>
+        <Text style={styles.subTitle}>Create Your new Account</Text>
         <View style={styles.form}>
           <Text style={styles.label}>First Name</Text>
           <TextInput
-            style={styles.input}
             placeholder="Enter your Firstname"
             keyboardType="default"
             value={formData.firstname}
             onChangeText={(text) => handleInputChange("firstname", text)}
+            style={[
+              styles.input,
+              validationErrors.firstname && styles.inputError,
+            ]}
           />
+          {validationErrors.firstname && (
+            <Text style={styles.errorText}>{validationErrors.firstname}</Text>
+          )}
+
           <Text style={styles.label}>Last Name</Text>
           <TextInput
-            style={styles.input}
             placeholder="Enter your Lastname"
             keyboardType="default"
             value={formData.lastname}
             onChangeText={(text) => handleInputChange("lastname", text)}
+            style={[
+              styles.input,
+              validationErrors.lastname && styles.inputError,
+            ]}
           />
+          {validationErrors.lastname && (
+            <Text style={styles.errorText}>{validationErrors.lastname}</Text>
+          )}
+
           <Text style={styles.label}>Email</Text>
           <TextInput
-            style={styles.input}
             placeholder="Enter your Email"
             keyboardType="email-address"
             value={formData.email}
             onChangeText={(text) => handleInputChange("email", text)}
+            style={[styles.input, validationErrors.email && styles.inputError]}
           />
+          {validationErrors.email && (
+            <Text style={styles.errorText}>{validationErrors.email}</Text>
+          )}
           <Text style={styles.label}>Password</Text>
           <TextInput
-            style={styles.input}
             placeholder="Enter your Password"
             secureTextEntry={true}
             value={formData.password}
             onChangeText={(text) => handleInputChange("password", text)}
+            style={[
+              styles.input,
+              validationErrors.password && styles.inputError,
+            ]}
           />
+          {validationErrors.password && (
+            <Text style={styles.errorText}>{validationErrors.password}</Text>
+          )}
           <Text style={styles.label}>Gender</Text>
-          <TextInput
-            style={styles.input}
+          <View style={styles.radioContainer}>
+            <TouchableOpacity
+              style={[
+                styles.radioButton,
+                selectedGender === "male" && styles.radioButtonSelected,
+              ]}
+              onPress={() => handleGenderSelection("male")}
+            >
+              <Text
+                style={[
+                  styles.radioText,
+                  selectedGender === "male" && styles.radioTextSelected,
+                ]}
+              >
+                Male
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.radioButton,
+                selectedGender === "female" && styles.radioButtonSelected,
+              ]}
+              onPress={() => handleGenderSelection("female")}
+            >
+              <Text
+                style={[
+                  styles.radioText,
+                  selectedGender === "female" && styles.radioTextSelected,
+                ]}
+              >
+                Female
+              </Text>
+            </TouchableOpacity>
+          </View>
+          {/* <TextInput
             placeholder="Enter your Gender"
             keyboardType="default"
             value={formData.gender}
             onChangeText={(text) => handleInputChange("gender", text)}
-          />
+            style={[styles.input, validationErrors.gender && styles.inputError]}
+          /> */}
+          {/* {validationErrors.gender && (
+            <Text style={styles.errorText}>{validationErrors.gender}</Text>
+          )} */}
           <Text style={styles.label}>Age</Text>
 
           <TextInput
-            style={styles.input}
             placeholder="Enter your Age"
             keyboardType="number-pad"
             value={formData.age} // Convert the value to a string
             onChangeText={(text) => handleInputChange("age", text)}
+            style={[styles.input, validationErrors.age && styles.inputError]}
           />
+          {validationErrors.age && (
+            <Text style={styles.errorText}>{validationErrors.age}</Text>
+          )}
           <Text style={styles.label}>Weight</Text>
           <TextInput
-            style={styles.input}
             placeholder="Enter your Weight"
             keyboardType="number-pad"
             value={formData.weight} // Convert the value to a string
             onChangeText={(text) => handleInputChange("weight", text)}
+            style={[styles.input, validationErrors.weight && styles.inputError]}
           />
+          {validationErrors.weight && (
+            <Text style={styles.errorText}>{validationErrors.weight}</Text>
+          )}
           <Text style={styles.label}>Height</Text>
           <TextInput
-            style={styles.input}
             placeholder="Enter your Height"
             keyboardType="number-pad"
             value={formData.height} // Convert the value to a string
             onChangeText={(text) => handleInputChange("height", text)}
+            style={[styles.input, validationErrors.height && styles.inputError]}
           />
+          {validationErrors.height && (
+            <Text style={styles.errorText}>{validationErrors.height}</Text>
+          )}
 
           <Text style={styles.label}>Photo</Text>
           <View style={styles.file}>
@@ -190,6 +321,12 @@ const RegistrationPage = ({ navigation }) => {
               <Image source={{ uri: selectedImage }} style={styles.image} />
             )}
           </View>
+          {EmailError ? (
+            <Text style={{ color: "red", fontSize: 20, textAlign: "center" }}>
+              {EmailError}
+            </Text>
+          ) : null}
+
           <View style={{ height: 80 }}></View>
         </View>
       </ScrollView>
@@ -221,6 +358,7 @@ const styles = StyleSheet.create({
     // alignItems: "center",
     padding: 20,
     backgroundColor: "#EFE9F4",
+    position: "relative",
   },
   formScrollView: {
     // flexGrow: 1,
@@ -253,13 +391,15 @@ const styles = StyleSheet.create({
     borderRadius: 40,
   },
   title: {
-    marginTop: 10,
+    marginTop: 5,
     fontSize: 25,
+    textAlign: "center",
   },
   subTitle: {
     marginTop: 10,
     fontSize: 15,
     color: "gray",
+    textAlign: "center",
   },
   label: {
     color: "#092C4C",
@@ -276,6 +416,37 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#d3d3d3",
   },
+  inputError: {
+    borderColor: "red",
+  },
+  errorText: {
+    color: "red",
+  },
+  radioContainer: {
+    flexDirection: "row",
+    borderBottomColor: "gray",
+    borderBottomWidth: 0.5,
+    padding: 10,
+  },
+  radioButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 20,
+    padding: 3,
+    backgroundColor: "#d6aeef",
+  },
+  radioText: {
+    fontSize: 16,
+    marginLeft: 5,
+    color: "white",
+  },
+  radioButtonSelected: {
+    backgroundColor: "#C276F0", // Customize the selected color as needed
+    borderRadius: 5,
+  },
+  radioTextSelected: {
+    color: "#ffffff", // Customize the selected text color as needed
+  },
   file: {
     backgroundColor: "#EDE5F2",
     borderColor: "gray",
@@ -284,7 +455,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 10,
     borderRadius: 10,
-    width: 200,
+    width: 250,
     // height: 100,
     color: "black",
   },
@@ -315,6 +486,20 @@ const styles = StyleSheet.create({
   logincolor: {
     color: "#C276F0",
     textDecorationLine: "underline",
+  },
+  blurOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.0)", // Change the opacity value as needed
+  },
+  signupContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1,
   },
 });
 export default RegistrationPage;
