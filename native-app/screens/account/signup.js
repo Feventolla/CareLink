@@ -9,6 +9,8 @@ import {
   ScrollView,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
+import { Platform } from "react-native";
+
 // import ImagePicker from "react-native-image-picker";
 import * as ImagePicker from "expo-image-picker";
 import { useSignupMutation } from "../../services/Auth/auth-api";
@@ -24,29 +26,68 @@ const RegistrationPage = ({ navigation }) => {
     weight: "",
     height: "",
   });
-  const [signup, { data, isLoading, isError, isSuccess }] = useSignupMutation();
-
-  const handleInputChange = (field, value) => {
-    setFormData((prevData) => ({ ...prevData, [field]: value }));
-  };
-
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    const credentials = formData;
-    console.log("registered user Form Data:", formData);
-    try {
-      await signup(credentials).unwrap();
-      console.log("credentials", credentials);
-      // Signup successful
-      // Redirect or show success message
-    } catch (error) {
-      console.log("error", error);
-    }
-    // navigation.navigate("Signin");
-  };
   const [selectedImage, setSelectedImage] = useState(null);
 
+  const [signup, { isLoading }] = useSignupMutation();
+
+  const handleInputChange = (field, value) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [field]: value,
+    }));
+  };
+
+  const handleRegister = async () => {
+    try {
+      const {
+        firstname,
+        lastname,
+        email,
+        password,
+        gender,
+        age,
+        weight,
+        height,
+      } = formData;
+      const photo = selectedImage;
+
+      // Perform validation or any other necessary checks on the input values
+
+      const signupData = new FormData();
+      signupData.append("firstname", firstname);
+      signupData.append("lastname", lastname);
+      signupData.append("email", email);
+      signupData.append("password", password);
+      signupData.append("gender", gender);
+      signupData.append("age", String(age));
+      signupData.append("weight", String(weight));
+      signupData.append("height", String(height));
+      signupData.append("photo", {
+        uri: photo,
+        type: "image/jpeg", // Adjust the file type as needed
+        name: "profile.jpg", // Adjust the file name as needed
+      });
+      console.log("signupData", signupData);
+
+      const response = await signup(signupData).unwrap();
+
+      // Handle successful registration response
+      console.log("Registration successful:", response);
+
+      // Navigate to another screen or perform any other necessary action
+    } catch (error) {
+      // Handle registration error
+      console.log("Registration error:", error);
+    }
+  };
+
   const pickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      console.log("Permission denied to access media library");
+      return;
+    }
+
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -58,6 +99,7 @@ const RegistrationPage = ({ navigation }) => {
       setSelectedImage(result.uri);
     }
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -119,23 +161,23 @@ const RegistrationPage = ({ navigation }) => {
             style={styles.input}
             placeholder="Enter your Age"
             keyboardType="number-pad"
-            value={formData.age}
+            value={formData.age} // Convert the value to a string
             onChangeText={(text) => handleInputChange("age", text)}
           />
           <Text style={styles.label}>Weight</Text>
           <TextInput
             style={styles.input}
             placeholder="Enter your Weight"
-            keyboardType="decimal-pad"
-            value={formData.weight}
+            keyboardType="number-pad"
+            value={formData.weight} // Convert the value to a string
             onChangeText={(text) => handleInputChange("weight", text)}
           />
           <Text style={styles.label}>Height</Text>
           <TextInput
             style={styles.input}
             placeholder="Enter your Height"
-            keyboardType="decimal-pad"
-            value={formData.height}
+            keyboardType="number-pad"
+            value={formData.height} // Convert the value to a string
             onChangeText={(text) => handleInputChange("height", text)}
           />
 
@@ -147,7 +189,6 @@ const RegistrationPage = ({ navigation }) => {
             {selectedImage && (
               <Image source={{ uri: selectedImage }} style={styles.image} />
             )}
-            {/* <TextInput placeholder="choose a photo" /> */}
           </View>
           <View style={{ height: 80 }}></View>
         </View>
