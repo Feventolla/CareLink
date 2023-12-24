@@ -13,6 +13,7 @@ import {
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 import FilterPage from "./FilterHospitals";
+import { useGetHospitalsQuery } from "../../services/Hospital/hospital-api";
 
 const screenWidth = Dimensions.get("window").width;
 const numColumns = 2;
@@ -22,64 +23,46 @@ const itemSize = availableSpace / numColumns;
 
 const HospitalListPage = ({ navigation }) => {
   const [showFilter, setShowFilter] = useState(false);
-  // const navigation = useNavigation();
-  const navigateToHospitalDetail = (hospitalId) => {
-    navigation.navigate("Hospital_detail");
-  };
+  const { data, isLoading, error } = useGetHospitalsQuery({});
+  // const hospitals = hospitalData.value;
+  // console.log("data", data);
+  if (isLoading) {
+    return <Text>IS LOADING</Text>;
+  }
+  if (error) {
+    return <Text>something is wrong</Text>;
+  }
+
+  const hospitals = data.value;
 
   const openFilter = () => {
     setShowFilter(!showFilter);
   };
 
-  const hospitalsData = [
-    {
-      id: "1",
-      title: "Hospital 1",
-      description: "Lorem ipsum dolor sit am pharetra scelerisque ",
-      imageUrl: require("../../assets/images/hospital/hospital.png"),
-    },
-    {
-      id: "2",
-      title: "Hospital 2",
-      description: "Lorem ipsum dolor sit am pharetra scelerisque",
-      imageUrl: require("../../assets/images/hospital/hos1.jpeg"),
-    },
-    {
-      id: "3",
-      title: "Hospital 1",
-      description: "Lorem ipsum dolor sit am pharetra scelerisque",
-      imageUrl: require("../../assets/images/hospital/hos2.jpeg"),
-    },
-    {
-      id: "4",
-      title: "Hospital 2",
-      description: "Short description for Hospital 2",
-      imageUrl: require("../../assets/images/hospital/hos3.jpeg"),
-    },
-    {
-      id: "5",
-      title: "Hospital 1",
-      description: "Short description for Hospital 1",
-      imageUrl: require("../../assets/images/hospital/hos1.jpeg"),
-    },
-    {
-      id: "6",
-      title: "Hospital 2",
-      description: "Short description for Hospital 2",
-      imageUrl: require("../../assets/images/hospital/hos2.jpeg"),
-    },
-  ];
-
   const renderItem = ({ item }) => (
-    <ScrollView onPress={() => navigateToHospitalDetail(item.id)}>
+    <ScrollView
+      onPress={() => {
+        navigation.navigate("Hospital_detail", {
+          id: item._id,
+        });
+        // handleDetailPage(hospital._id)
+      }}
+    >
       <View style={styles.hospitalCard}>
-        <Image source={item.imageUrl} style={styles.hospitalImage} />
+        <Image source={{ uri: item.photo }} style={styles.hospitalImage} />
         <View style={styles.hospitalInfo}>
-          <Text style={styles.hospitalTitle}>{item.title}</Text>
+          <Text style={styles.hospitalTitle}>{item.name}</Text>
           <Text style={styles.hospitalDescription}>
-            {item.description.slice(0, 150)}...
+            {item.description.slice(0, 80)}...
           </Text>
-          <TouchableOpacity onPress={() => navigateToHospitalDetail(item.id)}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Hospital_detail", {
+                id: item._id,
+              });
+              // handleDetailPage(hospital._id)
+            }}
+          >
             <Text style={styles.readMoreButton}>Read More</Text>
           </TouchableOpacity>
         </View>
@@ -105,8 +88,8 @@ const HospitalListPage = ({ navigation }) => {
 
       <FlatList
         columnWrapperStyle={{ gap }}
-        data={hospitalsData}
-        keyExtractor={(item) => item.id}
+        data={hospitals}
+        keyExtractor={(item) => item._id}
         renderItem={renderItem}
         numColumns={2}
         horizontal={false}

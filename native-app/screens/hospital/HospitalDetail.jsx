@@ -57,8 +57,6 @@ const HospitalDetailPage = ({ navigation }) => {
             </TouchableOpacity>
           </View>
           <>
-            <Text style={styles.sectionTitle}>Available Doctors</Text>
-
             <ScrollView
               showsVerticalScrollIndicator={false}
               // style={{ flex: 1 }}
@@ -85,6 +83,7 @@ const HospitalDetailPage = ({ navigation }) => {
                   </Text>
                 )}
               </Text>
+              <Text style={styles.sectionTitle}>Available Doctors</Text>
               {hospital.doctors.length > 0 ? (
                 <FlatList
                   data={hospital.doctors}

@@ -54,7 +54,7 @@ const Loginpage = ({ navigation }) => {
 
         // Handle successful registration response
         console.log("login successful:", response);
-        // navigation.navigate("Signin");
+        navigation.navigate("MainApp");
 
         // Navigate to another screen or perform any other necessary action
       } catch (error) {
@@ -75,7 +75,16 @@ const Loginpage = ({ navigation }) => {
         <SvgXml xml={SvgContent} height={300} width={700} style={styles.svg} />
       </View>
       {EmailError ? (
-        <Text style={{ color: "red", fontSize: 20, textAlign: "center" }}>
+        <Text
+          style={{
+            color: "red",
+            fontSize: 20,
+            textAlign: "center",
+            backgroundColor: "white",
+            height: 40,
+            borderRadius: 30,
+          }}
+        >
           {EmailError}
         </Text>
       ) : null}
