@@ -76,7 +76,9 @@ const HospitalListPage = ({ navigation }) => {
         <Image source={item.imageUrl} style={styles.hospitalImage} />
         <View style={styles.hospitalInfo}>
           <Text style={styles.hospitalTitle}>{item.title}</Text>
-          <Text style={styles.hospitalDescription}>{item.description}</Text>
+          <Text style={styles.hospitalDescription}>
+            {item.description.slice(0, 150)}...
+          </Text>
           <TouchableOpacity onPress={() => navigateToHospitalDetail(item.id)}>
             <Text style={styles.readMoreButton}>Read More</Text>
           </TouchableOpacity>

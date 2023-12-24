@@ -19,6 +19,11 @@ const HospitalDetailPage = ({ navigation }) => {
   const { id } = route.params;
   const { data: hospitalData, isLoading, error } = useHospitalQuery(id);
 
+  const [showFullDescription, setShowFullDescription] = useState(false);
+  const toggleDescription = () => {
+    setShowFullDescription(!showFullDescription);
+  };
+
   if (isLoading) {
     return <Text>IS LOADING</Text>;
   }
@@ -51,19 +56,53 @@ const HospitalDetailPage = ({ navigation }) => {
               <Text style={styles.visitGalleryButtonText}>Visit Gallery</Text>
             </TouchableOpacity>
           </View>
-          {hospital.doctors.length > 0 ? (
-            <FlatList
-              data={hospital.doctors}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <DoctorItem key={item.id} item={item} />
-              )}
-              horizontal={false}
+          <>
+            <Text style={styles.sectionTitle}>Available Doctors</Text>
+
+            <ScrollView
               showsVerticalScrollIndicator={false}
-            />
-          ) : (
-            <Text style={styles.noDoctor}>No Doctors Available</Text>
-          )}
+              // style={{ flex: 1 }}
+            >
+              <Text style={styles.descriptionText}>
+                {showFullDescription
+                  ? hospital.description
+                  : `${hospital.description.slice(0, 150)}...`}
+
+                {!showFullDescription && (
+                  <Text
+                    style={styles.seeMoreButton}
+                    onPress={toggleDescription}
+                  >
+                    See More
+                  </Text>
+                )}
+                {showFullDescription && (
+                  <Text
+                    style={styles.seeMoreButton}
+                    onPress={toggleDescription}
+                  >
+                    ...Show Less
+                  </Text>
+                )}
+              </Text>
+              {hospital.doctors.length > 0 ? (
+                <FlatList
+                  data={hospital.doctors}
+                  keyExtractor={(item) => item.id}
+                  renderItem={({ item }) => (
+                    <DoctorItem key={item.id} item={item} />
+                  )}
+                  horizontal={false}
+                  showsVerticalScrollIndicator={false}
+                  // ListHeaderComponent={() => (
+
+                  // )}
+                />
+              ) : (
+                <Text style={styles.noDoctor}>No Doctors Available</Text>
+              )}
+            </ScrollView>
+          </>
         </View>
       </View>
     </View>

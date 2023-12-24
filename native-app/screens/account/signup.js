@@ -133,6 +133,7 @@ const RegistrationPage = ({ navigation }) => {
 
         // Handle successful registration response
         console.log("Registration successful:", response);
+        navigation.navigate("Signin");
 
         // Navigate to another screen or perform any other necessary action
       } catch (error) {
