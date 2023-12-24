@@ -12,13 +12,19 @@ const DoctorDetail = () => {
   const handleAddDoctor = (id) => {
     navigate(`/addDoctor/${id}`);
   };
+  const handleDashboard = () => {
+    navigate("/adminDashboard");
+  };
 
   if (isLoading) {
     return (
       <>
         {" "}
         <div className="grid grid-cols-7 bg-[rgb(250,250,250)] relative min-h-screen">
-          <h1 className="text-3xl font-semibold text-[#C276F0] block sm:hidden ml-8 mt-8">
+          <h1
+            className="text-3xl font-semibold text-[#C276F0] block sm:hidden ml-8 mt-8 cursor-pointer"
+            onClick={() => handleDashboard()}
+          >
             Care<span className="text-black">Link</span>
           </h1>
           <div className="flex flex-row absolute top-10 right-2 gap-2 sm:hidden">

@@ -79,8 +79,8 @@ function Login() {
               id="name"
               value={formData.name}
               onChange={handleInputChange}
-              className={`input input-bordered max-w-lg p-3 border-solid border-2 border-gray-300 rounded-xl ${
-                errors.name ? "border-red-500" : ""
+              className={`input input-bordered max-w-lg p-3 border-solid border-2 border-gray-300 rounded-xl focus:outline-none ${
+                errors.name ? "" : ""
               }`}
             />
             {errors.name && (
@@ -97,8 +97,8 @@ function Login() {
               id="email"
               value={formData.email}
               onChange={handleInputChange}
-              className={`input input-bordered max-w-lg p-3 border-solid border-2 border-gray-300 rounded-xl ${
-                errors.email ? "border-red-500" : ""
+              className={`input input-bordered max-w-lg p-3 border-solid border-2 border-gray-300 rounded-xl focus:outline-none ${
+                errors.email ? "" : ""
               }`}
             />
             {errors.email && (
@@ -115,8 +115,8 @@ function Login() {
               id="password"
               value={formData.password}
               onChange={handleInputChange}
-              className={`input input-bordered max-w-lg p-3 border-solid border-2 border-gray-300 rounded-xl ${
-                errors.password ? "border-red-500" : ""
+              className={`input input-bordered max-w-lg p-3 border-solid border-2 border-gray-300 rounded-xl focus:outline-none ${
+                errors.password ? "" : ""
               }`}
             />
             {errors.password && (
