@@ -148,12 +148,14 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize: 40,
     fontWeight: "bold",
+    
   },
   heroText_care: {
     color: "#C276F0",
     fontSize: 40,
     fontWeight: "bold",
     // fontFamily: "po",
+    right: 60,
   },
   profileImage: {
     width: 40,
@@ -202,7 +204,7 @@ const styles = StyleSheet.create({
   },
   hosp_search: {
     marginTop: 30,
-    fontSize: 45,
+    fontSize: 35,
     textAlign: "center",
     fontWeight: "bold",
   },
