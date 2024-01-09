@@ -59,8 +59,8 @@ const styles = StyleSheet.create({
   },
   bar: {
     // position: 'absolute',
-    bottom: 100,
-    width: 90,
+    bottom: 180,
+    width: 10,
     height: 5,
     backgroundColor: "#D3D3D3",
     marginHorizontal: 5,

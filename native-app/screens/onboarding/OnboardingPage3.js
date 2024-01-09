@@ -62,8 +62,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   bar: {
-    width: 100,
-    bottom: 90,
+    bottom: 180,
+    width: 10,
     height: 5,
     backgroundColor: "#D3D3D3",
     marginHorizontal: 5,
