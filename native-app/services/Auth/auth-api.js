@@ -3,7 +3,6 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const userApi = createApi({
   reducerPath: "userApi",
   baseQuery: fetchBaseQuery({ baseUrl: "https://carelink.onrender.com/" }),
-  // baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000" }),
 
   // Adjust the base URL accordingly
   endpoints: (builder) => ({
@@ -21,7 +20,26 @@ export const userApi = createApi({
         body: credentials,
       }),
     }),
+    forgot: builder.mutation({
+      query: (credentials) => ({
+        url: "/patient/forgetPassword",
+        method: "POST",
+        body: credentials,
+      }),
+    }),
+    reset: builder.mutation({
+      query: (credentials) => ({
+        url: "/patient/resetPassword",
+        method: "POST",
+        body: credentials,
+      }),
+    }),
   }),
 });
 
-export const { useSignupMutation, useLoginMutation } = userApi;
+export const {
+  useSignupMutation,
+  useLoginMutation,
+  useForgotMutation,
+  useResetMutation,
+} = userApi;
