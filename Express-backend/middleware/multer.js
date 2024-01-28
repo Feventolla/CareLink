@@ -1,5 +1,7 @@
 const multer = require("multer");
 
+console.log("multer hereeeeeeeeeeee");
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "profile/"); // Specify the directory where images will be stored

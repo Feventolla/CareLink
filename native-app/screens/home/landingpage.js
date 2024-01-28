@@ -8,12 +8,10 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-// import { ScrollView } from "react-native-gesture-handler";
-// import { NavigationContainer } from "@react-navigation/native";
-// import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-// import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import ActionButton from "react-native-action-button";
+import { useGetHospitalsQuery } from "../../services/Hospital/hospital-api";
+import HospitalDetailPage from "../hospital/HospitalDetail";
 
 const Landingpage = ({ navigation }) => {
   const handleFabPress = () => {
@@ -21,30 +19,23 @@ const Landingpage = ({ navigation }) => {
     navigation.navigate("Chatbot");
     console.log("Floating Action Button Pressed!");
   };
-  const cards = [
-    {
-      id: "1",
-      image: require("../../assets/hospital-hero.jpg"),
-      title: "Hospital one",
-      description:
-        "Description Lorem ipsum dolor sit amet, consecte adipiscing elit. Adipiscing pharetra scelerisque ",
-    },
-    {
-      id: "2",
-      image: require("../../assets/hospital-hero.jpg"),
-      title: "Hospital two",
-      description:
-        "Description Lorem ipsum dolor sit amet, consecte adipiscing elit. Adipiscing pharetra scelerisque ",
-    },
-    {
-      id: "3",
-      image: require("../../assets/hospital-hero.jpg"),
-      title: "Hospital three",
-      description:
-        "Description Lorem ipsum dolor sit amet, consecte adipiscing elit. Adipiscing pharetra scelerisque ",
-    },
-    // Add more cards as needed
-  ];
+  // const handleDetailPage =(id)=>{
+  //   navigation.navigate('Hospital_detail', )
+
+  // }
+
+  const { data, isLoading, error, isSuccess } = useGetHospitalsQuery({});
+  // const hospitals = hospitalData.value;
+  // console.log("data", data);
+  if (isLoading) {
+    return <Text>IS LOADING</Text>;
+  }
+  // if (data && data.value) {
+  //   console.log("data fetched", data.value);
+
+  // }
+  const hospitals = data.value;
+  // console.log(hospitals);
 
   return (
     <View>
@@ -100,19 +91,29 @@ const Landingpage = ({ navigation }) => {
           showsHorizontalScrollIndicator={false}
           style={styles.container_card}
         >
-          {cards.map((card) => (
+          {hospitals.map((hospital) => (
             <TouchableOpacity
               style={styles.card}
-              onPress={() => console.log(`Card ${card.id} pressed`)}
-              key={card.id}
+              onPress={() => console.log(`Card ${hospital._id} pressed`)}
+              key={hospital._id}
             >
-              <Image source={card.image} style={styles.cardImage} />
+              <Image
+                source={{ uri: hospital.photo }}
+                style={styles.cardImage}
+              />
               <View style={styles.cardContent}>
-                <Text style={styles.cardTitle}>{card.title}</Text>
-                <Text style={styles.cardDescription}>{card.description}</Text>
+                <Text style={styles.cardTitle}>{hospital.name}</Text>
+                <Text style={styles.cardDescription}>
+                  {hospital.description.slice(0, 150)}...
+                </Text>
                 <TouchableOpacity
                   style={styles.actionButton}
-                  onPress={() => navigation.navigate("Hospital_detail")}
+                  onPress={() => {
+                    navigation.navigate("Hospital_detail", {
+                      id: hospital._id,
+                    });
+                    // handleDetailPage(hospital._id)
+                  }}
                 >
                   <Text style={styles.actionButtonText}>Read More</Text>
                 </TouchableOpacity>
@@ -279,6 +280,7 @@ const styles = StyleSheet.create({
   actionButtonText: {
     color: "#C276F0",
     fontWeight: "bold",
+    textAlign: "right",
   },
   fabIcon: {
     fontSize: 30,
