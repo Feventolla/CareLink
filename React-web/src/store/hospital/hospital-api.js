@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { getCookie } from "../../utils/cookie";
 
 const BASE_URL = "https://carelink.onrender.com/hospital";
 
@@ -7,6 +8,13 @@ export const hospitalApiSlice = createApi({
   tagTypes: ["Hospital"],
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_URL,
+    prepareHeaders: (headers) => {
+      const token = getCookie("token");
+      if (token) {
+        headers.set("authorization", `bearer ${token}`);
+      }
+      return headers;
+    },
   }),
   endpoints: (builder) => ({
     createHospital: builder.mutation({

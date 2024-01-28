@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetHospitalQuery } from "../../../store/hospital/hospital";
-import { useUpdateHospitalMutation } from "../../../store/hospital/hospital";
+import { useGetHospitalQuery } from "../../../store/hospital/hospital-api";
+import { useUpdateHospitalMutation } from "../../../store/hospital/hospital-api";
 import { LuLogOut } from "react-icons/lu";
+import { useDispatch } from "react-redux";
+import { clearToken } from "../../../store/auth/auth-slice";
 import Sidebar from "../common/SideBar";
 import EditLoading from "../common/EditLoading";
 
@@ -21,7 +23,11 @@ function EditHospital() {
   const [formData, setFormData] = useState({});
   const [selectedDays, setSelectedDays] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
-
+  const dispatch = useDispatch();
+  const handleLogOut = () => {
+    dispatch(clearToken());
+    navigate("/logout");
+  };
   useEffect(() => {
     if (response) {
       const curr = response.hospital;
@@ -161,7 +167,10 @@ function EditHospital() {
       <h1 className="text-3xl font-semibold text-[#C276F0] block sm:hidden ml-8 mt-8">
         Care<span className="text-black">Link</span>
       </h1>
-      <div className="flex flex-row absolute top-10 right-2 gap-2 sm:hidden">
+      <div
+        className="flex flex-row absolute top-10 right-2 gap-2 sm:hidden cursor-pointer"
+        onClick={handleLogOut}
+      >
         <LuLogOut color="#131313" className="mt-1" />
         <p className="text-[#131313]">Log Out</p>
       </div>

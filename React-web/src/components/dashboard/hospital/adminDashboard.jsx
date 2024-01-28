@@ -1,15 +1,17 @@
 import { useState } from "react";
-import edit from "../../../assets/edit.svg";
 import { useNavigate } from "react-router-dom";
-import { useGetHospitalsQuery } from "../../../store/hospital/hospital";
-import { useDeleteHospitalMutation } from "../../../store/hospital/hospital";
+import { useGetHospitalsQuery } from "../../../store/hospital/hospital-api";
+import { useDeleteHospitalMutation } from "../../../store/hospital/hospital-api";
+import { LuLogOut } from "react-icons/lu";
+import { useDispatch } from "react-redux";
+import { clearToken } from "../../../store/auth/auth-slice";
+import edit from "../../../assets/edit.svg";
 import Modal from "../common/Modal";
 import HospitalLoading from "./HospitalLoading";
 import Sidebar from "../common/SideBar";
-import { LuLogOut } from "react-icons/lu";
 
 const Admindashboard = () => {
-  const { data: hospitals, error, isLoading } = useGetHospitalsQuery();
+  const { data: hospitals, isError, isLoading, error } = useGetHospitalsQuery();
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
@@ -18,7 +20,7 @@ const Admindashboard = () => {
     useDeleteHospitalMutation();
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [selectedHospitalId, setSelectedHospitalId] = useState(null);
-
+  const dispatch = useDispatch();
   const handleDashboard = () => {
     navigate("/adminDashboard");
   };
@@ -27,7 +29,10 @@ const Admindashboard = () => {
     setConfirmDelete(true);
     setSelectedHospitalId(id);
   };
-
+  const handleLogOut = () => {
+    dispatch(clearToken());
+    navigate("/logout");
+  };
   const handleConfirmDelete = async () => {
     try {
       await deleteHospital(selectedHospitalId);
@@ -53,7 +58,10 @@ const Admindashboard = () => {
           >
             Care<span className="text-black">Link</span>
           </h1>
-          <div className="flex flex-row absolute top-10 right-2 gap-2 sm:hidden">
+          <div
+            className="flex flex-row absolute top-10 right-2 gap-2 sm:hidden cursor-pointer"
+            onClick={handleLogOut}
+          >
             <LuLogOut color="#131313" className="mt-1" />
             <p className="text-[#131313]">Log Out</p>
           </div>
@@ -72,7 +80,7 @@ const Admindashboard = () => {
       </div>
     );
   }
-  if (error) {
+  if (isError || error) {
     return <Error message={"An Error occurred while getting the hospitals"} />;
   }
   console.log(hospitals);
@@ -113,7 +121,10 @@ const Admindashboard = () => {
       <h1 className="text-3xl font-semibold text-[#C276F0] block sm:hidden ml-8 mt-8">
         Care<span className="text-black">Link</span>
       </h1>
-      <div className="flex flex-row absolute top-10 right-2 gap-2 sm:hidden">
+      <div
+        className="flex flex-row absolute top-10 right-2 gap-2 sm:hidden cursor-pointer"
+        onClick={handleLogOut}
+      >
         <LuLogOut color="#131313" className="mt-1" />
         <p className="text-[#131313]">Log Out</p>
       </div>

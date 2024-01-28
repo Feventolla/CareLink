@@ -6,7 +6,7 @@ import {
   useGetDoctorQuery,
   useDeleteDoctorMutation,
 } from "../../../store/doctor/doctor-api";
-import { useGetHospitalQuery } from "../../../store/hospital/hospital";
+import { useGetHospitalQuery } from "../../../store/hospital/hospital-api";
 import Modal from "../common/Modal";
 import Error from "../common/Error";
 
