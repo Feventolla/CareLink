@@ -69,7 +69,7 @@ const Admindashboard = () => {
           <Sidebar className="col-span-1 hidden sm:block" />
           <div className="col-span-7 m-10 ml-8 sm:ml-56 mr-8">
             <div className="flex bg-[#FAFAFA] items-center justify-center w-full text-3xl text-[#3E435D] font-semibold pt-10 pb-10 ml-6 ">
-              Welcome, Dagim
+              Welcome
             </div>
             <div className="text-xl font-semibold pb-4 md:pb-7">
               Hospitals Information
@@ -81,6 +81,7 @@ const Admindashboard = () => {
     );
   }
   if (isError || error) {
+    // eslint-disable-next-line react/jsx-no-undef
     return <Error message={"An Error occurred while getting the hospitals"} />;
   }
   console.log(hospitals);
@@ -99,9 +100,9 @@ const Admindashboard = () => {
     console.log(`Edit card with id ${id}`);
     navigate(`/editHospital/${id}`);
   };
-  const handleLogout = () => {
-    console.log("logout");
-  };
+  // const handleLogout = () => {
+  //   console.log("logout");
+  // };
 
   // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -134,7 +135,7 @@ const Admindashboard = () => {
         <div className="flex flex-col md:flex-row gap-16 ">
           <div className="flex flex-col w-full bg-[#FAFAFA] pl-3">
             <div className="flex bg-[#FAFAFA] items-center justify-center w-full text-3xl text-[#3E435D] font-semibold pt-10 pb-10 ml-6 ">
-              Welcome, Dagim
+              Welcome
             </div>
             <div className="text-xl font-semibold pb-4 md:pb-7">
               Hospitals Information
@@ -240,6 +241,7 @@ const Admindashboard = () => {
       {confirmDelete && (
         <Modal
           onClose={() => setConfirmDelete(false)}
+          // eslint-disable-next-line react/no-children-prop
           children={
             <div className="bg-white px-16 rounded-lg lg:text-lg py-8">
               <h1 className="font-bold">Are you sure?</h1>
