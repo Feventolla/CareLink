@@ -51,10 +51,6 @@ const HospitalDetailPage = ({ navigation }) => {
               <Icon name="location-on" size={15} color="#C276F0" />
               <Text style={styles.addressText}>{hospital.address}</Text>
             </View>
-
-            <TouchableOpacity>
-              <Text style={styles.visitGalleryButtonText}>Visit Gallery</Text>
-            </TouchableOpacity>
           </View>
           <>
             <ScrollView
