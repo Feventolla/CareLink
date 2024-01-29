@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   View,
   Text,
@@ -11,7 +11,6 @@ import {
   SafeAreaView,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { useNavigation } from "@react-navigation/native";
 import FilterPage from "./FilterHospitals";
 import { useGetHospitalsQuery } from "../../services/Hospital/hospital-api";
 
@@ -23,8 +22,21 @@ const itemSize = availableSpace / numColumns;
 
 const HospitalListPage = ({ navigation }) => {
   const [showFilter, setShowFilter] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [appliedFilters, setAppliedFilters] = useState({
+    services: [],
+    experience: null,
+  });
   const { data, isLoading, error } = useGetHospitalsQuery({});
+  // const hospitals = hospitalData.value;
+  // console.log("data", data);
+
+  const applyFilters = (selectedServices, selectedExperience) => {
+    setAppliedFilters({
+      services: selectedServices,
+      experience: selectedExperience,
+    });
+  };
 
   if (isLoading) {
     return <Text>Loading...</Text>;
@@ -34,13 +46,39 @@ const HospitalListPage = ({ navigation }) => {
   }
 
   const hospitals = data.value;
+  // console.log("******************", hospitals);
+  const filteredHospitals = useMemo(() => {
+    let filteredList = hospitals;
+
+    if (appliedFilters.services.length > 0) {
+      filteredList = filteredList.filter((hospital) => {
+        // Check if all selected services are present in the hospital's services array
+        return appliedFilters.services.every((selectedService) =>
+          hospital.services.includes(selectedService)
+        );
+      });
+    }
+
+    // if (appliedFilters.experience !== null) {
+    //   if (appliedFilters.experience === ">10") {
+    //     let experience = 10;
+    //   } else {
+    //     experience = parseInt(appliedFilters.experience);
+    //   }
+    //   filteredList = filteredList.filter(
+    //     (hospital) => hospital.medicalExperience >= experience
+    //   );
+    // }
+
+    return filteredList;
+  }, [hospitals, appliedFilters]);
 
   const openFilter = () => {
     setShowFilter(!showFilter);
   };
 
-  const filteredHospitals = hospitals.filter((hospital) =>
-    hospital.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredHospitalsWithSearch = filteredHospitals.filter((hospital) =>
+    hospital.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const renderItem = ({ item }) => (
@@ -80,15 +118,13 @@ const HospitalListPage = ({ navigation }) => {
           <Text style={styles.filterButtonText}>Filter</Text>
         </TouchableOpacity>
       </View>
-      {showFilter && <FilterPage />}
+      {showFilter && <FilterPage applyFilters={applyFilters} />}
       <View style={styles.searchBar}>
         <TextInput
           style={styles.searchInput}
-          type="text"
-          placeholder="Search..."
-          value={searchTerm}
-          onChangeText={(text) => setSearchTerm(text)}
-          className="p-2 w-full md:w-96 mb-4 md:mb-0 border rounded focus:outline-none"
+          placeholder="Search"
+          value={searchQuery}
+          onChangeText={(text) => setSearchQuery(text)}
         />
         <TouchableOpacity style={styles.searchIcon}>
           <Icon name="search" size={21} color="#C276F0" />
@@ -97,7 +133,7 @@ const HospitalListPage = ({ navigation }) => {
 
       <FlatList
         columnWrapperStyle={{ gap }}
-        data={filteredHospitals}
+        data={filteredHospitalsWithSearch}
         keyExtractor={(item) => item._id}
         renderItem={renderItem}
         numColumns={2}
