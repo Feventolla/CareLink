@@ -1,19 +1,25 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Sidebar from "../common/SideBar";
 import { LuLogOut } from "react-icons/lu";
 import { useGetDoctorQuery } from "../../../store/doctor/doctor-api";
 import { useUpdateDoctorMutation } from "../../../store/doctor/doctor-api";
+import { useDispatch } from "react-redux";
+import { clearToken } from "../../../store/auth/auth-slice";
 import EditLoading from "../common/EditLoading";
+import Sidebar from "../common/SideBar";
 
 function EditDoctor() {
   const [updateDoctor, { isLoaing: isUpdating }] = useUpdateDoctorMutation();
   const { doctorId } = useParams();
   console.log(doctorId);
   const { data: response, isLoading, error } = useGetDoctorQuery(doctorId);
-
   const [formData, setFormData] = useState({});
   const [selectedDays, setSelectedDays] = useState([]);
+  const dispatch = useDispatch();
+  const handleLogOut = () => {
+    dispatch(clearToken());
+    navigate("/logout");
+  };
 
   useEffect(() => {
     if (response) {
@@ -133,7 +139,10 @@ function EditDoctor() {
       <h1 className="text-3xl font-semibold text-[#C276F0] block sm:hidden ml-8 mt-8">
         Care<span className="text-black">Link</span>
       </h1>
-      <div className="flex flex-row absolute top-10 right-2 gap-2 sm:hidden">
+      <div
+        className="flex flex-row absolute top-10 right-2 gap-2 sm:hidden cursor-pointer"
+        onClick={handleLogOut}
+      >
         <LuLogOut color="#131313" className="mt-1" />
         <p className="text-[#131313]">Log Out</p>
       </div>
@@ -315,7 +324,7 @@ function EditDoctor() {
                 <span className="sr-only">Loading...</span>
               </div>
             ) : (
-              "Update Hospital"
+              "Update Doctor"
             )}
           </button>
         </form>

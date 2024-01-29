@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "../common/SideBar";
 import { LuLogOut } from "react-icons/lu";
-import { useCreateHospitalMutation } from "../../../store/hospital/hospital";
+import { useCreateHospitalMutation } from "../../../store/hospital/hospital-api";
+import { useDispatch } from "react-redux";
+import { clearToken } from "../../../store/auth/auth-slice";
+import Sidebar from "../common/SideBar";
 
 function RegisterHospital() {
   const initialState = {
@@ -21,6 +23,11 @@ function RegisterHospital() {
   const [selectedServices, setSelectedServices] = useState([]);
   const [createHospital, { isLoading }] = useCreateHospitalMutation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const handleLogOut = () => {
+    dispatch(clearToken());
+    navigate("/logout");
+  };
 
   const options = [
     { value: "Monday", label: "Monday" },
@@ -130,7 +137,10 @@ function RegisterHospital() {
       <h1 className="text-3xl font-semibold text-[#C276F0] block sm:hidden ml-8 mt-8">
         Care<span className="text-black">Link</span>
       </h1>
-      <div className="flex flex-row absolute top-10 right-2 gap-2 sm:hidden">
+      <div
+        className="flex flex-row absolute top-10 right-2 gap-2 sm:hidden cursor-pointer"
+        onClick={handleLogOut}
+      >
         <LuLogOut color="#131313" className="mt-1" />
         <p className="text-[#131313]">Log Out</p>
       </div>
