@@ -39,10 +39,10 @@ const HospitalListPage = ({ navigation }) => {
   };
 
   if (isLoading) {
-    return <Text>IS LOADING</Text>;
+    return <Text>Loading...</Text>;
   }
   if (error) {
-    return <Text>something is wrong</Text>;
+    return <Text>Something went wrong</Text>;
   }
 
   const hospitals = data.value;
@@ -76,7 +76,6 @@ const HospitalListPage = ({ navigation }) => {
   const openFilter = () => {
     setShowFilter(!showFilter);
   };
-
 
   const filteredHospitalsWithSearch = filteredHospitals.filter((hospital) =>
     hospital.name.toLowerCase().includes(searchQuery.toLowerCase())

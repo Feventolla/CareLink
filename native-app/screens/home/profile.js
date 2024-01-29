@@ -115,7 +115,7 @@ const ProfilePage = () => {
       {/* Profile Header */}
       <View style={styles.profileHeader}>
         <Image
-          source={require("../../assets/hospital-hero.jpg")} // Replace with your cover photo source
+          source={require("../../assets/hospital-hero.jpg")}
           style={styles.coverPhoto}
         />
         <Image

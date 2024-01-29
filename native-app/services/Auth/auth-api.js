@@ -27,6 +27,13 @@ export const userApi = createApi({
         body: credentials,
       }),
     }),
+    otp: builder.mutation({
+      query: (credentials) => ({
+        url: "/patient/otpCode",
+        method: "POST",
+        body: credentials,
+      }),
+    }),
     reset: builder.mutation({
       query: (credentials) => ({
         url: "/patient/resetPassword",
@@ -41,5 +48,6 @@ export const {
   useSignupMutation,
   useLoginMutation,
   useForgotMutation,
+  useOtpMutation,
   useResetMutation,
 } = userApi;

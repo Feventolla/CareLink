@@ -30,13 +30,13 @@ const Sidebar = () => {
       <div className="m-6">
         <h1
           className="text-3xl font-semibold text-[#C276F0] cursor-pointer"
-          onClick={() => handleDashboard}
+          onClick={() => handleDashboard()}
         >
           Care<span className="text-black">Link</span>
         </h1>
         <div
           className="flex flex-row gap-4 mt-12 cursor-pointer"
-          onClick={() => handleDashboard}
+          onClick={() => handleDashboard()}
         >
           <RxDashboard color="#C276F0" size={18} />{" "}
           <p className="text-sm text-[#C276F0]">DashBoard</p>

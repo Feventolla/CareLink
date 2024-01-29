@@ -8,13 +8,41 @@ import {
   Alert,
   ScrollView,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import { SvgContent } from "../svg_content/otpSvg";
+import { useRoute } from "@react-navigation/native";
+import { useOtpMutation } from "../../services/Auth/auth-api";
 
 const OTPVerificationPage = ({ navigation }) => {
+  const [codeOtp, { isLoading }] = useOtpMutation();
+  const [error, setError] = useState();
   const [otp, setOtp] = useState(["", "", "", ""]); // Array to store OTP digits
   const otpInputRefs = Array(4).fill(React.createRef());
+  const route = useRoute();
+  const { email } = route.params;
+  console.log("passed email", email);
+  // const [formData, setFormData] = useState({
+  //   otp: "",
+  // });
+
+  // const handleInputChange = (field, value) => {
+  //   setFormData((prevData) => ({ ...prevData, [field]: value }));
+  // };
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.signupContainer}>
+          <ActivityIndicator size="large" color="#C276F0" />
+          <Text>checking Entered OTP...</Text>
+        </View>
+
+        <View style={styles.blurOverlay} />
+      </View>
+    );
+  }
 
   const handleInputChange = (index, value) => {
     // Update OTP array with the new value
@@ -35,12 +63,27 @@ const OTPVerificationPage = ({ navigation }) => {
     }
   };
 
-  const handleSubmit = () => {
-    const enteredOtp = otp.join("");
-    // Alert.alert("Entered OTP", enteredOtp);
-    navigation.navigate("Reset");
+  const handleSubmit = async () => {
+    const prevOtp = otp.join("");
+    const enteredotp = parseInt(prevOtp, 10);
 
-    // Add logic to verify OTP with the server or perform other actions
+    console.log("otp formdata", enteredotp);
+    try {
+      const response = await codeOtp({ otp: enteredotp, email: email });
+
+      // Handle successful registration response
+      console.log("otp entered successful:", response);
+
+      if (response.data.isSuccess === true) {
+        navigation.navigate("Reset");
+      } else {
+        setError(response.data.message);
+      }
+    } catch (error) {
+      // Handle registration error
+      console.log("otpcode error:", error);
+      setError(error.data.message);
+    }
   };
 
   return (
@@ -62,6 +105,20 @@ const OTPVerificationPage = ({ navigation }) => {
         />
         {/* <SvgXml xml={SvgContent} height={150} width={400} style={styles.svg} /> */}
       </View>
+      {error ? (
+        <Text
+          style={{
+            color: "red",
+            fontSize: 20,
+            textAlign: "center",
+            backgroundColor: "white",
+            height: 40,
+            borderRadius: 30,
+          }}
+        >
+          {error}
+        </Text>
+      ) : null}
       <View style={styles.otpContainer}>
         {otp.map((digit, index) => (
           <TextInput
