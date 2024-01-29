@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const userApi = createApi({
   reducerPath: "userApi",
+  tagTypes: ["Patient"],
   baseQuery: fetchBaseQuery({ baseUrl: "https://carelink.onrender.com/" }),
 
   // Adjust the base URL accordingly
@@ -20,6 +21,12 @@ export const userApi = createApi({
         body: credentials,
       }),
     }),
+    getPatient: builder.query({
+      query: (patientId) => `/patient/getPatient/${patientId}`,
+      providesTags: ["Patient"]
+
+    }),
+
     forgot: builder.mutation({
       query: (credentials) => ({
         url: "/patient/forgetPassword",
@@ -33,7 +40,10 @@ export const userApi = createApi({
         method: "POST",
         body: credentials,
       }),
+
     }),
+
+ 
   }),
 });
 
@@ -42,4 +52,7 @@ export const {
   useLoginMutation,
   useForgotMutation,
   useResetMutation,
+  useGetPatientQuery
+
+  
 } = userApi;

@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useDispatch } from 'react-redux';
+import { setUser } from "../../services/Auth/auth_slice";
 import {
   View,
   Text,
@@ -19,6 +21,8 @@ const Loginpage = ({ navigation }) => {
   const [signin, { isLoading }] = useLoginMutation();
   const [validationErrors, setErrors] = useState({});
   const [EmailError, setEmailError] = useState();
+
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -64,7 +68,7 @@ const Loginpage = ({ navigation }) => {
         console.log("formdata", formData);
 
         const response = await signin(formData).unwrap();
-
+        dispatch(setUser(response.value));
         // Handle successful registration response
         console.log("login successful:", response);
         navigation.navigate("MainApp");
