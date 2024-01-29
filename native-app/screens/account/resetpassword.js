@@ -12,23 +12,57 @@ import { FontAwesome } from "@expo/vector-icons";
 // import ImagePicker from "react-native-image-picker";
 import { SvgXml } from "react-native-svg";
 import { SvgContent } from "../../screens/svg_content/resetSvg";
+import { useResetMutation } from "../../services/Auth/auth-api";
 
 const Resetpassword = ({ navigation }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [reset, { isLoading }] = useResetMutation();
+  const [error, setError] = useState();
+  const [validationErrors, setErrors] = useState({});
 
   const handleInputChange = (field, value) => {
     setFormData((prevData) => ({ ...prevData, [field]: value }));
   };
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required ,Please enter an email";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Invalid email address";
+    }
 
-  const handleLogin = () => {
-    // Handle the login logic here with formData
-    console.log("reset Form Data:", formData);
+    // Validate Password
+    if (!formData.password.trim()) {
+      newErrors.password = "Password is required ,Please enter a password";
+    }
 
-    // For demonstration, navigate to "MainApp"
-    navigation.navigate("Signin");
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleLogin = async () => {
+    if (validateForm()) {
+      console.log("reset Form Data:", formData);
+      try {
+        const response = await reset(formData).unwrap();
+
+        // Handle successful registration response
+        console.log("password reset successfully:", response);
+
+        if (response.isSuccess === true) {
+          navigation.navigate("Signin");
+        } else {
+          setError(response.data.message);
+        }
+      } catch (error) {
+        // Handle registration error
+        console.log("reset error:", error);
+        setError(error.data.message);
+      }
+    }
   };
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
@@ -40,24 +74,48 @@ const Resetpassword = ({ navigation }) => {
         <Text style={styles.title}>Reset your password</Text>
         <SvgXml xml={SvgContent} height={250} width={600} style={styles.svg} />
       </View>
+      {error ? (
+        <Text
+          style={{
+            color: "red",
+            fontSize: 20,
+            textAlign: "center",
+            backgroundColor: "white",
+            height: 40,
+            borderRadius: 30,
+          }}
+        >
+          {error}
+        </Text>
+      ) : null}
       <View style={styles.formScrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.form}>
           <Text style={styles.label}>Email</Text>
           <TextInput
-            style={styles.input}
             placeholder="Enter your Email"
             keyboardType="email-address"
             value={formData.email}
             onChangeText={(text) => handleInputChange("email", text)}
+            style={[styles.input, validationErrors.email && styles.inputError]}
           />
-          <Text style={styles.label}>Password</Text>
+          {validationErrors.email && (
+            <Text style={styles.errorText}>{validationErrors.email}</Text>
+          )}
+
+          <Text style={styles.label}>New Password</Text>
           <TextInput
-            style={styles.input}
             placeholder="Enter your Password"
             secureTextEntry={true}
             value={formData.password}
             onChangeText={(text) => handleInputChange("password", text)}
+            style={[
+              styles.input,
+              validationErrors.password && styles.inputError,
+            ]}
           />
+          {validationErrors.password && (
+            <Text style={styles.errorText}>{validationErrors.password}</Text>
+          )}
         </View>
       </View>
       <View style={styles.bottombutton}>
