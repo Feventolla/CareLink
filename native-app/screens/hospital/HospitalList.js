@@ -23,14 +23,14 @@ const itemSize = availableSpace / numColumns;
 
 const HospitalListPage = ({ navigation }) => {
   const [showFilter, setShowFilter] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const { data, isLoading, error } = useGetHospitalsQuery({});
-  // const hospitals = hospitalData.value;
-  // console.log("data", data);
+
   if (isLoading) {
-    return <Text>IS LOADING</Text>;
+    return <Text>Loading...</Text>;
   }
   if (error) {
-    return <Text>something is wrong</Text>;
+    return <Text>Something went wrong</Text>;
   }
 
   const hospitals = data.value;
@@ -39,13 +39,16 @@ const HospitalListPage = ({ navigation }) => {
     setShowFilter(!showFilter);
   };
 
+  const filteredHospitals = hospitals.filter((hospital) =>
+    hospital.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const renderItem = ({ item }) => (
     <ScrollView
       onPress={() => {
         navigation.navigate("Hospital_detail", {
           id: item._id,
         });
-        // handleDetailPage(hospital._id)
       }}
     >
       <View style={styles.hospitalCard}>
@@ -60,7 +63,6 @@ const HospitalListPage = ({ navigation }) => {
               navigation.navigate("Hospital_detail", {
                 id: item._id,
               });
-              // handleDetailPage(hospital._id)
             }}
           >
             <Text style={styles.readMoreButton}>Read More</Text>
@@ -80,7 +82,14 @@ const HospitalListPage = ({ navigation }) => {
       </View>
       {showFilter && <FilterPage />}
       <View style={styles.searchBar}>
-        <TextInput style={styles.searchInput} placeholder="Search" />
+        <TextInput
+          style={styles.searchInput}
+          type="text"
+          placeholder="Search..."
+          value={searchTerm}
+          onChangeText={(text) => setSearchTerm(text)}
+          className="p-2 w-full md:w-96 mb-4 md:mb-0 border rounded focus:outline-none"
+        />
         <TouchableOpacity style={styles.searchIcon}>
           <Icon name="search" size={21} color="#C276F0" />
         </TouchableOpacity>
@@ -88,7 +97,7 @@ const HospitalListPage = ({ navigation }) => {
 
       <FlatList
         columnWrapperStyle={{ gap }}
-        data={hospitals}
+        data={filteredHospitals}
         keyExtractor={(item) => item._id}
         renderItem={renderItem}
         numColumns={2}
