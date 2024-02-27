@@ -9,6 +9,7 @@ import {
 import { useGetHospitalQuery } from "../../../store/hospital/hospital-api";
 import Modal from "../common/Modal";
 import Error from "../common/Error";
+import { getCookie } from "../../../utils/cookie";
 
 const DoctorCard = ({ doctorId, hospitalId }) => {
   const navigate = useNavigate();
@@ -69,14 +70,22 @@ const DoctorCard = ({ doctorId, hospitalId }) => {
         alt="Doctor"
         className="w-24 h-20 object-cover mb-4 rounded-xl mx-auto"
       />
-      <h4 className="font-bold mb-4">{doctor.firstName}</h4>
-      <p className="text-gray-600 text-sm mb-4">{doctor.specialization}</p>
+      <h4 className="font-bold mb-4">
+        {getCookie("language") === "en"
+          ? doctor.firstName
+          : doctor.amhFirstName}
+      </h4>
+      <p className="text-gray-600 text-sm mb-4">
+        {getCookie("language") === "en"
+          ? doctor.specialization
+          : doctor.amhSpecialization}
+      </p>
       <div className="flex justify-end mt-4 absolute bottom-4 right-4">
         <button
           className="text-red-500 text-sm cursor-pointer"
           onClick={() => handleDelete(doctor._id)}
         >
-          Delete Doctor
+          {getCookie("language") === "en" ? "Delete Doctor" : "ዶክተር አጥፋ"}
         </button>
       </div>
       {confirmDelete && (
@@ -84,22 +93,26 @@ const DoctorCard = ({ doctorId, hospitalId }) => {
           onClose={() => setConfirmDelete(false)}
           children={
             <div className="bg-white px-16 rounded-lg lg:text-lg py-8">
-              <h1 className="font-bold">Are you sure?</h1>
+              <h1 className="font-bold">
+                {getCookie("language") === "en" ? "Are you sure?" : "እርግጠኛ ኖት?"}
+              </h1>
               <p className="text-secondary-text">
-                you want to delete this Doctor
+                {getCookie("language") === "en"
+                  ? "you want to delete this Doctor"
+                  : "ይህንን ዶክተር መሰረዝ ይፈልጋሉ"}
               </p>
               <div className="flex justify-end mt-4 font-medium">
                 <button
                   className="mr-5 hover:underline text-red-600"
                   onClick={handleConfirmDelete}
                 >
-                  Yes
+                  {getCookie("language") === "en" ? "Yes" : "አዎ"}
                 </button>
                 <button
                   className="text-primary hover:underline"
                   onClick={handleCancelDelete}
                 >
-                  No
+                  {getCookie("language") === "en" ? "No" : "አይ"}
                 </button>
               </div>
               {isDeleting && (

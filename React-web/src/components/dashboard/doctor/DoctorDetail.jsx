@@ -6,11 +6,16 @@ import { clearToken } from "../../../store/auth/auth-slice";
 import DoctorCard from "./DoctorCard";
 import DoctorLoading from "./DoctorLoading";
 import Sidebar from "../common/SideBar";
-
+import { getCookie } from "../../../utils/cookie";
+import { setLanguage } from "../../../store/auth/auth-slice";
+import { useState } from "react";
 
 const DoctorDetail = () => {
   const { hospitalId } = useParams();
   const { data: response, error, isLoading } = useGetHospitalQuery(hospitalId);
+  const [currLanguage, setCurrLanguage] = useState(
+    getCookie("language") || "en"
+  );
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -25,6 +30,12 @@ const DoctorDetail = () => {
 
   const handleDashboard = () => {
     navigate("/adminDashboard");
+  };
+
+  const handleLanguageToggle = () => {
+    const newLanguage = currLanguage === "am" ? "en" : "am";
+    dispatch(setLanguage({ language: newLanguage }));
+    setCurrLanguage(newLanguage);
   };
 
   if (isLoading) {
@@ -43,7 +54,9 @@ const DoctorDetail = () => {
             onClick={handleLogOut}
           >
             <LuLogOut color="#131313" className="mt-1" />
-            <p className="text-[#131313]">Log Out</p>
+            <p className="text-[#131313]">
+              {getCookie("language") === "en" ? "Log Out" : "ውጣ"}
+            </p>
           </div>
 
           <Sidebar className="col-span-1 hidden sm:block" />
@@ -76,18 +89,27 @@ const DoctorDetail = () => {
 
       <Sidebar className="col-span-1 hidden sm:block" />
       <div className="col-span-7 m-10 ml-8 sm:ml-56 mr-8">
+        <div className="flex items-end justify-end">
+          <button
+            onClick={handleLanguageToggle}
+            className="flex justify-self-end"
+          >
+            {currLanguage === "am" ? "English" : "Amharic"}
+          </button>
+        </div>
         <h2 className="text-xl sm:text-2xl mb-4 font-semibold">
-          Hospitals Information -{hospitalData.name}
+          {currLanguage === "am" ? "የሆስፒታል መረጃ" : "Hospital Information"} -
+          {currLanguage === "en" ? hospitalData.name : hospitalData.amhName}
         </h2>
         <h3 className="text-xl sm:text-2xl mb-16 text-center font-semibold mt-16">
-          Available Doctors
+          {currLanguage === "en" ? "Available Doctors" : "የሚገኙ ዶክተሮች"}
         </h3>
         <div className="mb-5">
           <button
             className="bg-[#C276F0] text-white font-bold py-2 px-10 rounded"
             onClick={() => handleAddDoctor(hospitalData._id)}
           >
-            Add Doctor
+            {currLanguage === "am" ? "ዶክተር ጨምር" : "Add Doctor"}
           </button>
         </div>
         {doctorsId.length >= 1 ? (
@@ -98,7 +120,9 @@ const DoctorDetail = () => {
           </div>
         ) : (
           <div className="text-start text-2xl font-bold mt-8">
-            No Doctors Added Yet!
+            {currLanguage === "en"
+              ? "No Doctors Added Yet!"
+              : "እስካሁን ምንም ዶክተሮች አልተጨመረም!"}
           </div>
         )}
       </div>

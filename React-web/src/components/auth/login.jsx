@@ -70,6 +70,7 @@ function Login() {
           email: authData.value.patient.email,
           token: authData.value.token,
           role: authData.value.patient.role,
+          language: "en",
         })
       );
       if (authData.value.patient.role === "admin") {

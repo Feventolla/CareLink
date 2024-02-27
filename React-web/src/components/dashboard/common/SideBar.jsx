@@ -3,6 +3,7 @@ import { LuLogOut } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 import { clearToken } from "../../../store/auth/auth-slice";
 import { useDispatch } from "react-redux";
+import { getCookie } from "../../../utils/cookie";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
@@ -24,7 +25,9 @@ const Sidebar = () => {
         onClick={handleLogOut}
       >
         <LuLogOut color="#131313" className="mt-1" />
-        <p className="text-[#131313]">Log Out</p>
+        <p className="text-[#131313]">
+          {getCookie("language") === "en" ? "Log Out" : "ውጣ"}
+        </p>
       </div>
 
       <div className="m-6">
@@ -39,7 +42,9 @@ const Sidebar = () => {
           onClick={() => handleDashboard()}
         >
           <RxDashboard color="#C276F0" size={18} />{" "}
-          <p className="text-sm text-[#C276F0]">DashBoard</p>
+          <p className="text-sm text-[#C276F0]">
+            {getCookie("language") === "en" ? "DashBoard" : "ዳሽቦርድ"}
+          </p>
         </div>
       </div>
     </div>
