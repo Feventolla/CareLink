@@ -9,6 +9,8 @@ import edit from "../../../assets/edit.svg";
 import Modal from "../common/Modal";
 import HospitalLoading from "./HospitalLoading";
 import Sidebar from "../common/SideBar";
+import { getCookie } from "../../../utils/cookie";
+import { setLanguage } from "../../../store/auth/auth-slice";
 
 const Admindashboard = () => {
   const { data: hospitals, isError, isLoading, error } = useGetHospitalsQuery();
@@ -20,6 +22,9 @@ const Admindashboard = () => {
     useDeleteHospitalMutation();
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [selectedHospitalId, setSelectedHospitalId] = useState(null);
+  const [currLanguage, setCurrLanguage] = useState(
+    getCookie("language") || "en"
+  );
   const dispatch = useDispatch();
   const handleDashboard = () => {
     navigate("/adminDashboard");
@@ -48,6 +53,12 @@ const Admindashboard = () => {
     setSelectedHospitalId(null);
   };
 
+  const handleLanguageToggle = () => {
+    const newLanguage = currLanguage === "am" ? "en" : "am";
+    dispatch(setLanguage({ language: newLanguage }));
+    setCurrLanguage(newLanguage);
+  };
+
   if (isLoading) {
     return (
       <div>
@@ -63,7 +74,9 @@ const Admindashboard = () => {
             onClick={handleLogOut}
           >
             <LuLogOut color="#131313" className="mt-1" />
-            <p className="text-[#131313]">Log Out</p>
+            <p className="text-[#131313]">
+              {getCookie("language") === "en" ? "Log Out" : "ውጣ"}
+            </p>
           </div>
 
           <Sidebar className="col-span-1 hidden sm:block" />
@@ -84,10 +97,13 @@ const Admindashboard = () => {
     // eslint-disable-next-line react/jsx-no-undef
     return <Error message={"An Error occurred while getting the hospitals"} />;
   }
-  console.log(hospitals);
+
   const hospitalData = hospitals.value;
-  const filteredhospitalData = hospitalData.filter((card) =>
-    card.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredhospitalData = hospitalData.filter(
+    (card) =>
+      card.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (card.amhName &&
+        card.amhName.toLowerCase().includes(searchTerm.toLowerCase()))
   );
   const handleDetailHospital = (id) => {
     navigate(`/detailHospital/${id}`);
@@ -97,12 +113,10 @@ const Admindashboard = () => {
   };
 
   const handleEdit = (id) => {
-    console.log(`Edit card with id ${id}`);
+
     navigate(`/editHospital/${id}`);
   };
-  // const handleLogout = () => {
-  //   console.log("logout");
-  // };
+  
 
   // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -127,18 +141,28 @@ const Admindashboard = () => {
         onClick={handleLogOut}
       >
         <LuLogOut color="#131313" className="mt-1" />
-        <p className="text-[#131313]">Log Out</p>
+        <p className="text-[#131313]">
+          {getCookie("language") === "en" ? "Log Out" : "ውጣ"}
+        </p>
       </div>
 
       <Sidebar className="col-span-1 hidden sm:block" />
       <div className="p-5 col-span-7 m-10 ml-8 sm:ml-56 mr-8">
         <div className="flex flex-col md:flex-row gap-16 ">
           <div className="flex flex-col w-full bg-[#FAFAFA] pl-3">
+            <div className="flex items-end justify-end">
+              <button
+                onClick={handleLanguageToggle}
+                className="flex justify-self-end"
+              >
+                {currLanguage === "am" ? "English" : "Amharic"}
+              </button>
+            </div>
             <div className="flex bg-[#FAFAFA] items-center justify-center w-full text-3xl text-[#3E435D] font-semibold pt-10 pb-10 ml-6 ">
-              Welcome
+              {currLanguage === "en" ? "Welcome" : "እንኳን ደህና መጡ"}
             </div>
             <div className="text-xl font-semibold pb-4 md:pb-7">
-              Hospitals Information
+              {currLanguage === "am" ? "የሆስፒታል መረጃ" : "Hospital Information"}
             </div>
             <div className="flex flex-col md:flex-row justify-between md:space-x-4 mb-5">
               <div className="mb-4 md:mb-0">
@@ -146,13 +170,13 @@ const Admindashboard = () => {
                   className="bg-[#C276F0] text-white font-bold py-2 px-10 rounded"
                   onClick={handleAddHospital}
                 >
-                  Add Hospital
+                  {currLanguage === "am" ? "ሆስፒታል ጨምር" : "Add Hospital"}
                 </button>
               </div>
               <div>
                 <input
                   type="text"
-                  placeholder="Search..."
+                  placeholder={currLanguage === "en" ? "Search..." : "ፈልግ..."}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="p-2 w-full md:w-96 mb-4 md:mb-0 border rounded focus:outline-none"
@@ -176,7 +200,9 @@ const Admindashboard = () => {
                         />
                       </div>
                       <div className="flex-grow">
-                        <h3 className="text-xl font-semibold">{card.name}</h3>
+                        <h3 className="text-xl font-semibold">
+                          {currLanguage === "en" ? card.name : card.amhName}
+                        </h3>
                       </div>
                       <div
                         onClick={() => handleEdit(card._id)}
@@ -196,9 +222,15 @@ const Admindashboard = () => {
                         onClick={() => handleDetailHospital(card._id)}
                       >
                         {card.description.length > 150 ? (
-                          <>{`${card.description.slice(0, 150)}...`}</>
-                        ) : (
+                          <>{`${
+                            currLanguage === "en"
+                              ? card.description.slice(0, 150)
+                              : card.amhDescription
+                          }...`}</>
+                        ) : currLanguage === "en" ? (
                           card.description
+                        ) : (
+                          card.amhDescription
                         )}
                       </div>
                       <div className="bottom-4 right-3 absolute">
@@ -206,7 +238,9 @@ const Admindashboard = () => {
                           onClick={() => handleDelete(card._id)}
                           className="text-red-500 text-sm cursor-pointer"
                         >
-                          Delete Hospital
+                          {currLanguage === "en"
+                            ? "Delete Hospital"
+                            : "ሆስፒታል አጥፋ"}
                         </button>
                       </div>
                     </div>
@@ -215,7 +249,9 @@ const Admindashboard = () => {
               </div>
             ) : (
               <div className="flex text-3xl justify-center mt-4">
-                Oops, No Hospital Found
+                {currLanguage === "en"
+                  ? "Oops, No Hospital Found"
+                  : "ምንም ሆስፒታል አልተገኘም"}
               </div>
             )}
           </div>
@@ -244,22 +280,26 @@ const Admindashboard = () => {
           // eslint-disable-next-line react/no-children-prop
           children={
             <div className="bg-white px-16 rounded-lg lg:text-lg py-8">
-              <h1 className="font-bold">Are you sure?</h1>
+              <h1 className="font-bold">
+                {currLanguage === "en" ? "Are you sure?" : "እርግጠኛ ኖት?"}
+              </h1>
               <p className="text-secondary-text">
-                you want to delete this Hospital
+                {currLanguage === "en"
+                  ? "you want to delete this Hospital"
+                  : "ይህንን ሆስፒታል መሰረዝ ይፈልጋሉ"}
               </p>
               <div className="flex justify-end mt-4 font-medium">
                 <button
                   className="mr-5 hover:underline text-red-600"
                   onClick={handleConfirmDelete}
                 >
-                  Yes
+                  {currLanguage === "en" ? "Yes" : "አዎ"}
                 </button>
                 <button
                   className="text-primary hover:underline"
                   onClick={handleCancelDelete}
                 >
-                  No
+                  {currLanguage === "en" ? "No" : "አይ"}
                 </button>
               </div>
               {isDeleting && (

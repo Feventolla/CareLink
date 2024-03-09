@@ -2,9 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LuLogOut } from "react-icons/lu";
 import { useCreateHospitalMutation } from "../../../store/hospital/hospital-api";
-import { useDispatch } from "react-redux";
 import { clearToken } from "../../../store/auth/auth-slice";
 import Sidebar from "../common/SideBar";
+import { useDispatch } from "react-redux";
+import { setLanguage } from "../../../store/auth/auth-slice";
+import { getCookie } from "../../../utils/cookie";
 
 function RegisterHospital() {
   const initialState = {
@@ -18,35 +20,79 @@ function RegisterHospital() {
     webSite: "",
     photo: null,
   };
+
   const [formData, setFormData] = useState(initialState);
   const [selectedDays, setSelectedDays] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
   const [createHospital, { isLoading }] = useCreateHospitalMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [currLanguage, setCurrLanguage] = useState(
+    getCookie("language") || "en"
+  );
+
   const handleLogOut = () => {
     dispatch(clearToken());
     navigate("/logout");
   };
 
   const options = [
-    { value: "Monday", label: "Monday" },
-    { value: "Tuesday", label: "Tuesday" },
-    { value: "Wednesday", label: "Wednesday" },
-    { value: "Thursday", label: "Thursday" },
-    { value: "Friday", label: "Friday" },
-    { value: "Saturday", label: "Saturday" },
-    { value: "Sunday", label: "Sunday" },
+    {
+      value: "Monday",
+      label: `${currLanguage === "am" ? "ሰኞ" : "Monday"}`,
+    },
+    {
+      value: "Tuesday",
+      label: `${currLanguage === "am" ? "ማክሰኞ" : "Tuesday"}`,
+    },
+    {
+      value: "Wednesday",
+      label: `${currLanguage === "am" ? "ረቡዕ" : "Wednesday"}`,
+    },
+    {
+      value: "Thursday",
+      label: `${currLanguage === "am" ? "ሐሙስ" : "Thursday"}`,
+    },
+    { value: "Friday", label: `${currLanguage === "am" ? "አርብ" : "Friday"}` },
+    {
+      value: "Saturday",
+      label: `${currLanguage === "am" ? "ቅዳሜ" : "Saturday"}`,
+    },
+    {
+      value: "Sunday",
+      label: `${currLanguage === "am" ? "እሁድ" : "Sunday"}`,
+    },
   ];
 
   const hospitlaServices = [
-    "Emergency",
-    "Maternity",
-    "Radiolgy",
-    "Cardiology",
-    "sergury",
-    "Laboratory",
-    "Physiotherapy",
+    {
+      valeu: "Emergency",
+      lable: `${currLanguage === "am" ? "ድንገተኛ አደጋ" : "Emergency"}`,
+    },
+    {
+      value: "Maternity",
+      lable: `${currLanguage === "am" ? "የወሊድ" : "Maternity"}`,
+    },
+    {
+      value: "Radiolgy",
+      lable: `${currLanguage === "am" ? "Radiolgy" : "ራዲዮሎጂ"}`,
+    },
+    {
+      value: "Cardiology",
+      lable: `${currLanguage === "am" ? "ካርዲዮሎጂ" : "Cardiology"}`,
+    },
+    {
+      value: "sergury",
+      lable: `${currLanguage === "am" ? "ቀዶ ጥገና" : "sergury"}`,
+    },
+    {
+      value: "Laboratory",
+      lable: `${currLanguage === "am" ? "ላቦራቶሪ" : "Laboratory"}`,
+    },
+    {
+      value: "Physiotherapy",
+      lable: `${currLanguage === "am" ? "ፊዚዮቴራፒ" : "Physiotherapy"}`,
+    },
   ];
 
   const toggleDay = (selectedDay) => {
@@ -84,6 +130,11 @@ function RegisterHospital() {
       photo: file,
     });
   };
+  const handleLanguageToggle = () => {
+    const newLanguage = currLanguage === "am" ? "en" : "am";
+    dispatch(setLanguage({ language: newLanguage }));
+    setCurrLanguage(newLanguage);
+  };
 
   const handleAddHospital = async (e) => {
     e.preventDefault();
@@ -101,7 +152,6 @@ function RegisterHospital() {
     } = formData;
 
     const formDataToSend = new FormData();
-    console.log(photo, "the photo");
     formDataToSend.append("name", name);
     formDataToSend.append("generalSpecialization", generalSpecialization);
     formDataToSend.append("description", description);
@@ -120,10 +170,9 @@ function RegisterHospital() {
     }
     formDataToSend.append("availability[startTime]", startTime);
     formDataToSend.append("availability[endTime]", endTime);
-    console.log(formDataToSend);
+    formDataToSend.append("language", getCookie("language") || "en");
     try {
       const response = await createHospital(formDataToSend).unwrap();
-      console.log(response);
       setFormData(initialState);
       navigate("/adminDashboard");
     } catch (error) {
@@ -142,30 +191,43 @@ function RegisterHospital() {
         onClick={handleLogOut}
       >
         <LuLogOut color="#131313" className="mt-1" />
-        <p className="text-[#131313]">Log Out</p>
+        <p className="text-[#131313]">
+          {getCookie("language") === "en" ? "Log Out" : "ውጣ"}
+        </p>
       </div>
 
       <Sidebar className="col-span-1 hidden sm:block" />
       <div className="col-span-7 m-10 ml-8 sm:ml-56 mr-8">
+        <div className="flex items-end justify-end">
+          <button
+            onClick={handleLanguageToggle}
+            className="flex justify-self-end"
+          >
+            {currLanguage === "am" ? "English" : "Amharic"}
+          </button>
+        </div>
+
         <h1 className="sm:text-center font-bold text-2xl sm:p-10 mb-6 sm:pb-0">
-          Hospital Information
+          {currLanguage === "am" ? "የሆስፒታል መረጃ" : "Hospital Information"}
         </h1>
+
         <h2 className="pb-6 sm:pb-10 text-lg sm:text-xl font-bold">
-          Add Hospital
+          {currLanguage === "am" ? "ሆስፒታል ጨምር" : "Add Hospital"}
         </h2>
+
         <form onSubmit={handleAddHospital}>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="flex flex-col">
               {/* {backEndError && <p className="text-red-500">{backEndError}</p>} */}
               <label htmlFor="name" className="text-sm font-semibold mb-2">
-                Hospital Name
+                {currLanguage === "am" ? "የሆስፒታል ስም" : "Hospital Name"}
               </label>
               <input
                 name="name"
                 onChange={handleInputChange}
                 type="text"
                 required
-                placeholder="Tkur Anbesa"
+                placeholder={currLanguage === "am" ? "ጥቁር አንበሳ" : "Tkur Anbesa"}
                 className="py-2 px-2 rounded-lg border max-w-lg mb-6 focus:outline-none focus:ring-1 focus:border-[#035ECF]"
               />
 
@@ -173,7 +235,9 @@ function RegisterHospital() {
                 className="text-sm font-semibold mb-2"
                 htmlFor="generalSpecialization"
               >
-                General Specialization
+                {currLanguage === "am"
+                  ? "አጠቃላይ ስፔሻላይዜሽን"
+                  : "General Specialization"}
               </label>
               <input
                 name="generalSpecialization"
@@ -188,7 +252,7 @@ function RegisterHospital() {
                 className="text-sm font-semibold mb-2"
                 htmlFor="description"
               >
-                About Hospital
+                {currLanguage === "am" ? "ስለ ሆስፒታል" : "About Hospital"}
               </label>
               <input
                 name="description"
@@ -199,7 +263,7 @@ function RegisterHospital() {
                 placeholder="write here about the hospital"
               />
               <label className="text-sm font-semibold mb-2" htmlFor="address">
-                Address
+                {currLanguage === "am" ? "አድራሻ" : "Address"}
               </label>
               <input
                 name="address"
@@ -210,7 +274,7 @@ function RegisterHospital() {
               />
 
               <label className="text-sm font-semibold mb-2" htmlFor="webSite">
-                webSite
+                {currLanguage === "am" ? "ድህረገፅ" : "webSite"}
               </label>
               <input
                 name="webSite"
@@ -224,7 +288,7 @@ function RegisterHospital() {
                 className="text-sm font-semibold mb-2"
                 htmlFor="phoneNumber"
               >
-                Contact
+                {currLanguage === "am" ? "ስልክ ቁጥር" : "Contact"}
               </label>
               <input
                 name="phoneNumber"
@@ -238,7 +302,7 @@ function RegisterHospital() {
             </div>
             <div className="flex flex-col">
               <label className="text-sm font-semibold mb-3" htmlFor="services">
-                Services
+                {currLanguage === "am" ? "አገልግሎቶች" : "Services"}
               </label>
 
               <div className="flex space-x-2 flex-wrap mb-4">
@@ -246,19 +310,19 @@ function RegisterHospital() {
                   <button
                     key={index}
                     type="button"
-                    onClick={() => toggleService(service)}
+                    onClick={() => toggleService(service.value)}
                     className={`py-1 px-2 rounded-lg text-xs mb-2 ${
-                      selectedServices.includes(service)
+                      selectedServices.includes(service.value)
                         ? "bg-[#C276F0] text-white"
                         : "bg-white border border-[#C276F0] text-[#C276F0]"
                     }`}
                   >
-                    {service}
+                    {service.lable}
                   </button>
                 ))}
               </div>
               <label className="text-sm font-semibold mb-3" htmlFor="day">
-                Working Day
+                {currLanguage === "am" ? "የስራ ቀን" : "Working Day"}
               </label>
 
               <div className="flex space-x-2 flex-wrap mb-4">
@@ -278,7 +342,7 @@ function RegisterHospital() {
                 ))}
               </div>
               <label className="text-sm font-semibold mb-2" htmlFor="startTime">
-                Opening Time
+                {currLanguage === "am" ? "የመክፈቻ ሰአት" : "Opening Time"}
               </label>
               <input
                 name="startTime"
@@ -289,7 +353,7 @@ function RegisterHospital() {
                 placeholder="08:00 AM"
               />
               <label className="text-sm font-semibold mb-2" htmlFor="endTime">
-                Closing Time
+                {currLanguage === "am" ? "የመዝጊያ ሰአት" : "Closing Time"}
               </label>
               <input
                 name="endTime"
@@ -301,7 +365,7 @@ function RegisterHospital() {
               />
 
               <label className="text-sm font-semibold mb-2" htmlFor="photo">
-                Photo
+                {currLanguage === "am" ? "ፎቶ" : "Photo"}
               </label>
               <input
                 name="photo"
@@ -336,7 +400,11 @@ function RegisterHospital() {
                 <span className="sr-only">Loading...</span>
               </div>
             ) : (
-              "Add Hospital"
+              (() => {
+                const contentToDisplay =
+                  currLanguage === "am" ? "ሆስፒታል ጨምር" : "Add Hospital";
+                return <span>{contentToDisplay}</span>;
+              })()
             )}
           </button>
         </form>

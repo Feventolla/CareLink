@@ -7,14 +7,18 @@ import { useDispatch } from "react-redux";
 import { clearToken } from "../../../store/auth/auth-slice";
 import EditLoading from "../common/EditLoading";
 import Sidebar from "../common/SideBar";
+import { getCookie } from "../../../utils/cookie";
+import { setLanguage } from "../../../store/auth/auth-slice";
 
 function EditDoctor() {
   const [updateDoctor, { isLoaing: isUpdating }] = useUpdateDoctorMutation();
   const { doctorId } = useParams();
-  console.log(doctorId);
   const { data: response, isLoading, error } = useGetDoctorQuery(doctorId);
   const [formData, setFormData] = useState({});
   const [selectedDays, setSelectedDays] = useState([]);
+  const [currLanguage, setCurrLanguage] = useState(
+    getCookie("language") || "en"
+  );
   const dispatch = useDispatch();
   const handleLogOut = () => {
     dispatch(clearToken());
@@ -24,12 +28,19 @@ function EditDoctor() {
   useEffect(() => {
     if (response) {
       const curr = response.value;
-      console.log(curr, "the doc");
       const currHospital = {
-        firstName: curr.firstName,
-        lastName: curr.lastName,
+        firstName: `${
+          getCookie("language") === "en" ? curr.firstName : curr.amhFirstName
+        }`,
+        lastName: `${
+          getCookie("language") === "en" ? curr.lastName : curr.amhLastName
+        }`,
         email: curr.email,
-        specialization: curr.specialization,
+        specialization: `${
+          getCookie("language") === "en"
+            ? curr.specialization
+            : curr.amhSpecialization
+        }`,
         phoneNumber: curr.phoneNumber,
         startTime: curr.availability.startTime,
         endTime: curr.availability.endTime,
@@ -83,6 +94,7 @@ function EditDoctor() {
     formDataToSend.append("yearsOfExperience", yearsOfExperience);
     formDataToSend.append("gender", gender);
     formDataToSend.append("hospitalId", hospitalId);
+    formDataToSend.append("language", currLanguage);
 
     if (photo) {
       formDataToSend.append("photo", photo, photo.name);
@@ -93,13 +105,11 @@ function EditDoctor() {
     }
     formDataToSend.append("availability[startTime]", startTime);
     formDataToSend.append("availability[endTime]", endTime);
-    console.log(formDataToSend);
     try {
       const response = await updateDoctor({
         doctor: formDataToSend,
         id: doctorId,
       }).unwrap();
-      console.log(response);
       setFormData({});
       navigate(`/detailHospital/${hospitalId}`);
     } catch (error) {
@@ -108,13 +118,31 @@ function EditDoctor() {
     }
   };
   const options = [
-    { value: "Monday", label: "Monday" },
-    { value: "Tuesday", label: "Tuesday" },
-    { value: "Wednesday", label: "Wednesday" },
-    { value: "Thursday", label: "Thursday" },
-    { value: "Friday", label: "Friday" },
-    { value: "Saturday", label: "Saturday" },
-    { value: "Sunday", label: "Sunday" },
+    {
+      value: "Monday",
+      label: `${currLanguage === "am" ? "ሰኞ" : "Monday"}`,
+    },
+    {
+      value: "Tuesday",
+      label: `${currLanguage === "am" ? "ማክሰኞ" : "Tuesday"}`,
+    },
+    {
+      value: "Wednesday",
+      label: `${currLanguage === "am" ? "ረቡዕ" : "Wednesday"}`,
+    },
+    {
+      value: "Thursday",
+      label: `${currLanguage === "am" ? "ሐሙስ" : "Thursday"}`,
+    },
+    { value: "Friday", label: `${currLanguage === "am" ? "አርብ" : "Friday"}` },
+    {
+      value: "Saturday",
+      label: `${currLanguage === "am" ? "ቅዳሜ" : "Saturday"}`,
+    },
+    {
+      value: "Sunday",
+      label: `${currLanguage === "am" ? "እሁድ" : "Sunday"}`,
+    },
   ];
   const toggleDay = (selectedDay) => {
     setSelectedDays((prevSelectedDays) => {
@@ -144,20 +172,24 @@ function EditDoctor() {
         onClick={handleLogOut}
       >
         <LuLogOut color="#131313" className="mt-1" />
-        <p className="text-[#131313]">Log Out</p>
+        <p className="text-[#131313]">
+          {getCookie("language") === "en" ? "Log Out" : "ውጣ"}
+        </p>
       </div>
 
       <Sidebar className="col-span-1 hidden sm:block" />
       <div className="col-span-7 m-10 ml-8 sm:ml-56 mr-8">
         <h1 className="text-center font-bold text-2xl p-10">
-          Doctors Information
+          {currLanguage === "en" ? "Doctors Information" : "የዶክተር መረጃ"}
         </h1>
-        <h2 className="pb-10 text-xl font-bold">Edit Doctor</h2>
+        <h2 className="pb-10 text-xl font-bold">
+          {currLanguage === "am" ? "ዶክተር ቀይር" : "Edit Doctor"}
+        </h2>
         <form onSubmit={handleEditDoctor}>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="flex flex-col">
               <label htmlFor="name" className="text-sm font-semibold mb-2">
-                First Name
+                {currLanguage === "am" ? "ስም" : "First Name"}
               </label>
               <input
                 name="firstName"
@@ -170,7 +202,7 @@ function EditDoctor() {
               />
 
               <label className="text-sm font-semibold mb-2" htmlFor="lastName">
-                Last Name
+                {currLanguage === "am" ? "የአባት ስም" : "Last Name"}
               </label>
               <input
                 name="lastName"
@@ -183,7 +215,7 @@ function EditDoctor() {
               />
 
               <label className="text-sm font-semibold mb-2" htmlFor="email">
-                email
+                {currLanguage === "am" ? "ኢሜይል" : "email"}
               </label>
               <input
                 name="email"
@@ -198,7 +230,7 @@ function EditDoctor() {
                 className="text-sm font-semibold mb-2"
                 htmlFor="specialization"
               >
-                Specialization
+                {currLanguage === "am" ? "ስፔሻላይዜሽን" : "Specialization"}
               </label>
               <input
                 name="specialization"
@@ -213,7 +245,7 @@ function EditDoctor() {
                 className="text-sm font-semibold mb-2"
                 htmlFor="phoneNumber"
               >
-                Contact
+                {currLanguage === "am" ? "ስልክ ቁጥር" : "Contact"}
               </label>
               <input
                 name="phoneNumber"
@@ -225,13 +257,33 @@ function EditDoctor() {
                 placeholder="+251 967 765 789"
                 // pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}-[0-9]{3}"
               />
+              <label className="text-sm font-semibold mb-2" htmlFor="gender">
+                {currLanguage === "am" ? "ጾታ" : "Gender"}
+              </label>
+              <select
+                name="gender"
+                value={formData.gender}
+                onChange={handleInputChange}
+                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
+                required
+              >
+                <option value="" disabled selected>
+                  {currLanguage === "am" ? "ጾታ ይምረጡ" : "Select Gender"}
+                </option>
+                <option value="Female">
+                  {currLanguage === "am" ? "ሴት" : "Female"}
+                </option>
+                <option value="Male">
+                  {currLanguage === "am" ? "ወንድ" : "Male"}
+                </option>
+              </select>
             </div>
             <div className="flex flex-col">
               <label
                 className="text-sm font-semibold mb-2"
                 htmlFor="yearsOfExperience"
               >
-                Years Of Experience
+                {currLanguage === "am" ? "የሥራ ዓመታት" : "Years Of Experience"}
               </label>
               <input
                 name="yearsOfExperience"
@@ -245,7 +297,7 @@ function EditDoctor() {
               />
 
               <label className="text-sm font-semibold mb-2" htmlFor="day">
-                working days
+                {currLanguage === "am" ? "የስራ ቀን" : "Working Day"}
               </label>
               <div className="flex space-x-2 flex-wrap mb-4">
                 {options.map((option) => (
@@ -264,7 +316,7 @@ function EditDoctor() {
                 ))}
               </div>
               <label className="text-sm font-semibold mb-2" htmlFor="startTime">
-                Start Time
+                {currLanguage === "am" ? "የመግቢያ ሰዓት" : "Start Time"}
               </label>
               <input
                 name="startTime"
@@ -276,7 +328,7 @@ function EditDoctor() {
                 placeholder="08:00 AM"
               />
               <label className="text-sm font-semibold mb-2" htmlFor="endTime">
-                End Time
+                {currLanguage === "am" ? "የመውጫ ሰዓት" : "End Time"}
               </label>
               <input
                 name="endTime"
@@ -289,7 +341,7 @@ function EditDoctor() {
               />
 
               <label className="text-sm font-semibold mb-2" htmlFor="photo">
-                Photo
+                {currLanguage === "am" ? "ፎቶ" : "Photo"}
               </label>
               <input
                 name="photo"
@@ -324,7 +376,11 @@ function EditDoctor() {
                 <span className="sr-only">Loading...</span>
               </div>
             ) : (
-              "Update Doctor"
+              (() => {
+                const contentToDisplay =
+                  currLanguage === "am" ? "ዶክተር ቀይር" : "Edit Doctor";
+                return <span>{contentToDisplay}</span>;
+              })()
             )}
           </button>
         </form>

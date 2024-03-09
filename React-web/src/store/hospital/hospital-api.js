@@ -10,6 +10,7 @@ export const hospitalApiSlice = createApi({
     baseUrl: BASE_URL,
     prepareHeaders: (headers) => {
       const token = getCookie("token");
+      
       if (token) {
         headers.set("authorization", `bearer ${token}`);
       }
