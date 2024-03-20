@@ -92,7 +92,7 @@ const DoctorDetail = () => {
         <div className="flex items-end justify-end">
           <button
             onClick={handleLanguageToggle}
-            className="flex justify-self-end"
+            className="flex justify-self-end bg-[#C276F0] hover:bg-[#c7a0df] text-white font-bold py-1 px-4 rounded transition duration-300"
           >
             {currLanguage === "am" ? "English" : "Amharic"}
           </button>
