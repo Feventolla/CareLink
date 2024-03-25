@@ -8,17 +8,16 @@ import { clearToken } from "../../../store/auth/auth-slice";
 import EditLoading from "../common/EditLoading";
 import Sidebar from "../common/SideBar";
 import { getCookie } from "../../../utils/cookie";
-import { setLanguage } from "../../../store/auth/auth-slice";
 
 function EditDoctor() {
   const [updateDoctor, { isLoaing: isUpdating }] = useUpdateDoctorMutation();
   const { doctorId } = useParams();
   const { data: response, isLoading, error } = useGetDoctorQuery(doctorId);
   const [formData, setFormData] = useState({});
-  const [selectedDays, setSelectedDays] = useState([]);
   const [currLanguage, setCurrLanguage] = useState(
     getCookie("language") || "en"
   );
+  const [careerStartTime, setCareerStartTime] = useState("");
   const dispatch = useDispatch();
   const handleLogOut = () => {
     dispatch(clearToken());
@@ -28,6 +27,21 @@ function EditDoctor() {
   useEffect(() => {
     if (response) {
       const curr = response.value;
+      const careerStartTimeFormat = new Date(
+        curr.careerStartTime.year,
+        curr.careerStartTime.month - 1,
+        1,
+        0,
+        0,
+        0,
+        0
+      );
+      const month =
+        `${careerStartTimeFormat.getMonth()}`.length == 2
+          ? `${careerStartTimeFormat.getMonth() + 1}`
+          : `0${careerStartTimeFormat.getMonth() + 1}`;
+      setCareerStartTime(`${careerStartTimeFormat.getFullYear()}-${month}-01`);
+
       const currHospital = {
         firstName: `${
           getCookie("language") === "en" ? curr.firstName : curr.amhFirstName
@@ -35,24 +49,19 @@ function EditDoctor() {
         lastName: `${
           getCookie("language") === "en" ? curr.lastName : curr.amhLastName
         }`,
-        email: curr.email,
+
         specialization: `${
           getCookie("language") === "en"
             ? curr.specialization
             : curr.amhSpecialization
         }`,
-        phoneNumber: curr.phoneNumber,
-        startTime: curr.availability.startTime,
-        endTime: curr.availability.endTime,
-        yearsOfExperience: curr.yearsOfExperience,
+
         gender: curr.gender,
         hospitalId: curr.hospitalId,
       };
       setFormData(currHospital);
-      setSelectedDays(curr.availability.day);
     }
   }, [response, doctorId]);
-
   const navigate = useNavigate();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -75,23 +84,24 @@ function EditDoctor() {
     const {
       firstName,
       lastName,
-      email,
       specialization,
-      phoneNumber,
-      startTime,
-      endTime,
-      yearsOfExperience,
       gender,
       photo,
       hospitalId,
     } = formData;
     const formDataToSend = new FormData();
+    const careerStartTimeParts = careerStartTime.split("-");
     formDataToSend.append("firstName", firstName);
     formDataToSend.append("lastName", lastName);
     formDataToSend.append("specialization", specialization);
-    formDataToSend.append("phoneNumber", phoneNumber);
-    formDataToSend.append("email", email);
-    formDataToSend.append("yearsOfExperience", yearsOfExperience);
+    formDataToSend.append(
+      "careerStartTime[year]",
+      parseInt(careerStartTimeParts[0])
+    );
+    formDataToSend.append(
+      "careerStartTime[month]",
+      parseInt(careerStartTimeParts[1])
+    );
     formDataToSend.append("gender", gender);
     formDataToSend.append("hospitalId", hospitalId);
     formDataToSend.append("language", currLanguage);
@@ -100,13 +110,8 @@ function EditDoctor() {
       formDataToSend.append("photo", photo, photo.name);
     }
 
-    for (const day in selectedDays) {
-      formDataToSend.append("availability[day][]", selectedDays[day]);
-    }
-    formDataToSend.append("availability[startTime]", startTime);
-    formDataToSend.append("availability[endTime]", endTime);
     try {
-      const response = await updateDoctor({
+      await updateDoctor({
         doctor: formDataToSend,
         id: doctorId,
       }).unwrap();
@@ -116,42 +121,6 @@ function EditDoctor() {
       // setBackendError(`An error occurred : ${error.data.title}`);
       console.log("An error occurred", error);
     }
-  };
-  const options = [
-    {
-      value: "Monday",
-      label: `${currLanguage === "am" ? "ሰኞ" : "Monday"}`,
-    },
-    {
-      value: "Tuesday",
-      label: `${currLanguage === "am" ? "ማክሰኞ" : "Tuesday"}`,
-    },
-    {
-      value: "Wednesday",
-      label: `${currLanguage === "am" ? "ረቡዕ" : "Wednesday"}`,
-    },
-    {
-      value: "Thursday",
-      label: `${currLanguage === "am" ? "ሐሙስ" : "Thursday"}`,
-    },
-    { value: "Friday", label: `${currLanguage === "am" ? "አርብ" : "Friday"}` },
-    {
-      value: "Saturday",
-      label: `${currLanguage === "am" ? "ቅዳሜ" : "Saturday"}`,
-    },
-    {
-      value: "Sunday",
-      label: `${currLanguage === "am" ? "እሁድ" : "Sunday"}`,
-    },
-  ];
-  const toggleDay = (selectedDay) => {
-    setSelectedDays((prevSelectedDays) => {
-      if (prevSelectedDays.includes(selectedDay)) {
-        return prevSelectedDays.filter((day) => day !== selectedDay);
-      } else {
-        return [...prevSelectedDays, selectedDay];
-      }
-    });
   };
 
   if (isLoading) {
@@ -214,18 +183,6 @@ function EditDoctor() {
                 placeholder="Doe"
               />
 
-              <label className="text-sm font-semibold mb-2" htmlFor="email">
-                {currLanguage === "am" ? "ኢሜይል" : "email"}
-              </label>
-              <input
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
-                type="email"
-                required
-                placeholder="johndoe45@gmail.com"
-              />
               <label
                 className="text-sm font-semibold mb-2"
                 htmlFor="specialization"
@@ -241,22 +198,6 @@ function EditDoctor() {
                 placeholder="www.tkuranbesa.com"
               />
 
-              <label
-                className="text-sm font-semibold mb-2"
-                htmlFor="phoneNumber"
-              >
-                {currLanguage === "am" ? "ስልክ ቁጥር" : "Contact"}
-              </label>
-              <input
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleInputChange}
-                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
-                type="tel"
-                required
-                placeholder="+251 967 765 789"
-                // pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}-[0-9]{3}"
-              />
               <label className="text-sm font-semibold mb-2" htmlFor="gender">
                 {currLanguage === "am" ? "ጾታ" : "Gender"}
               </label>
@@ -281,63 +222,17 @@ function EditDoctor() {
             <div className="flex flex-col">
               <label
                 className="text-sm font-semibold mb-2"
-                htmlFor="yearsOfExperience"
+                htmlFor="careerStartTime"
               >
-                {currLanguage === "am" ? "የሥራ ዓመታት" : "Years Of Experience"}
+                {currLanguage === "am" ? "የስራ መነሻ ቀን" : "Career Start Time"}
               </label>
               <input
-                name="yearsOfExperience"
-                value={formData.yearsOfExperience}
-                onChange={handleInputChange}
+                name="careerStartTime"
+                value={careerStartTime}
+                onChange={(e) => setCareerStartTime(e.target.value)}
                 className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
-                type="number"
+                type="date"
                 required
-                placeholder="5"
-                min="0"
-              />
-
-              <label className="text-sm font-semibold mb-2" htmlFor="day">
-                {currLanguage === "am" ? "የስራ ቀን" : "Working Day"}
-              </label>
-              <div className="flex space-x-2 flex-wrap mb-4">
-                {options.map((option) => (
-                  <button
-                    key={option.value}
-                    type="button"
-                    onClick={() => toggleDay(option.value)}
-                    className={`py-1 px-2 rounded-lg text-xs mb-2 ${
-                      selectedDays.includes(option.value)
-                        ? "bg-[#C276F0] text-white"
-                        : "bg-white border border-[#C276F0] text-[#C276F0]"
-                    }`}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-              <label className="text-sm font-semibold mb-2" htmlFor="startTime">
-                {currLanguage === "am" ? "የመግቢያ ሰዓት" : "Start Time"}
-              </label>
-              <input
-                name="startTime"
-                value={formData.startTime}
-                onChange={handleInputChange}
-                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
-                type="time"
-                required
-                placeholder="08:00 AM"
-              />
-              <label className="text-sm font-semibold mb-2" htmlFor="endTime">
-                {currLanguage === "am" ? "የመውጫ ሰዓት" : "End Time"}
-              </label>
-              <input
-                name="endTime"
-                value={formData.endTime}
-                onChange={handleInputChange}
-                className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
-                type="time"
-                required
-                placeholder="6:00 PM"
               />
 
               <label className="text-sm font-semibold mb-2" htmlFor="photo">

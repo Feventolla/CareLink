@@ -9,20 +9,7 @@ import { setLanguage } from "../../../store/auth/auth-slice";
 import { getCookie } from "../../../utils/cookie";
 
 function RegisterHospital() {
-  const initialState = {
-    name: "",
-    generalSpecialization: "",
-    description: "",
-    address: "",
-    phoneNumber: "",
-    startTime: "",
-    endTime: "",
-    webSite: "",
-    photo: null,
-  };
-
-  const [formData, setFormData] = useState(initialState);
-  const [selectedDays, setSelectedDays] = useState([]);
+  const [formData, setFormData] = useState({ twentyFourHours: false });
   const [selectedServices, setSelectedServices] = useState([]);
   const [createHospital, { isLoading }] = useCreateHospitalMutation();
   const navigate = useNavigate();
@@ -30,80 +17,197 @@ function RegisterHospital() {
   const [currLanguage, setCurrLanguage] = useState(
     getCookie("language") || "en"
   );
+  const [descriptionLengthError, setDescriptionLengthError] = useState("");
 
   const handleLogOut = () => {
     dispatch(clearToken());
     navigate("/logout");
   };
 
-  const options = [
-    {
-      value: "Monday",
-      label: `${currLanguage === "am" ? "ሰኞ" : "Monday"}`,
-    },
-    {
-      value: "Tuesday",
-      label: `${currLanguage === "am" ? "ማክሰኞ" : "Tuesday"}`,
-    },
-    {
-      value: "Wednesday",
-      label: `${currLanguage === "am" ? "ረቡዕ" : "Wednesday"}`,
-    },
-    {
-      value: "Thursday",
-      label: `${currLanguage === "am" ? "ሐሙስ" : "Thursday"}`,
-    },
-    { value: "Friday", label: `${currLanguage === "am" ? "አርብ" : "Friday"}` },
-    {
-      value: "Saturday",
-      label: `${currLanguage === "am" ? "ቅዳሜ" : "Saturday"}`,
-    },
-    {
-      value: "Sunday",
-      label: `${currLanguage === "am" ? "እሁድ" : "Sunday"}`,
-    },
-  ];
-
   const hospitlaServices = [
     {
-      valeu: "Emergency",
-      lable: `${currLanguage === "am" ? "ድንገተኛ አደጋ" : "Emergency"}`,
+      valeu: "CT Scan",
+      lable: `${currLanguage === "am" ? "ሲቲ ስካን" : "CT Scan"}`,
     },
     {
-      value: "Maternity",
-      lable: `${currLanguage === "am" ? "የወሊድ" : "Maternity"}`,
+      value: "Dental",
+      lable: `${currLanguage === "am" ? "የጥርስ ህክምና" : "Dental"}`,
     },
     {
-      value: "Radiolgy",
-      lable: `${currLanguage === "am" ? "Radiolgy" : "ራዲዮሎጂ"}`,
+      value: "Neurosurgery",
+      lable: `${currLanguage === "am" ? "የነርቭ ቀዶ ጥገና" : "Neurosurgery"}`,
     },
     {
-      value: "Cardiology",
-      lable: `${currLanguage === "am" ? "ካርዲዮሎጂ" : "Cardiology"}`,
+      value: "Obstetrics and Gynecology",
+      lable: `${
+        currLanguage === "am" ? "የማህፀን ህክምና" : "Obstetrics and Gynecology"
+      }`,
     },
     {
-      value: "sergury",
-      lable: `${currLanguage === "am" ? "ቀዶ ጥገና" : "sergury"}`,
+      value: "Ophthalmology",
+      lable: `${currLanguage === "am" ? "የዓይን ህክምና" : "Ophthalmology"}`,
     },
     {
       value: "Laboratory",
       lable: `${currLanguage === "am" ? "ላቦራቶሪ" : "Laboratory"}`,
     },
     {
+      value: "Orthopaedics",
+      lable: `${currLanguage === "am" ? "ኦርቶፔዲክስ" : "Orthopaedics"}`,
+    },
+    {
+      value: "Pediatrics",
+      lable: `${currLanguage === "am" ? "የሕፃናት ሕክምና" : "Pediatrics"}`,
+    },
+    {
       value: "Physiotherapy",
       lable: `${currLanguage === "am" ? "ፊዚዮቴራፒ" : "Physiotherapy"}`,
     },
+    {
+      value: "Psychiatry",
+      lable: `${currLanguage === "am" ? "ሳይካትሪ" : "Psychiatry"}`,
+    },
+    {
+      value: "X-Ray",
+      lable: `${currLanguage === "am" ? "ኤክስ-ሬይ" : "X-Ray"}`,
+    },
+    {
+      value: "Surgery",
+      lable: `${currLanguage === "am" ? "ቀዶ ጥገና" : "Surgery"}`,
+    },
+    {
+      value: "MRI",
+      lable: `${currLanguage === "am" ? "ኤም አር አይ" : "MRI"}`,
+    },
+    {
+      value: "Cardiology",
+      lable: `${currLanguage === "am" ? "ካርዲዮሎጂ " : "Cardiology"}`,
+    },
+    {
+      value: "Chemotherapy",
+      lable: `${currLanguage === "am" ? "ኪሞቴራፒ " : "Chemotherapy"}`,
+    },
+    {
+      value: "ENT (Ear, Nose,Throat)",
+      lable: `${
+        currLanguage === "am"
+          ? "ENT (ጆሮ፣ አፍንጫ፣ ጉሮሮ) "
+          : "ENT (Ear, Nose,Throat)"
+      }`,
+    },
+    {
+      value: "Gastroenterology",
+      lable: `${currLanguage === "am" ? "የጨጓራ" : "Gastroenterology"}`,
+    },
+    {
+      value: "Hematology",
+      lable: `${currLanguage === "am" ? "ሄማቶሎጂ" : "Hematology"}`,
+    },
+    {
+      value: "Neurology",
+      lable: `${currLanguage === "am" ? "ኒውሮሎጂ" : "Neurology"}`,
+    },
+    {
+      value: "Oncology",
+      lable: `${currLanguage === "am" ? "ኦንኮሎጂ" : "Oncology"}`,
+    },
+    {
+      value: "Pharmacy",
+      lable: `${currLanguage === "am" ? "ፋርማሲ" : "Pharmacy"}`,
+    },
+    {
+      value: "Urology",
+      lable: `${currLanguage === "am" ? "ኡሮሎጂ" : "Urology"}`,
+    },
+    {
+      value: "COVID-19 testing",
+      lable: `${currLanguage === "am" ? "የኮቪድ-19 ምርመራ" : "COVID-19 testing"}`,
+    },
+    {
+      value: "Outpatient medical service",
+      lable: `${
+        currLanguage === "am" ? "የተመላላሽ ታካሚ ሕክምና" : "Outpatient medical service"
+      }`,
+    },
+    {
+      value: "In patient service",
+      lable: `${
+        currLanguage === "am" ? "የየታካሚዎች አገልግሎት" : "Outpatient medical service"
+      }`,
+    },
+    {
+      value: "Endoscopy and Colonoscopy",
+      lable: `${
+        currLanguage === "am" ? "ኢንዶስኮፒ እና ኮሎኖስኮፒ" : "Endoscopy and Colonoscopy"
+      }`,
+    },
+    {
+      value: "Angioplasty Percutaneous Coronary Intervention (PCI)",
+      lable: `${
+        currLanguage === "am"
+          ? "Angioplasty Percutaneous Coronary Intervention (PCI)"
+          : "Angioplasty Percutaneous Coronary Intervention (PCI)"
+      }`,
+    },
+    {
+      value: "Diagnostic Coronary Angiography",
+      lable: `${
+        currLanguage === "am"
+          ? "ዲያግኖስቲክ ኮርኒሪ አንጂዮግራፊ"
+          : "Diagnostic Coronary Angiography"
+      }`,
+    },
+    {
+      value: "Echocardiography",
+      lable: `${currLanguage === "am" ? "ኢኮካርዲዮግራፊ" : "Echocardiography"}`,
+    },
+    {
+      value: "Intensive Coronary Care Unit",
+      lable: `${
+        currLanguage === "am"
+          ? "ከፍተኛ የልብ ህክምና ክፍል"
+          : "Intensive Coronary Care Unit"
+      }`,
+    },
+    {
+      value: "Open Heart surgery",
+      lable: `${
+        currLanguage === "am" ? "ክፍት የልብ ቀዶ ጥገና" : "Open Heart surgery"
+      }`,
+    },
+    {
+      value: "Rehabilitative",
+      lable: `${currLanguage === "am" ? "ማገገሚያ" : "Rehabilitative"}`,
+    },
+    {
+      value: "Breast cancer screaning",
+      lable: `${
+        currLanguage === "am" ? "የጡት ካንሰር ማጣራት" : "Breast cancer screaning"
+      }`,
+    },
+    {
+      value: "Spinal Neuro Surgery",
+      lable: `${
+        currLanguage === "am"
+          ? "የአከርካሪ አጥንት የነርቭ ቀዶ ጥገና"
+          : "Spinal Neuro Surgery"
+      }`,
+    },
+    {
+      value: "Ultraviolet Light Treatment",
+      lable: `${
+        currLanguage === "am"
+          ? "የአልትራቫዮሌት ብርሃን ሕክምና"
+          : "Ultraviolet Light Treatment"
+      }`,
+    },
+    {
+      value: "Dialysis Center",
+      lable: `${currLanguage === "am" ? "የዲያሊሲስ ማዕከል" : "Dialysis Center"}`,
+    },
   ];
 
-  const toggleDay = (selectedDay) => {
-    setSelectedDays((prevSelectedDays) => {
-      if (prevSelectedDays.includes(selectedDay)) {
-        return prevSelectedDays.filter((day) => day !== selectedDay);
-      } else {
-        return [...prevSelectedDays, selectedDay];
-      }
-    });
-  };
+  hospitlaServices.sort((a, b) => (a.value > b.value ? 1 : -1));
 
   const toggleService = (selectedService) => {
     setSelectedServices((prevSelectedServices) => {
@@ -149,8 +253,17 @@ function RegisterHospital() {
       startTime,
       endTime,
       photo,
+      twentyFourHours,
+      longitude,
+      latitude,
     } = formData;
 
+    if (description.length < 100) {
+      setDescriptionLengthError(
+        "Description must be at least 100 characters long."
+      );
+      return; // Prevent form submission
+    }
     const formDataToSend = new FormData();
     formDataToSend.append("name", name);
     formDataToSend.append("generalSpecialization", generalSpecialization);
@@ -165,15 +278,16 @@ function RegisterHospital() {
     for (const service in selectedServices) {
       formDataToSend.append("services[]", selectedServices[service]);
     }
-    for (const day in selectedDays) {
-      formDataToSend.append("availability[day][]", selectedDays[day]);
-    }
+
+    formDataToSend.append("availability[twentyFourHours]", twentyFourHours);
     formDataToSend.append("availability[startTime]", startTime);
     formDataToSend.append("availability[endTime]", endTime);
     formDataToSend.append("language", getCookie("language") || "en");
+    formDataToSend.append("latitude", latitude);
+    formDataToSend.append("longitude", longitude);
     try {
-      const response = await createHospital(formDataToSend).unwrap();
-      setFormData(initialState);
+      await createHospital(formDataToSend).unwrap();
+      setFormData({});
       navigate("/adminDashboard");
     } catch (error) {
       // setBackendError(`An error occurred : ${error.data.title}`);
@@ -201,7 +315,7 @@ function RegisterHospital() {
         <div className="flex items-end justify-end">
           <button
             onClick={handleLanguageToggle}
-            className="flex justify-self-end"
+            className="flex justify-self-end bg-[#C276F0] hover:bg-[#c7a0df] text-white font-bold py-1 px-4 rounded transition duration-300"
           >
             {currLanguage === "am" ? "English" : "Amharic"}
           </button>
@@ -230,6 +344,10 @@ function RegisterHospital() {
                 placeholder={currLanguage === "am" ? "ጥቁር አንበሳ" : "Tkur Anbesa"}
                 className="py-2 px-2 rounded-lg border max-w-lg mb-6 focus:outline-none focus:ring-1 focus:border-[#035ECF]"
               />
+              <p className="text-red-500">
+                {descriptionLengthError &&
+                  "Description must be at least 100 characters long."}
+              </p>
 
               <label
                 className="text-sm font-semibold mb-2"
@@ -299,6 +417,29 @@ function RegisterHospital() {
                 placeholder="+251 967 765 789"
                 // pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}-[0-9]{3}"
               />
+
+              <label htmlFor="latitude" className="text-sm font-semibold mb-2">
+                {currLanguage === "am" ? "ኬክሮስ" : "Latitude"}
+              </label>
+              <input
+                name="latitude"
+                onChange={handleInputChange}
+                type="text"
+                required
+                placeholder="8.6666"
+                className="py-2 px-2 rounded-lg border max-w-lg mb-6 focus:outline-none focus:ring-1 focus:border-[#035ECF]"
+              />
+              <label htmlFor="longitude" className="text-sm font-semibold mb-2">
+                {currLanguage === "am" ? "ኬንትሮስ" : "Longitude"}
+              </label>
+              <input
+                name="longitude"
+                onChange={handleInputChange}
+                type="text"
+                required
+                placeholder="8.6666"
+                className="py-2 px-2 rounded-lg border max-w-lg mb-6 focus:outline-none focus:ring-1 focus:border-[#035ECF]"
+              />
             </div>
             <div className="flex flex-col">
               <label className="text-sm font-semibold mb-3" htmlFor="services">
@@ -321,25 +462,36 @@ function RegisterHospital() {
                   </button>
                 ))}
               </div>
-              <label className="text-sm font-semibold mb-3" htmlFor="day">
-                {currLanguage === "am" ? "የስራ ቀን" : "Working Day"}
+              <label className="text-sm font-semibold mb-3">
+                {currLanguage === "am" ? "ቀንን በቀን" : "Twenty Four Hours"}
               </label>
-
-              <div className="flex space-x-2 flex-wrap mb-4">
-                {options.map((option) => (
-                  <button
-                    key={option.value}
-                    type="button"
-                    onClick={() => toggleDay(option.value)}
-                    className={`py-1 px-2 rounded-lg text-xs mb-2 ${
-                      selectedDays.includes(option.value)
-                        ? "bg-[#C276F0] text-white"
-                        : "bg-white border border-[#C276F0] text-[#C276F0]"
-                    }`}
-                  >
-                    {option.label}
-                  </button>
-                ))}
+              <div className="flex space-x-2 mb-4">
+                <button
+                  type="button"
+                  className={`py-1 px-2 rounded-lg text-xs mb-2 ${
+                    formData.twentyFourHours
+                      ? "bg-[#C276F0] text-white"
+                      : "bg-white border border-[#C276F0] text-[#C276F0]"
+                  }`}
+                  onClick={() =>
+                    setFormData({ ...formData, twentyFourHours: true })
+                  }
+                >
+                  {currLanguage === "am" ? "አዎ" : "Yes"}
+                </button>
+                <button
+                  type="button"
+                  className={`py-1 px-2 rounded-lg text-xs mb-2 ${
+                    !formData.twentyFourHours
+                      ? "bg-[#C276F0] text-white"
+                      : "bg-white border border-[#C276F0] text-[#C276F0]"
+                  }`}
+                  onClick={() =>
+                    setFormData({ ...formData, twentyFourHours: false })
+                  }
+                >
+                  {currLanguage === "am" ? "አይ" : "No"}
+                </button>
               </div>
               <label className="text-sm font-semibold mb-2" htmlFor="startTime">
                 {currLanguage === "am" ? "የመክፈቻ ሰአት" : "Opening Time"}
@@ -363,7 +515,6 @@ function RegisterHospital() {
                 required
                 placeholder="6:00 PM "
               />
-
               <label className="text-sm font-semibold mb-2" htmlFor="photo">
                 {currLanguage === "am" ? "ፎቶ" : "Photo"}
               </label>
@@ -372,6 +523,7 @@ function RegisterHospital() {
                 onChange={handleFileChange}
                 className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
                 type="file"
+                required
               />
             </div>
           </div>
