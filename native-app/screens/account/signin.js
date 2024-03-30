@@ -7,28 +7,75 @@ import {
   StyleSheet,
   Image,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 // import ImagePicker from "react-native-image-picker";
 import { SvgXml } from "react-native-svg";
 import { SvgContent } from "../../screens/svg_content/loginSvg";
+import { useLoginMutation } from "../../services/Auth/auth-api";
 
 const Loginpage = ({ navigation }) => {
+  const [signin, { isLoading }] = useLoginMutation();
+  const [validationErrors, setErrors] = useState({});
+  const [EmailError, setEmailError] = useState();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.signupContainer}>
+          <ActivityIndicator size="large" color="#C276F0" />
+          <Text>sigining in User...</Text>
+        </View>
+
+        <View style={styles.blurOverlay} />
+      </View>
+    );
+  }
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required ,Please enter an email";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Invalid email address";
+    }
+
+    // Validate Password
+    if (!formData.password.trim()) {
+      newErrors.password = "Password is required ,Please enter a password";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleInputChange = (field, value) => {
     setFormData((prevData) => ({ ...prevData, [field]: value }));
   };
 
-  const handleLogin = () => {
-    // Handle the login logic here with formData
-    console.log("Login Form Data:", formData);
+  const handleLogin = async () => {
+    if (validateForm()) {
+      try {
+        console.log("formdata", formData);
 
-    // For demonstration, navigate to "MainApp"
-    navigation.navigate("MainApp");
+        const response = await signin(formData).unwrap();
+
+        // Handle successful registration response
+        console.log("login successful:", response);
+        navigation.navigate("MainApp");
+
+        // Navigate to another screen or perform any other necessary action
+      } catch (error) {
+        // Handle registration error
+        console.log("login error:", error);
+        setEmailError(error.data.message);
+      }
+    }
   };
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
@@ -40,24 +87,47 @@ const Loginpage = ({ navigation }) => {
         <Text style={styles.title}>Login to your account</Text>
         <SvgXml xml={SvgContent} height={300} width={700} style={styles.svg} />
       </View>
+      {EmailError ? (
+        <Text
+          style={{
+            color: "red",
+            fontSize: 20,
+            textAlign: "center",
+            backgroundColor: "white",
+            height: 40,
+            borderRadius: 30,
+          }}
+        >
+          {EmailError}
+        </Text>
+      ) : null}
       <View style={styles.formScrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.form}>
           <Text style={styles.label}>Email</Text>
           <TextInput
-            style={styles.input}
             placeholder="Enter your Email"
             keyboardType="email-address"
             value={formData.email}
             onChangeText={(text) => handleInputChange("email", text)}
+            style={[styles.input, validationErrors.email && styles.inputError]}
           />
+          {validationErrors.email && (
+            <Text style={styles.errorText}>{validationErrors.email}</Text>
+          )}
           <Text style={styles.label}>Password</Text>
           <TextInput
-            style={styles.input}
             placeholder="Enter your Password"
             secureTextEntry={true}
             value={formData.password}
             onChangeText={(text) => handleInputChange("password", text)}
+            style={[
+              styles.input,
+              validationErrors.password && styles.inputError,
+            ]}
           />
+          {validationErrors.password && (
+            <Text style={styles.errorText}>{validationErrors.password}</Text>
+          )}
         </View>
         <TouchableOpacity
           onPress={() => {
@@ -137,6 +207,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#d3d3d3",
   },
+  inputError: {
+    borderColor: "red",
+  },
+  errorText: {
+    color: "red",
+  },
   forgot: {
     color: "#f26f6f",
     textAlign: "right",
@@ -166,6 +242,20 @@ const styles = StyleSheet.create({
   logincolor: {
     color: "#C276F0",
     textDecorationLine: "underline",
+  },
+  blurOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.0)", // Change the opacity value as needed
+  },
+  signupContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1,
   },
 });
 export default Loginpage;

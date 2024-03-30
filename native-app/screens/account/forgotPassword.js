@@ -12,7 +12,11 @@ import { FontAwesome } from "@expo/vector-icons";
 // import ImagePicker from "react-native-image-picker";
 import { SvgXml } from "react-native-svg";
 import { SvgContent } from "../../screens/svg_content/loginSvg";
+import { useForgotMutation } from "../../services/Auth/auth-api";
+
 const Forgotpassword = ({ navigation }) => {
+  const [forgot, { isLoading }] = useForgotMutation();
+  const [error, setError] = useState();
   const [formData, setFormData] = useState({
     email: "",
   });
@@ -21,11 +25,21 @@ const Forgotpassword = ({ navigation }) => {
     setFormData((prevData) => ({ ...prevData, [field]: value }));
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
+    console.log(formData);
     // Handle the login logic here with formData
-    console.log("forgot Form Data:", formData);
+    try {
+      const response = await forgot(formData).unwrap();
+      console.log("email entered successful:", response);
 
-    navigation.navigate("OTP");
+      navigation.navigate("OTP", { email: formData.email });
+      // Navigate to another screen or perform any other necessary action
+    } catch (error) {
+      // Handle registration error
+      console.log("forgot error:", error);
+      setError(error.data.message);
+    }
+    console.log("forgot Form Data:", formData.email);
   };
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
@@ -41,6 +55,20 @@ const Forgotpassword = ({ navigation }) => {
 
         <SvgXml xml={SvgContent} height={300} width={700} style={styles.svg} />
       </View>
+      {error ? (
+        <Text
+          style={{
+            color: "red",
+            fontSize: 20,
+            textAlign: "center",
+            backgroundColor: "white",
+            height: 40,
+            borderRadius: 30,
+          }}
+        >
+          {error}
+        </Text>
+      ) : null}
       <View style={styles.formScrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.form}>
           <Text style={styles.label}>Email</Text>

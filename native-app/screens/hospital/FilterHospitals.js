@@ -7,19 +7,16 @@ import {
   StyleSheet,
 } from "react-native";
 
-const specialistsData = [
-  "Cardiologist",
-  "Dermatologist",
-  "Orthopedic",
-  "Pediatrician",
-  "Ophthalmologist",
-  "Neurologist",
-  "Gastroenterologist",
-  "Endocrinologist",
-  // Add more specialists as needed
+const serviceData = [
+  "Radiolgy",
+  "Maternity",
+  "Cardiology",
+  "Laboratory",
+  "Emergency",
+  "Physiotherapy",
+  "sergury",
 ];
 const medicalExperienceData = [
-  "All",
   "1",
   "2",
   "3",
@@ -32,73 +29,81 @@ const medicalExperienceData = [
   ">10",
 ];
 
-const FilterPage = () => {
-  const [selectedSpecialists, setSelectedSpecialists] = useState([]);
+const FilterPage = ({ applyFilters }) => {
+  const [selectedServices, setSelectedServices] = useState([]);
+  const [selectedYear, setSelectedYear] = useState(null);
 
-  const toggleSpecialist = (specialist) => {
-    if (selectedSpecialists.includes(specialist)) {
-      setSelectedSpecialists(
-        selectedSpecialists.filter((item) => item !== specialist)
-      );
-    } else {
-      setSelectedSpecialists([...selectedSpecialists, specialist]);
-    }
+  const toggleService = (service) => {
+    const updatedServices = selectedServices.includes(service)
+      ? selectedServices.filter((item) => item !== service)
+      : [...selectedServices, service];
+
+    setSelectedServices(updatedServices);
+  };
+
+  const toggleYear = (year) => {
+    const updatedYear = selectedYear === year ? null : year;
+    setSelectedYear(updatedYear);
+  };
+
+  const handleApplyFilters = () => {
+    applyFilters(selectedServices, selectedYear);
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.filterTitle}>
-        <Text style={styles.title}>Medical Specialist</Text>
+        <Text style={styles.title}>Medical Service</Text>
       </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {specialistsData.map((specialist, index) => (
+        {serviceData.map((service, index) => (
           <TouchableOpacity
             key={index}
             style={[
-              styles.specialistItem,
-              selectedSpecialists.includes(specialist) &&
-                styles.selectedSpecialist,
+              styles.serviceItem,
+              selectedServices.includes(service) && styles.selectedService,
             ]}
-            onPress={() => toggleSpecialist(specialist)}
+            onPress={() => toggleService(service)}
           >
             <Text
               style={[
-                styles.specialistText,
-                selectedSpecialists.includes(specialist) &&
-                  styles.selectedSpecialistText,
+                styles.serviceText,
+                selectedServices.includes(service) &&
+                  styles.selectedServiceText,
               ]}
             >
-              {specialist}
+              {service}
             </Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <View style={styles.filterTitle}>
+      <TouchableOpacity onPress={handleApplyFilters}>
+        <Text style={styles.applyFilterButton}>Apply Filters</Text>
+      </TouchableOpacity>
+      {/* <View style={styles.filterTitle}>
         <Text style={styles.title}>Medical Experience</Text>
-      </View>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {medicalExperienceData.map((specialist, index) => (
+      </View> */}
+      {/* <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        {medicalExperienceData.map((year, index) => (
           <TouchableOpacity
             key={index}
             style={[
-              styles.specialistItem,
-              selectedSpecialists.includes(specialist) &&
-                styles.selectedSpecialist,
+              styles.serviceItem,
+              selectedYear === year && styles.selectedService,
             ]}
-            onPress={() => toggleSpecialist(specialist)}
+            onPress={() => toggleYear(year)}
           >
             <Text
               style={[
-                styles.specialistText,
-                selectedSpecialists.includes(specialist) &&
-                  styles.selectedSpecialistText,
+                styles.serviceText,
+                selectedYear === year && styles.selectedServiceText,
               ]}
             >
-              {specialist}
+              {year}
             </Text>
           </TouchableOpacity>
         ))}
-      </ScrollView>
+      </ScrollView> */}
     </View>
   );
 };
@@ -111,14 +116,14 @@ const styles = StyleSheet.create({
   container: {
     // flex: 1,
     padding: 16,
-    height: 200,
+    // height: 200,
   },
   title: {
     fontSize: 14,
     fontWeight: "bold",
     marginBottom: 16,
   },
-  specialistItem: {
+  serviceItem: {
     borderColor: "#E5E5E5",
     borderRadius: 10,
     paddingVertical: 8,
@@ -127,15 +132,21 @@ const styles = StyleSheet.create({
     marginRight: 10,
     height: 40,
   },
-  selectedSpecialist: {
+  selectedService: {
     backgroundColor: "#C276F0",
     color: "#FFFFFF",
   },
-  specialistText: {
+  serviceText: {
     fontWeight: "bold",
   },
-  selectedSpecialistText: {
+  selectedServiceText: {
     color: "white",
+  },
+  applyFilterButton: {
+    color: "#C276F0",
+    paddingTop: 8,
+    paddingLeft: 4,
+    alignSelf: "flex-end",
   },
 });
 
