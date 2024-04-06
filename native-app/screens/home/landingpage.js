@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,32 +10,64 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import ActionButton from "react-native-action-button";
-import { useGetHospitalsQuery } from "../../services/Hospital/hospital-api";
-import HospitalDetailPage from "../hospital/HospitalDetail";
+import { useGetNearbyHospitalsQuery } from "../../services/Hospital/hospital-api";
+import * as Location from "expo-location";
+
+const DEFAULT_LOCATION = {
+  latitude: "40.7128",
+  longitude: "-74.006",
+};
 
 const Landingpage = ({ navigation }) => {
+  const [location, setLocation] = useState(null);
+  const [longitude, setLongitude] = useState("");
+  const [latitude, setLatitude] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setLongitude(DEFAULT_LOCATION.longitude); // Set default longitude
+        setLatitude(DEFAULT_LOCATION.latitude); // Set default latitude
+      } else {
+        try {
+          let location = await Location.getCurrentPositionAsync({});
+          setLocation(location);
+          setLongitude(location.coords.longitude);
+          setLatitude(location.coords.latitude);
+        } catch (error) {
+          setLongitude(DEFAULT_LOCATION.longitude); // Set default longitude
+          setLatitude(DEFAULT_LOCATION.latitude); // Set default latitude
+        }
+      }
+      setLoading(false); // Set loading to false after location is fetched or default is set
+    })();
+  }, []);
+  console.log("location", longitude, latitude);
   const handleFabPress = () => {
-    // Handle the FAB press event
     navigation.navigate("Chatbot");
     console.log("Floating Action Button Pressed!");
   };
-  // const handleDetailPage =(id)=>{
-  //   navigation.navigate('Hospital_detail', )
 
-  // }
-
-  const { data, isLoading, error, isSuccess } = useGetHospitalsQuery({});
-  // const hospitals = hospitalData.value;
-  // console.log("data", data);
-  if (isLoading) {
-    return <Text>IS LOADING</Text>;
+  const { data, isLoading, error, isSuccess } = useGetNearbyHospitalsQuery(
+    {
+      longitude,
+      latitude,
+    },
+    { skip: loading } // Skip query when loading is true
+  );
+  if (loading) {
+    return <Text>Loading...</Text>; // Display loading indicator while fetching location
   }
-  // if (data && data.value) {
-  //   console.log("data fetched", data.value);
+  if (isLoading) {
+    return <Text>LOADING..</Text>;
+  }
+  if (error) {
+    return <Text>Error</Text>;
+  }
 
-  // }
   const hospitals = data.value;
-  // console.log(hospitals);
 
   return (
     <View>
