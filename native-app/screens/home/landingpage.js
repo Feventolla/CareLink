@@ -19,29 +19,35 @@ const DEFAULT_LOCATION = {
 };
 
 const Landingpage = ({ navigation }) => {
-  const [location, setLocation] = useState(null);
   const [longitude, setLongitude] = useState("");
   const [latitude, setLatitude] = useState("");
   const [loading, setLoading] = useState(true);
-
+  const [displayDistance, setDisplayDistance] = useState(true);
+  const { data, isLoading, error, isSuccess } = useGetNearbyHospitalsQuery(
+    {
+      longitude,
+      latitude,
+    },
+    { skip: loading }
+  );
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        setLongitude(DEFAULT_LOCATION.longitude); // Set default longitude
-        setLatitude(DEFAULT_LOCATION.latitude); // Set default latitude
+        setLongitude(DEFAULT_LOCATION.longitude);
+        setLatitude(DEFAULT_LOCATION.latitude);
+        setDisplayDistance(false);
       } else {
         try {
           let location = await Location.getCurrentPositionAsync({});
-          setLocation(location);
           setLongitude(location.coords.longitude);
           setLatitude(location.coords.latitude);
         } catch (error) {
-          setLongitude(DEFAULT_LOCATION.longitude); // Set default longitude
-          setLatitude(DEFAULT_LOCATION.latitude); // Set default latitude
+          setLongitude(DEFAULT_LOCATION.longitude);
+          setLatitude(DEFAULT_LOCATION.latitude);
         }
       }
-      setLoading(false); // Set loading to false after location is fetched or default is set
+      setLoading(false);
     })();
   }, []);
   console.log("location", longitude, latitude);
@@ -50,15 +56,8 @@ const Landingpage = ({ navigation }) => {
     console.log("Floating Action Button Pressed!");
   };
 
-  const { data, isLoading, error, isSuccess } = useGetNearbyHospitalsQuery(
-    {
-      longitude,
-      latitude,
-    },
-    { skip: loading } // Skip query when loading is true
-  );
   if (loading) {
-    return <Text>Loading...</Text>; // Display loading indicator while fetching location
+    return <Text>Loading...</Text>;
   }
   if (isLoading) {
     return <Text>LOADING..</Text>;
@@ -147,7 +146,15 @@ const Landingpage = ({ navigation }) => {
                     // handleDetailPage(hospital._id)
                   }}
                 >
-                  <Text style={styles.actionButtonText}>Read More</Text>
+                  <View style={styles.bottomContainer}>
+                    {displayDistance && (
+                      <Text style={styles.distance}>
+                        {hospital.distance / 1000} km away
+                      </Text>
+                    )}
+
+                    <Text style={styles.actionButtonText}>Read More</Text>
+                  </View>
                 </TouchableOpacity>
               </View>
             </TouchableOpacity>
@@ -309,10 +316,20 @@ const styles = StyleSheet.create({
     // borderRadius: 5,
     // alignItems: "center",
   },
+  bottomContainer: {
+    color: "#C276F0",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   actionButtonText: {
     color: "#C276F0",
     fontWeight: "bold",
     textAlign: "right",
+  },
+  distance: {
+    color: "#C276F0",
+    fontWeight: "bold",
   },
   fabIcon: {
     fontSize: 30,
