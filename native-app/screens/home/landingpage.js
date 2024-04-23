@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,32 +10,63 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import ActionButton from "react-native-action-button";
-import { useGetHospitalsQuery } from "../../services/Hospital/hospital-api";
-import HospitalDetailPage from "../hospital/HospitalDetail";
+import { useGetNearbyHospitalsQuery } from "../../services/Hospital/hospital-api";
+import * as Location from "expo-location";
+
+const DEFAULT_LOCATION = {
+  latitude: "40.7128",
+  longitude: "-74.006",
+};
 
 const Landingpage = ({ navigation }) => {
+  const [longitude, setLongitude] = useState("");
+  const [latitude, setLatitude] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [displayDistance, setDisplayDistance] = useState(true);
+  const { data, isLoading, error, isSuccess } = useGetNearbyHospitalsQuery(
+    {
+      longitude,
+      latitude,
+    },
+    { skip: loading }
+  );
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setLongitude(DEFAULT_LOCATION.longitude);
+        setLatitude(DEFAULT_LOCATION.latitude);
+        setDisplayDistance(false);
+      } else {
+        try {
+          let location = await Location.getCurrentPositionAsync({});
+          setLongitude(location.coords.longitude);
+          setLatitude(location.coords.latitude);
+        } catch (error) {
+          setLongitude(DEFAULT_LOCATION.longitude);
+          setLatitude(DEFAULT_LOCATION.latitude);
+        }
+      }
+      setLoading(false);
+    })();
+  }, []);
+  console.log("location", longitude, latitude);
   const handleFabPress = () => {
-    // Handle the FAB press event
     navigation.navigate("Chatbot");
     console.log("Floating Action Button Pressed!");
   };
-  // const handleDetailPage =(id)=>{
-  //   navigation.navigate('Hospital_detail', )
 
-  // }
-
-  const { data, isLoading, error, isSuccess } = useGetHospitalsQuery({});
-  // const hospitals = hospitalData.value;
-  // console.log("data", data);
-  if (isLoading) {
-    return <Text>IS LOADING</Text>;
+  if (loading) {
+    return <Text>Loading...</Text>;
   }
-  // if (data && data.value) {
-  //   console.log("data fetched", data.value);
+  if (isLoading) {
+    return <Text>LOADING..</Text>;
+  }
+  if (error) {
+    return <Text>Error</Text>;
+  }
 
-  // }
   const hospitals = data.value;
-  // console.log(hospitals);
 
   return (
     <View>
@@ -115,7 +146,15 @@ const Landingpage = ({ navigation }) => {
                     // handleDetailPage(hospital._id)
                   }}
                 >
-                  <Text style={styles.actionButtonText}>Read More</Text>
+                  <View style={styles.bottomContainer}>
+                    {displayDistance && (
+                      <Text style={styles.distance}>
+                        {hospital.distance / 1000} km away
+                      </Text>
+                    )}
+
+                    <Text style={styles.actionButtonText}>Read More</Text>
+                  </View>
                 </TouchableOpacity>
               </View>
             </TouchableOpacity>
@@ -277,10 +316,20 @@ const styles = StyleSheet.create({
     // borderRadius: 5,
     // alignItems: "center",
   },
+  bottomContainer: {
+    color: "#C276F0",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   actionButtonText: {
     color: "#C276F0",
     fontWeight: "bold",
     textAlign: "right",
+  },
+  distance: {
+    color: "#C276F0",
+    fontWeight: "bold",
   },
   fabIcon: {
     fontSize: 30,
