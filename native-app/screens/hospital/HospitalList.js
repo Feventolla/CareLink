@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   View,
   Text,
@@ -12,7 +12,13 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import FilterPage from "./FilterHospitals";
-import { useGetHospitalsQuery } from "../../services/Hospital/hospital-api";
+import { useGetNearbyHospitalsQuery } from "../../services/Hospital/hospital-api";
+import * as Location from "expo-location";
+
+const DEFAULT_LOCATION = {
+  latitude: "40.7128",
+  longitude: "-74.006",
+};
 
 const screenWidth = Dimensions.get("window").width;
 const numColumns = 2;
@@ -27,51 +33,60 @@ const HospitalListPage = ({ navigation }) => {
     services: [],
     experience: null,
   });
-  const { data, isLoading, error } = useGetHospitalsQuery({});
-  // const hospitals = hospitalData.value;
-  // console.log("data", data);
+  const [longitude, setLongitude] = useState("");
+  const [latitude, setLatitude] = useState("");
+  const [loading, setLoading] = useState(true);
+  const { data, isLoading, error, isSuccess } = useGetNearbyHospitalsQuery(
+    {
+      longitude,
+      latitude,
+    },
+    { skip: loading }
+  );
 
-  const applyFilters = (selectedServices, selectedExperience) => {
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setLongitude(DEFAULT_LOCATION.longitude);
+        setLatitude(DEFAULT_LOCATION.latitude);
+      } else {
+        try {
+          let location = await Location.getCurrentPositionAsync({});
+          setLongitude(location.coords.longitude);
+          setLatitude(location.coords.latitude);
+        } catch (error) {
+          setLongitude(DEFAULT_LOCATION.longitude);
+          setLatitude(DEFAULT_LOCATION.latitude);
+        }
+      }
+      setLoading(false);
+    })();
+  }, []);
+
+  const applyFilters = (selectedServices) => {
     setAppliedFilters({
       services: selectedServices,
-      experience: selectedExperience,
     });
   };
 
+  if (loading) {
+    return <Text>Loading...</Text>;
+  }
   if (isLoading) {
     return <Text>Loading...</Text>;
   }
   if (error) {
     return <Text>Something went wrong</Text>;
   }
-
   const hospitals = data.value;
-  // console.log("******************", hospitals);
-  const filteredHospitals = useMemo(() => {
-    let filteredList = hospitals;
 
-    if (appliedFilters.services.length > 0) {
-      filteredList = filteredList.filter((hospital) => {
-        // Check if all selected services are present in the hospital's services array
-        return appliedFilters.services.every((selectedService) =>
-          hospital.services.includes(selectedService)
-        );
-      });
-    }
-
-    // if (appliedFilters.experience !== null) {
-    //   if (appliedFilters.experience === ">10") {
-    //     let experience = 10;
-    //   } else {
-    //     experience = parseInt(appliedFilters.experience);
-    //   }
-    //   filteredList = filteredList.filter(
-    //     (hospital) => hospital.medicalExperience >= experience
-    //   );
-    // }
-
-    return filteredList;
-  }, [hospitals, appliedFilters]);
+  const filteredHospitals = hospitals.filter((hospital) => {
+    if (appliedFilters.services.length === 0) return true;
+    return appliedFilters.services.every((selectedService) =>
+      hospital.services.includes(selectedService)
+    );
+  });
 
   const openFilter = () => {
     setShowFilter(!showFilter);
@@ -139,6 +154,7 @@ const HospitalListPage = ({ navigation }) => {
         numColumns={2}
         horizontal={false}
         showsVerticalScrollIndicator={false}
+        style={styles.list}
       />
     </SafeAreaView>
   );
@@ -225,6 +241,49 @@ const styles = {
   },
   closeFilterButton: {
     color: "white",
+  },
+
+  filterTitle: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  container: {
+    // flex: 1,
+    padding: 16,
+    // height: 200,
+  },
+  title: {
+    fontSize: 14,
+    fontWeight: "bold",
+    marginBottom: 16,
+  },
+  serviceItem: {
+    borderColor: "#E5E5E5",
+    borderRadius: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    marginRight: 10,
+    height: 40,
+  },
+  selectedService: {
+    backgroundColor: "#C276F0",
+    color: "#FFFFFF",
+  },
+  serviceText: {
+    fontWeight: "bold",
+  },
+  selectedServiceText: {
+    color: "white",
+  },
+  applyFilterButton: {
+    color: "#C276F0",
+    paddingTop: 8,
+    paddingLeft: 4,
+    alignSelf: "flex-end",
+  },
+  list: {
+    marginBottom: 100,
   },
 };
 

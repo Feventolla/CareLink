@@ -7,31 +7,17 @@ import {
   StyleSheet,
 } from "react-native";
 
-const serviceData = [
-  "Radiolgy",
-  "Maternity",
-  "Cardiology",
-  "Laboratory",
-  "Emergency",
-  "Physiotherapy",
-  "sergury",
-];
-const medicalExperienceData = [
-  "1",
-  "2",
-  "3",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  "9",
-  ">10",
-];
-
 const FilterPage = ({ applyFilters }) => {
   const [selectedServices, setSelectedServices] = useState([]);
-  const [selectedYear, setSelectedYear] = useState(null);
+  const serviceData = [
+    "Radiolgy",
+    "Maternity",
+    "Cardiology",
+    "Laboratory",
+    "Emergency",
+    "Physiotherapy",
+    "sergury",
+  ];
 
   const toggleService = (service) => {
     const updatedServices = selectedServices.includes(service)
@@ -41,13 +27,8 @@ const FilterPage = ({ applyFilters }) => {
     setSelectedServices(updatedServices);
   };
 
-  const toggleYear = (year) => {
-    const updatedYear = selectedYear === year ? null : year;
-    setSelectedYear(updatedYear);
-  };
-
   const handleApplyFilters = () => {
-    applyFilters(selectedServices, selectedYear);
+    applyFilters(selectedServices);
   };
 
   return (
@@ -80,30 +61,6 @@ const FilterPage = ({ applyFilters }) => {
       <TouchableOpacity onPress={handleApplyFilters}>
         <Text style={styles.applyFilterButton}>Apply Filters</Text>
       </TouchableOpacity>
-      {/* <View style={styles.filterTitle}>
-        <Text style={styles.title}>Medical Experience</Text>
-      </View> */}
-      {/* <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {medicalExperienceData.map((year, index) => (
-          <TouchableOpacity
-            key={index}
-            style={[
-              styles.serviceItem,
-              selectedYear === year && styles.selectedService,
-            ]}
-            onPress={() => toggleYear(year)}
-          >
-            <Text
-              style={[
-                styles.serviceText,
-                selectedYear === year && styles.selectedServiceText,
-              ]}
-            >
-              {year}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView> */}
     </View>
   );
 };

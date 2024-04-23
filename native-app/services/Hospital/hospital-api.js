@@ -7,17 +7,21 @@ export const hospitalApi = createApi({
     getHospitals: builder.query({
       query: () => "/hospital/getAllHospitals",
     }),
-    Hospital: builder.query({
+    hospital: builder.query({
       query: (id) => `/hospital/getHospital/${id}`,
+    }),
+    getNearbyHospitals: builder.query({
+      query: (location) => ({
+        url: "/hospital/getNearbyHospitals",
+        body: location,
+        method: "POST",
+      }),
     }),
   }),
 });
-// const api = createApi({
-//   // other configurations...
-//   onQueryUpdated: (query) => {
-//     console.log("Query Updated:", query);
-//   },
-//   // other configurations...
-// });
 
-export const { useGetHospitalsQuery, useHospitalQuery } = hospitalApi;
+export const {
+  useGetHospitalsQuery,
+  useHospitalQuery,
+  useGetNearbyHospitalsQuery,
+} = hospitalApi;
