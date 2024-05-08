@@ -17,8 +17,13 @@ const DEFAULT_LOCATION = {
   latitude: "40.7128",
   longitude: "-74.006",
 };
+import { useSelector, useState, useDispatch } from 'react-redux';
+import setLanguage from '../common/langButton';
+
+const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
 const Landingpage = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [longitude, setLongitude] = useState("");
   const [latitude, setLatitude] = useState("");
   const [loading, setLoading] = useState(true);
@@ -56,9 +61,16 @@ const Landingpage = ({ navigation }) => {
     console.log("Floating Action Button Pressed!");
   };
 
-  if (loading) {
-    return <Text>Loading...</Text>;
-  }
+  const currentLanguage = useSelector(state => state.auth.language); 
+
+  const toggleLanguage = () => {
+    const newLanguage = currentLanguage === 'en' ? 'am' : 'en';
+    dispatch(setLanguage({ language: newLanguage }));
+  };
+
+  // const { data, isLoading, error, isSuccess } = useGetHospitalsQuery({});
+  // const hospitals = hospitalData.value;
+  // console.log("data", data);
   if (isLoading) {
     return <Text>LOADING..</Text>;
   }
@@ -70,6 +82,12 @@ const Landingpage = ({ navigation }) => {
 
   return (
     <View>
+      
+        
+        <LanguageDropdown
+          currentLanguage={currentLanguage}
+          onChangeLanguage={() => setIsDropdownVisible(!isDropdownVisible)}
+      />
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.heroContainer}>
           <Text style={styles.heroText_care}>
@@ -97,12 +115,17 @@ const Landingpage = ({ navigation }) => {
             style={styles.heroImage3}
           />
         </View>
-        <Text style={styles.hosp_search}>Find Hospitals Nearby </Text>
+        <Text style={styles.hosp_search}
+          // placeholder={currentLanguage === 'en' ? 'Find Hospitals Nearby' : 'በአቅራቢያ ያሉ ሆስፒታሎችን ያግኙ'}
+
+        >
+          {currentLanguage === 'en' ? 'Find Hospitals Nearby' : 'በአቅራቢያዎ ያሉ ሆስፒታሎችን ያግኙ'}
+           </Text>
 
         <View style={styles.searchContainer}>
           <TextInput
             style={styles.searchInput}
-            placeholder="Search hospitals..."
+            placeholder={currentLanguage === 'en' ? 'Search hospitals...' : 'ሆስፒታሎችን ፈልግ...'}
             // onChangeText={handleSearch}
             // value={searchText}
           />
@@ -113,9 +136,9 @@ const Landingpage = ({ navigation }) => {
             style={styles.searchIcon}
           />
         </View>
-        <Text style={styles.hosp_aval}>Hospitals Available here</Text>
+        <Text style={styles.hosp_aval}>{currentLanguage === 'en' ? 'Hospitals Available here' : 'እዚህ የሚገኙ ሆስፒታሎች ' }</Text>
         <Text style={styles.hosp_avaldesc}>
-          Find various articles about health here
+          {currentLanguage === 'en' ? 'Find various articles about health here' : 'ስለ ጤና የተለያዩ መጣጥፎችን እዚህ ያግኙ'}
         </Text>
         <ScrollView
           horizontal
@@ -166,7 +189,17 @@ const Landingpage = ({ navigation }) => {
         onPress={handleFabPress}
         renderIcon={() => <Icon name="child-care" style={styles.fabIcon} />}
       />
+      {isDropdownVisible && (
+        <LanguageDropdown
+          currentLanguage={currentLanguage}
+          onChangeLanguage={() => {
+            setIsDropdownVisible(!isDropdownVisible);
+            toggleLanguage();
+          }}
+        />
+      )}
     </View>
+    
   );
 };
 

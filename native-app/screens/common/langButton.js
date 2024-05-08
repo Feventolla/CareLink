@@ -1,23 +1,29 @@
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { setLanguage } from '../../services/Auth/auth_slice';
+// LanguageDropdown.js
 
-const LangButton = () => {
-    const dispatch = useDispatch()
-    const {currentLanguage, setCurrentLanguage} = useSelector(state => state.auth.language);
+import React from 'react';
+import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
-    const toggleLanguage = () => {
-        const newLanguage = currentLanguage === 'en' ? 'am' : 'en';
-        setCurrentLanguage(newLanguage);
-        dispatch(setLanguage(newLanguage));
-    }
+const LanguageDropdown = ({ currentLanguage, onChangeLanguage }) => {
     return (
-        <div>
-            <button onClick={toggleLanguage}>
-                {currentLanguage === 'en' ? 'English' : 'Amharic'}
-            </button>
-        </div>
-    )
-}
+        <View style={styles.container}>
+            <TouchableOpacity onPress={onChangeLanguage} style={styles.dropdown}>
+                <Text>{currentLanguage === 'en' ? 'English' : 'Amharic'}</Text>
+            </TouchableOpacity>
+        </View>
+    );
+};
 
-export default LangButton
+const styles = StyleSheet.create({
+    container: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+    },
+    dropdown: {
+        padding: 10,
+        backgroundColor: '#ffffff',
+        borderRadius: 5,
+    },
+});
+
+export default LanguageDropdown;
