@@ -13,6 +13,8 @@ import { useRoute } from "@react-navigation/native";
 import { useHospitalQuery } from "../../services/Hospital/hospital-api";
 import { useDoctorQuery } from "../../services/Doctors/doctor-api";
 import DoctorItem from "./DoctorItem";
+import { useSelector, useDispatch } from 'react-redux';
+import { setLanguage } from "../../services/Auth/auth_slice";
 
 const HospitalDetailPage = ({ navigation }) => {
   const route = useRoute();
@@ -23,6 +25,15 @@ const HospitalDetailPage = ({ navigation }) => {
   const toggleDescription = () => {
     setShowFullDescription(!showFullDescription);
   };
+
+  const currentLanguage = useSelector(state => state.auth.language);
+  const dispatch = useDispatch();
+
+  // const toggleLanguage = () => {
+  //   const newLanguage = currentLanguage.language === 'en' ? 'am' : 'en';
+  //   dispatch(setLanguage({ language: newLanguage }));
+
+  // };
 
   if (isLoading) {
     return <Text>IS LOADING</Text>;
@@ -45,29 +56,29 @@ const HospitalDetailPage = ({ navigation }) => {
       <Image source={{ uri: hospital.photo }} style={styles.image} />
       <View style={styles.overlayContainer}>
         <View style={styles.hospitalCard}>
-          <Text style={styles.hospitalTitle}>{hospital.name}</Text>
+          <Text style={styles.hospitalTitle}>{currentLanguage.language === 'en' ? hospital.name : hospital.amhName}</Text>
           <View style={styles.location}>
             <View style={{ flexDirection: "row" }}>
               <Icon name="location-on" size={15} color="#C276F0" />
-              <Text style={styles.addressText}>{hospital.address}</Text>
+              <Text style={styles.addressText}>{currentLanguage.language === 'en' ? hospital.address : hospital.amhAddress}</Text>
             </View>
           </View>
           <>
             <ScrollView
               showsVerticalScrollIndicator={false}
-              // style={{ flex: 1 }}
+            // style={{ flex: 1 }}
             >
               <Text style={styles.descriptionText}>
                 {showFullDescription
-                  ? hospital.description
-                  : `${hospital.description.slice(0, 150)}...`}
+                  ? currentLanguage.language === 'en' ? hospital.description : hospital.amhDescription
+                  : currentLanguage.language === 'en' ? `${hospital.description.slice(0, 150)}...` : `${hospital.amhDescription.slice(0, 150)}...`}
 
                 {!showFullDescription && (
                   <Text
                     style={styles.seeMoreButton}
                     onPress={toggleDescription}
                   >
-                    See More
+                    {currentLanguage.language === 'en' ? '..See More' : 'ተጨማሪ ይመልከቱ'}
                   </Text>
                 )}
                 {showFullDescription && (
@@ -75,11 +86,11 @@ const HospitalDetailPage = ({ navigation }) => {
                     style={styles.seeMoreButton}
                     onPress={toggleDescription}
                   >
-                    ...Show Less
+                    {currentLanguage.language === 'en' ? 'show less' : 'ያነሰ አሳይ'}
                   </Text>
                 )}
               </Text>
-              <Text style={styles.sectionTitle}>Available Doctors</Text>
+              <Text style={styles.sectionTitle}>{currentLanguage.language === 'en' ? ' Available Doctors' : 'የሚገኙ ዶክተሮች'}</Text>
               {hospital.doctors.length > 0 ? (
                 <FlatList
                   data={hospital.doctors}
@@ -89,9 +100,9 @@ const HospitalDetailPage = ({ navigation }) => {
                   )}
                   horizontal={false}
                   showsVerticalScrollIndicator={false}
-                  // ListHeaderComponent={() => (
+                // ListHeaderComponent={() => (
 
-                  // )}
+                // )}
                 />
               ) : (
                 <Text style={styles.noDoctor}>No Doctors Available</Text>

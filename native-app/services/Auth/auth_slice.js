@@ -16,7 +16,9 @@ const authSlice = createSlice({
             state.user = null;
         },
         setLanguage: (state, action) => {
+            console.log('####',action.payload)
             state.language = action.payload;
+            
         }
 
     }

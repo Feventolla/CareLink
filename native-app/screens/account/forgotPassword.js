@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import {
   View,
   Text,
@@ -15,6 +16,8 @@ import { SvgContent } from "../../screens/svg_content/loginSvg";
 import { useForgotMutation } from "../../services/Auth/auth-api";
 
 const Forgotpassword = ({ navigation }) => {
+  const currentLanguage = useSelector(state => state.auth.language);
+
   const [forgot, { isLoading }] = useForgotMutation();
   const [error, setError] = useState();
   const [formData, setFormData] = useState({
@@ -48,9 +51,9 @@ const Forgotpassword = ({ navigation }) => {
           style={styles.avatar}
           source={require("../../assets/logo.jpg")}
         />
-        <Text style={styles.title}>Enter your email</Text>
+        <Text style={styles.title}>{currentLanguage.language === 'en' ? 'Enter your email' : 'ኢሜይል ያስገቡ'}</Text>
         <Text style={styles.subTitle}>
-          we will sent you an otp on your email address
+          {currentLanguage.language === 'en' ? 'we will sent you an otp on your email address' : 'በኢሜል አድራሻዎ ላይ otp እንልክልዎታለን'}
         </Text>
 
         <SvgXml xml={SvgContent} height={300} width={700} style={styles.svg} />
@@ -71,10 +74,10 @@ const Forgotpassword = ({ navigation }) => {
       ) : null}
       <View style={styles.formScrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.form}>
-          <Text style={styles.label}>Email</Text>
+          <Text style={styles.label}>{currentLanguage.language === 'en' ?'Email': 'ኢሜይል' }</Text>
           <TextInput
             style={styles.input}
-            placeholder="Enter your Email"
+            placeholder={currentLanguage.language === 'en' ? "Enter your Email" : 'ኢሜይል ያስገቡ'}
             keyboardType="email-address"
             value={formData.email}
             onChangeText={(text) => handleInputChange("email", text)}
@@ -83,7 +86,7 @@ const Forgotpassword = ({ navigation }) => {
       </View>
       <View style={styles.bottombutton}>
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>send code</Text>
+          <Text style={styles.buttonText}>{currentLanguage.language === 'en' ? 'Send code': 'ኮድ ላክ'}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

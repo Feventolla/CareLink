@@ -23,6 +23,7 @@ import setLanguage from '../common/langButton';
 const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
 const Landingpage = ({ navigation }) => {
+  const currentLanguage = useSelector(state => state.auth.language);
   const dispatch = useDispatch();
   const [longitude, setLongitude] = useState("");
   const [latitude, setLatitude] = useState("");
@@ -61,13 +62,6 @@ const Landingpage = ({ navigation }) => {
     console.log("Floating Action Button Pressed!");
   };
 
-  const currentLanguage = useSelector(state => state.auth.language); 
-
-  const toggleLanguage = () => {
-    const newLanguage = currentLanguage === 'en' ? 'am' : 'en';
-    dispatch(setLanguage({ language: newLanguage }));
-  };
-
   // const { data, isLoading, error, isSuccess } = useGetHospitalsQuery({});
   // const hospitals = hospitalData.value;
   // console.log("data", data);
@@ -82,12 +76,9 @@ const Landingpage = ({ navigation }) => {
 
   return (
     <View>
-      
-        
-        <LanguageDropdown
-          currentLanguage={currentLanguage}
-          onChangeLanguage={() => setIsDropdownVisible(!isDropdownVisible)}
-      />
+
+
+
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.heroContainer}>
           <Text style={styles.heroText_care}>
@@ -97,7 +88,19 @@ const Landingpage = ({ navigation }) => {
             source={require("../../assets/hero-doc.png")}
             style={styles.profileImage}
           />
+
+          <TouchableOpacity
+            onPress={toggleLanguage}
+            style={styles.dropdownButton}
+          >
+            <Text>
+              {currentLanguage.language === "en" ? "English" : "Amharic"}
+            </Text>
+          </TouchableOpacity>
+
         </View>
+
+
 
         <View style={styles.heroImagesMainContainer}>
           <View style={styles.heroImagesContainer}>
@@ -116,18 +119,18 @@ const Landingpage = ({ navigation }) => {
           />
         </View>
         <Text style={styles.hosp_search}
-          // placeholder={currentLanguage === 'en' ? 'Find Hospitals Nearby' : 'በአቅራቢያ ያሉ ሆስፒታሎችን ያግኙ'}
+        // placeholder={currentLanguage === 'en' ? 'Find Hospitals Nearby' : 'በአቅራቢያ ያሉ ሆስፒታሎችን ያግኙ'}
 
         >
-          {currentLanguage === 'en' ? 'Find Hospitals Nearby' : 'በአቅራቢያዎ ያሉ ሆስፒታሎችን ያግኙ'}
-           </Text>
+          {currentLanguage.language === 'en' ? 'Find Hospitals Nearby' : 'በአቅራቢያዎ ያሉ ሆስፒታሎችን ያግኙ'}
+        </Text>
 
         <View style={styles.searchContainer}>
           <TextInput
             style={styles.searchInput}
-            placeholder={currentLanguage === 'en' ? 'Search hospitals...' : 'ሆስፒታሎችን ፈልግ...'}
-            // onChangeText={handleSearch}
-            // value={searchText}
+            placeholder={currentLanguage.language === 'en' ? 'Search hospitals...' : 'ሆስፒታሎችን ፈልግ...'}
+          // onChangeText={handleSearch}
+          // value={searchText}
           />
           <Icon
             name="search"
@@ -136,9 +139,9 @@ const Landingpage = ({ navigation }) => {
             style={styles.searchIcon}
           />
         </View>
-        <Text style={styles.hosp_aval}>{currentLanguage === 'en' ? 'Hospitals Available here' : 'እዚህ የሚገኙ ሆስፒታሎች ' }</Text>
+        <Text style={styles.hosp_aval}>{currentLanguage.language === 'en' ? 'Hospitals Available here' : 'እዚህ የሚገኙ ሆስፒታሎች '}</Text>
         <Text style={styles.hosp_avaldesc}>
-          {currentLanguage === 'en' ? 'Find various articles about health here' : 'ስለ ጤና የተለያዩ መጣጥፎችን እዚህ ያግኙ'}
+          {currentLanguage.language === 'en' ? 'Find various articles about health here' : 'ስለ ጤና የተለያዩ መጣጥፎችን እዚህ ያግኙ'}
         </Text>
         <ScrollView
           horizontal
@@ -156,9 +159,9 @@ const Landingpage = ({ navigation }) => {
                 style={styles.cardImage}
               />
               <View style={styles.cardContent}>
-                <Text style={styles.cardTitle}>{hospital.name}</Text>
+                <Text style={styles.cardTitle}>{currentLanguage.language === 'en' ? hospital.name: hospital.amhName}</Text>
                 <Text style={styles.cardDescription}>
-                  {hospital.description.slice(0, 150)}...
+                  {currentLanguage.language === 'en' ? hospital.description.slice(0, 150) : hospital.amhDescription.slice(0, 150) }...
                 </Text>
                 <TouchableOpacity
                   style={styles.actionButton}
@@ -176,7 +179,9 @@ const Landingpage = ({ navigation }) => {
                       </Text>
                     )}
 
-                    <Text style={styles.actionButtonText}>Read More</Text>
+                    <Text style={styles.actionButtonText}>
+                    {currentLanguage.language === 'en' ? 'Read More' : 'ተጨማሪ ያንብቡ'}
+                  </Text>
                   </View>
                 </TouchableOpacity>
               </View>
@@ -189,17 +194,9 @@ const Landingpage = ({ navigation }) => {
         onPress={handleFabPress}
         renderIcon={() => <Icon name="child-care" style={styles.fabIcon} />}
       />
-      {isDropdownVisible && (
-        <LanguageDropdown
-          currentLanguage={currentLanguage}
-          onChangeLanguage={() => {
-            setIsDropdownVisible(!isDropdownVisible);
-            toggleLanguage();
-          }}
-        />
-      )}
+
     </View>
-    
+
   );
 };
 

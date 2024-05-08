@@ -6,6 +6,8 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 const ProfilePage = () => {
 
   const user = useSelector((state) => state.auth.user);
+  const currentLanguage = useSelector(state => state.auth.language);
+
 
 
   const handleEditProfile = () => {
