@@ -1,5 +1,6 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 
