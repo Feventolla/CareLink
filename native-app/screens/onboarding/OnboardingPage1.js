@@ -1,8 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 const OnboardingPage1 = ({ navigation }) => {
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = await AsyncStorage.getItem("userToken");
+      if (token) {
+        navigation.navigate("MainApp");
+      }
+    };
+
+    checkToken();
+  }, []);
+
   const handleSkipPress = () => {
     navigation.navigate("Onboarding_two");
   };

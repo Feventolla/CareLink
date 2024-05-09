@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 // import ImagePicker from "react-native-image-picker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SvgXml } from "react-native-svg";
 import { SvgContent } from "../../screens/svg_content/loginSvg";
 import { useLoginMutation } from "../../services/Auth/auth-api";
@@ -24,6 +25,18 @@ const Loginpage = ({ navigation }) => {
     email: "",
     password: "",
   });
+
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = await AsyncStorage.getItem("userToken");
+      if (token) {
+        navigation.navigate("MainApp");
+      }
+    };
+
+    checkToken();
+  }, []);
+
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -67,6 +80,7 @@ const Loginpage = ({ navigation }) => {
 
         // Handle successful registration response
         console.log("login successful:", response);
+        await AsyncStorage.setItem("userToken", response.value.token);
         navigation.navigate("MainApp");
 
         // Navigate to another screen or perform any other necessary action

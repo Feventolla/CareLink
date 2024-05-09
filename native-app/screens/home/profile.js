@@ -1,100 +1,9 @@
-// import React from "react";
-// import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
-// import Icon from "react-native-vector-icons/MaterialIcons"; // Use the appropriate icon library
-
-// const ProfilePage = () => {
-//   const handleLogout = () => {
-//     // Add your logout logic here
-//     // For example, you might navigate to the login screen or clear user authentication.
-//     console.log("User logged out");
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <View style={styles.profileContainer}>
-//         <Image
-//           source={require("../../assets/hospital-hero.jpg")} // Replace with your profile image source
-//           style={styles.profileImage}
-//         />
-//         <Text style={styles.profileName}>John Doe</Text>
-//         <Text style={styles.profileDetails}>Software Developer</Text>
-//       </View>
-
-//       <View style={styles.actionsContainer}>
-//         <TouchableOpacity style={styles.actionButton}>
-//           <Icon name="mail-outline" size={24} color="#333" />
-//           <Text style={styles.actionButtonText}>Message</Text>
-//         </TouchableOpacity>
-
-//         <TouchableOpacity style={styles.actionButton}>
-//           <Icon name="phone" size={24} color="#333" />
-//           <Text style={styles.actionButtonText}>Call</Text>
-//         </TouchableOpacity>
-
-//         <TouchableOpacity style={styles.actionButton}>
-//           <Icon name="star-border" size={24} color="#333" />
-//           <Text style={styles.actionButtonText}>Favorite</Text>
-//         </TouchableOpacity>
-
-//         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-//           <Icon name="exit-to-app" size={24} color="#333" />
-//           <Text style={styles.actionButtonText}>Logout</Text>
-//         </TouchableOpacity>
-//       </View>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     alignItems: "center",
-//     justifyContent: "center",
-//     padding: 20,
-//   },
-//   profileContainer: {
-//     alignItems: "center",
-//     marginBottom: 20,
-//   },
-//   profileImage: {
-//     width: 120,
-//     height: 120,
-//     borderRadius: 60,
-//     marginBottom: 10,
-//   },
-//   profileName: {
-//     fontSize: 24,
-//     fontWeight: "bold",
-//     marginBottom: 5,
-//   },
-//   profileDetails: {
-//     fontSize: 16,
-//     color: "#666",
-//   },
-//   actionsContainer: {
-//     flexDirection: "row",
-//     justifyContent: "space-around",
-//     width: "100%",
-//   },
-//   actionButton: {
-//     alignItems: "center",
-//   },
-//   logoutButton: {
-//     alignItems: "center",
-//     marginTop: 20,
-//   },
-//   actionButtonText: {
-//     marginTop: 5,
-//   },
-// });
-
-// export default ProfilePage;
-
 import React from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-const ProfilePage = () => {
+const ProfilePage = ({ navigation }) => {
   const handleEditProfile = () => {
     // Logic for navigating to the profile editing screen
     console.log("Edit Profile");
@@ -105,9 +14,10 @@ const ProfilePage = () => {
     console.log("View Posts");
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     // Logic for logging out
-    console.log("Logout");
+    await AsyncStorage.removeItem("userToken");
+    navigation.navigate("Signin");
   };
 
   return (
