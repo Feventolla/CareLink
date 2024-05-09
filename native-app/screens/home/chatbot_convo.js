@@ -14,7 +14,7 @@ const ChatScreen = () => {
     }
 
     const newMessage = {
-      _id: messages.length + 1,
+      _id: Date.now(),
       text: inputText,
       createdAt: new Date(),
       user: { _id: 1, name: "User" },
@@ -25,7 +25,7 @@ const ChatScreen = () => {
     );
     setInputText("");
 
-    fetch("http://192.168.0.167:8000/chat", {
+    fetch("http://10.5.228.231:8000/chat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -41,7 +41,7 @@ const ChatScreen = () => {
         // Check if 'messages' is defined and is an array
         if (data.response && Array.isArray(data.response)) {
           const botMessages = data.response.map((text, index) => ({
-            _id: text.length + 2 + index,
+            _id: Date.now() + index,
             text: text,
             createdAt: new Date(),
             user: { _id: 2, name: "CareLink Bot" },
@@ -70,7 +70,7 @@ const ChatScreen = () => {
           <View style={styles.inputToolbar}>
             <TextInput
               style={styles.textInput}
-              placeholder="Type how you feel..."
+              placeholder="please use ',' while listing your symptoms..."
               value={inputText}
               onChangeText={setInputText}
             />
