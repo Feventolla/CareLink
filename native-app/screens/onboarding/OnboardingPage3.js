@@ -1,8 +1,12 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { useSelector } from "react-redux";
+
 
 const OnboardingPage3 = ({ navigation }) => {
+  const currentLanguage = useSelector(state => state.auth.language);
+
   const handleNextPress = () => {
     navigation.navigate("Signup");
   };
@@ -25,9 +29,9 @@ const OnboardingPage3 = ({ navigation }) => {
 
       <View style={styles.textContainer}>
         <Text style={styles.careLinkText}>
-          Get<Text style={styles.linkText}> Info</Text>
+          {currentLanguage.language === 'en' ? 'Get' : 'መረጃ'}<Text style={styles.linkText}> {currentLanguage.language === 'en' ?  'Info': 'አግኝ'}</Text>
         </Text>
-        <Text style={styles.subText}>Acquire information on what to do</Text>
+        <Text style={styles.subText}>{currentLanguage.language === 'en' ? 'Acquire information on what to do' : 'ምን ማድረግ እንዳለብዎት መረጃ ያግኙ'}</Text>
       </View>
 
       <Image source={require("../../assets/image3.png")} style={styles.image} />
@@ -40,7 +44,7 @@ const OnboardingPage3 = ({ navigation }) => {
             color="white"
             style={styles.arrowready}
           />
-          <Text style={styles.nextButtonText}>Get Started</Text>
+          <Text style={styles.nextButtonText}>{currentLanguage.language === 'en' ? 'Get Started' : 'ጀምር'}</Text>
         </View>
       </TouchableOpacity>
     </View>

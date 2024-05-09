@@ -31,6 +31,7 @@ const FilterPage = ({ applyFilters }) => {
     applyFilters(selectedServices);
   };
 
+
   return (
     <View style={styles.container}>
       <View style={styles.filterTitle}>

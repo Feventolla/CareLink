@@ -13,8 +13,11 @@ import { FontAwesome } from "@expo/vector-icons";
 import { SvgXml } from "react-native-svg";
 import { SvgContent } from "../../screens/svg_content/resetSvg";
 import { useResetMutation } from "../../services/Auth/auth-api";
+import { useSelector } from "react-redux";
 
 const Resetpassword = ({ navigation }) => {
+  const currentLanguage = useSelector(state => state.auth.language);
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -71,7 +74,7 @@ const Resetpassword = ({ navigation }) => {
           style={styles.avatar}
           source={require("../../assets/logo.jpg")}
         />
-        <Text style={styles.title}>Reset your password</Text>
+        <Text style={styles.title}>{currentLanguage.language === 'en' ? 'Reset your password' : 'የይለፍ ቃልዎን ይቀይሩ'}</Text>
         <SvgXml xml={SvgContent} height={250} width={600} style={styles.svg} />
       </View>
       {error ? (
@@ -90,9 +93,9 @@ const Resetpassword = ({ navigation }) => {
       ) : null}
       <View style={styles.formScrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.form}>
-          <Text style={styles.label}>Email</Text>
+          <Text style={styles.label}>{currentLanguage.language === 'en' ? 'Email': 'ኢሜይል'}</Text>
           <TextInput
-            placeholder="Enter your Email"
+            placeholder={currentLanguage.language === 'en' ? 'Enter your Email' : 'ኢሜይል ያስገቡ'}
             keyboardType="email-address"
             value={formData.email}
             onChangeText={(text) => handleInputChange("email", text)}
@@ -102,7 +105,7 @@ const Resetpassword = ({ navigation }) => {
             <Text style={styles.errorText}>{validationErrors.email}</Text>
           )}
 
-          <Text style={styles.label}>New Password</Text>
+          <Text style={styles.label}>{currentLanguage.language === 'en' ? 'New password' : 'አዲስ የይለፍ ቃል'}</Text>
           <TextInput
             placeholder="Enter your Password"
             secureTextEntry={true}
@@ -120,7 +123,7 @@ const Resetpassword = ({ navigation }) => {
       </View>
       <View style={styles.bottombutton}>
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>reset</Text>
+          <Text style={styles.buttonText}>{currentLanguage.language === 'en' ? 'Reset' : 'ቀይር'}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

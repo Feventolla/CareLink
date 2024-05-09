@@ -11,11 +11,14 @@ import {
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { Platform } from "react-native";
+import { useDispatch, useSelector } from 'react-redux';
+import { setLanguage } from '../../services/Auth/auth_slice';
 
 import * as ImagePicker from "expo-image-picker";
 import { useSignupMutation } from "../../services/Auth/auth-api";
 
 const RegistrationPage = ({ navigation }) => {
+
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
@@ -33,6 +36,15 @@ const RegistrationPage = ({ navigation }) => {
 
   const [selectedGender, setSelectedGender] = useState(null);
 
+  const currentLanguage = useSelector(state => state.auth.language);
+  const dispatch = useDispatch();
+
+  const toggleLanguage = () => {
+    const newLanguage = currentLanguage.language === 'en' ? 'am' : 'en';
+    dispatch(setLanguage({ language: newLanguage }));
+
+  };
+
   const handleGenderSelection = (gender) => {
     setSelectedGender(gender);
   };
@@ -43,6 +55,7 @@ const RegistrationPage = ({ navigation }) => {
         <View style={styles.signupContainer}>
           <ActivityIndicator size="large" color="#C276F0" />
           <Text>Registering User...</Text>
+
         </View>
         {/* Render the blurred signup page */}
         <View style={styles.blurOverlay} />
@@ -62,6 +75,7 @@ const RegistrationPage = ({ navigation }) => {
 
     // Validate Name
     if (!formData.firstname.trim()) {
+      
       newErrors.name = "First Name is required,Please enter FirstName";
     }
     if (!formData.lastname.trim()) {
@@ -166,21 +180,38 @@ const RegistrationPage = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
+
         <Image
           style={styles.avatar}
           source={require("../../assets/logo.jpg")}
         />
+
       </View>
+
       <ScrollView
         style={styles.formScrollView}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>Let's Get Started</Text>
-        <Text style={styles.subTitle}>Create Your new Account</Text>
+        <TouchableOpacity
+          onPress={toggleLanguage}
+          style={styles.dropdownButton}
+        >
+          <Text>
+            {currentLanguage.language === "en" ? "English" : "Amharic"}
+          </Text>
+        </TouchableOpacity>
+        
+        <Text style={styles.title}>
+          {currentLanguage.language === 'en' ? "Let's Get Started" : 'ወደ መተግበሪያው ይግቡ'}
+        </Text>
+        <Text style={styles.subTitle}>
+
+          {currentLanguage.language === 'en' ? "Create Your new Account" : 'አዲስ መለያዎን ይፍጠሩ'}
+        </Text>
         <View style={styles.form}>
-          <Text style={styles.label}>First Name</Text>
+          <Text style={styles.label}>{currentLanguage.language === 'en' ? 'First Name' : 'የመጀመሪያ ስም'}</Text>
           <TextInput
-            placeholder="Enter your Firstname"
+            placeholder={currentLanguage.language === 'en' ? "Enter your Firstname" : 'የመጀመሪያ ስምዎን ያስገቡ'}
             keyboardType="default"
             value={formData.firstname}
             onChangeText={(text) => handleInputChange("firstname", text)}
@@ -193,9 +224,9 @@ const RegistrationPage = ({ navigation }) => {
             <Text style={styles.errorText}>{validationErrors.firstname}</Text>
           )}
 
-          <Text style={styles.label}>Last Name</Text>
+          <Text style={styles.label}>{currentLanguage.language === 'en' ? 'Last Name' : 'የአባት ስም'}</Text>
           <TextInput
-            placeholder="Enter your Lastname"
+            placeholder={currentLanguage.language === 'en' ? "Enter your Lastname" : 'የአባት ስምዎን ያስገቡ'}
             keyboardType="default"
             value={formData.lastname}
             onChangeText={(text) => handleInputChange("lastname", text)}
@@ -208,9 +239,9 @@ const RegistrationPage = ({ navigation }) => {
             <Text style={styles.errorText}>{validationErrors.lastname}</Text>
           )}
 
-          <Text style={styles.label}>Email</Text>
+          <Text style={styles.label}>{currentLanguage.language === 'en' ? "Email" : 'ኢሜይል'}</Text>
           <TextInput
-            placeholder="Enter your Email"
+            placeholder={currentLanguage.language === 'en' ? "Enter your Email" : 'ኢሜይል ያስገቡ'}
             keyboardType="email-address"
             value={formData.email}
             onChangeText={(text) => handleInputChange("email", text)}
@@ -219,9 +250,9 @@ const RegistrationPage = ({ navigation }) => {
           {validationErrors.email && (
             <Text style={styles.errorText}>{validationErrors.email}</Text>
           )}
-          <Text style={styles.label}>Password</Text>
+          <Text style={styles.label}>{currentLanguage.language === 'en' ? "Pasword" : 'የይለፍ ቃልዎ'}</Text>
           <TextInput
-            placeholder="Enter your Password"
+            placeholder={currentLanguage.language === 'en' ? "Enter your password" : 'የይለፍ ቃልዎን ያስገቡ'}
             secureTextEntry={true}
             value={formData.password}
             onChangeText={(text) => handleInputChange("password", text)}
@@ -233,7 +264,7 @@ const RegistrationPage = ({ navigation }) => {
           {validationErrors.password && (
             <Text style={styles.errorText}>{validationErrors.password}</Text>
           )}
-          <Text style={styles.label}>Gender</Text>
+          <Text style={styles.label}>{currentLanguage.language === 'en' ? 'Gender' : 'ጾታ'}</Text>
           <View style={styles.radioContainer}>
             <TouchableOpacity
               style={[
@@ -248,7 +279,7 @@ const RegistrationPage = ({ navigation }) => {
                   selectedGender === "male" && styles.radioTextSelected,
                 ]}
               >
-                Male
+                {currentLanguage.language === 'en' ? 'Male' : 'ወንድ'}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -264,7 +295,7 @@ const RegistrationPage = ({ navigation }) => {
                   selectedGender === "female" && styles.radioTextSelected,
                 ]}
               >
-                Female
+                {currentLanguage.language === 'en' ? 'female' : 'ሴት'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -278,10 +309,10 @@ const RegistrationPage = ({ navigation }) => {
           {/* {validationErrors.gender && (
             <Text style={styles.errorText}>{validationErrors.gender}</Text>
           )} */}
-          <Text style={styles.label}>Age</Text>
+          <Text style={styles.label}>{currentLanguage.language === 'en' ? 'Age' : 'እድሜ'}</Text>
 
           <TextInput
-            placeholder="Enter your Age"
+            placeholder={currentLanguage.language === 'en' ? "Enter your Age" : 'እድሜህን አስገባ'}
             keyboardType="number-pad"
             value={formData.age} // Convert the value to a string
             onChangeText={(text) => handleInputChange("age", text)}
@@ -290,9 +321,9 @@ const RegistrationPage = ({ navigation }) => {
           {validationErrors.age && (
             <Text style={styles.errorText}>{validationErrors.age}</Text>
           )}
-          <Text style={styles.label}>Weight</Text>
+          <Text style={styles.label}>{currentLanguage.language === 'en' ? "Weight" : 'ክብደት'}</Text>
           <TextInput
-            placeholder="Enter your Weight"
+            placeholder={currentLanguage.language === 'en' ? "Enter your Weight" : 'ክብደትህን አስገባ'}
             keyboardType="number-pad"
             value={formData.weight} // Convert the value to a string
             onChangeText={(text) => handleInputChange("weight", text)}
@@ -301,9 +332,9 @@ const RegistrationPage = ({ navigation }) => {
           {validationErrors.weight && (
             <Text style={styles.errorText}>{validationErrors.weight}</Text>
           )}
-          <Text style={styles.label}>Height</Text>
+          <Text style={styles.label}>{currentLanguage.language === 'en' ? "Height" : 'ቁመት'}</Text>
           <TextInput
-            placeholder="Enter your Height"
+            placeholder={currentLanguage.language === 'en' ? "Enter your Height" : 'ቁመትህን አስገባ'}
             keyboardType="number-pad"
             value={formData.height} // Convert the value to a string
             onChangeText={(text) => handleInputChange("height", text)}
@@ -313,10 +344,10 @@ const RegistrationPage = ({ navigation }) => {
             <Text style={styles.errorText}>{validationErrors.height}</Text>
           )}
 
-          <Text style={styles.label}>Photo</Text>
+          <Text style={styles.label}>{currentLanguage.language === 'en' ? "Photo" : 'ፎቶ'}</Text>
           <View style={styles.file}>
             <TouchableOpacity onPress={pickImage}>
-              <Text style={styles.picktext}>Pick Image</Text>
+              <Text style={styles.picktext}>{currentLanguage.language === 'en' ? " Pick Image" : 'ፎቶ ምረጥ'}</Text>
             </TouchableOpacity>
             {selectedImage && (
               <Image source={{ uri: selectedImage }} style={styles.image} />
@@ -333,7 +364,7 @@ const RegistrationPage = ({ navigation }) => {
       </ScrollView>
       <View style={styles.bottombutton}>
         <TouchableOpacity style={styles.button} onPress={handleRegister}>
-          <Text style={styles.buttonText}>Register</Text>
+          <Text style={styles.buttonText}>{currentLanguage.language === 'en' ? "Register" : 'ይመዝገቡ'}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -343,8 +374,8 @@ const RegistrationPage = ({ navigation }) => {
           }}
         >
           <Text style={styles.footerText}>
-            Already Have an account?{" "}
-            <Text style={styles.logincolor}>Login</Text>
+            {currentLanguage.language === 'en' ? "Already Have an account" : 'አስቀድሞ መለያ አለዎት'}?{" "}
+            <Text style={styles.logincolor}>{currentLanguage.language === 'en' ? "Login" : 'ግቡ'}</Text>
           </Text>
         </TouchableOpacity>
       </View>

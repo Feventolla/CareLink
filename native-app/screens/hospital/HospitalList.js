@@ -19,6 +19,8 @@ const DEFAULT_LOCATION = {
   latitude: "40.7128",
   longitude: "-74.006",
 };
+import { useSelector } from "react-redux";
+import LanguageDropdown from "../common/langButton";
 
 const screenWidth = Dimensions.get("window").width;
 const numColumns = 2;
@@ -64,6 +66,8 @@ const HospitalListPage = ({ navigation }) => {
     })();
   }, []);
 
+  const currentLanguage = useSelector((state) => state.auth.language);
+
   const applyFilters = (selectedServices) => {
     setAppliedFilters({
       services: selectedServices,
@@ -107,9 +111,14 @@ const HospitalListPage = ({ navigation }) => {
       <View style={styles.hospitalCard}>
         <Image source={{ uri: item.photo }} style={styles.hospitalImage} />
         <View style={styles.hospitalInfo}>
-          <Text style={styles.hospitalTitle}>{item.name}</Text>
+          <Text style={styles.hospitalTitle}>
+            {currentLanguage.language === "en" ? item.name : item.amhName}
+          </Text>
           <Text style={styles.hospitalDescription}>
-            {item.description.slice(0, 80)}...
+            {currentLanguage.language === "en"
+              ? item.description.slice(0, 80)
+              : item.amhDescription.slice(0, 80)}
+            ...
           </Text>
           <TouchableOpacity
             onPress={() => {
@@ -118,7 +127,9 @@ const HospitalListPage = ({ navigation }) => {
               });
             }}
           >
-            <Text style={styles.readMoreButton}>Read More</Text>
+            <Text style={styles.readMoreButton}>
+              {currentLanguage.language === "en" ? "Read More" : "ተጨማሪ ያንብቡ"}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -128,16 +139,23 @@ const HospitalListPage = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Healthcare-facilities </Text>
+        <LanguageDropdown top={-6} right={4} />
+        <Text style={styles.title}>
+          {currentLanguage.language === "en"
+            ? "Healthcare-facilities"
+            : "የጤና ጥበቃ ተቋማት"}{" "}
+        </Text>
         <TouchableOpacity style={styles.filterButton} onPress={openFilter}>
-          <Text style={styles.filterButtonText}>Filter</Text>
+          <Text style={styles.filterButtonText}>
+            {currentLanguage.language === "en" ? "Filter" : "ማጣሪያ"}
+          </Text>
         </TouchableOpacity>
       </View>
       {showFilter && <FilterPage applyFilters={applyFilters} />}
       <View style={styles.searchBar}>
         <TextInput
           style={styles.searchInput}
-          placeholder="Search"
+          placeholder={currentLanguage.language === "en" ? "Search" : "ፈልግ"}
           value={searchQuery}
           onChangeText={(text) => setSearchQuery(text)}
         />
@@ -153,6 +171,7 @@ const HospitalListPage = ({ navigation }) => {
         renderItem={renderItem}
         numColumns={2}
         horizontal={false}
+        clear
         showsVerticalScrollIndicator={false}
         style={styles.list}
       />
@@ -169,6 +188,7 @@ const styles = {
   },
   header: {
     marginBottom: 16,
+    marginTop: 30,
   },
   title: {
     fontSize: 24,
@@ -183,6 +203,7 @@ const styles = {
   filterButton: {
     borderRadius: 8,
     alignItems: "flex-end",
+    marginTop: 8,
   },
   filterButtonText: {
     color: "#C276F0",
