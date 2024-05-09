@@ -1,15 +1,10 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
-import { useSelector } from "react-redux";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-
 const ProfilePage = () => {
-
   const user = useSelector((state) => state.auth.user);
-  const currentLanguage = useSelector(state => state.auth.language);
-
-
+  const currentLanguage = useSelector((state) => state.auth.language);
 
   const handleEditProfile = () => {
     // Logic for navigating to the profile editing screen
@@ -35,7 +30,7 @@ const ProfilePage = () => {
           style={styles.coverPhoto}
         />
         <Image
-          source={{uri: user.patient.photo}} // Replace with your profile image source
+          source={{ uri: user.patient.photo }} // Replace with your profile image source
           style={styles.profileImage}
         />
         <Text style={styles.profileName}>{user.patient.firstname}</Text>
