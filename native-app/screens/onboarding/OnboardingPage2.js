@@ -1,8 +1,11 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { useSelector } from "react-redux";
 
 const OnboardingPage2 = ({ navigation }) => {
+  const currentLanguage = useSelector(state => state.auth.language);
+
   const handleSkipPress = () => {
     navigation.navigate("Onboarding_three");
   };
@@ -29,9 +32,9 @@ const OnboardingPage2 = ({ navigation }) => {
 
       <View style={styles.textContainer}>
         <Text style={styles.careLinkText}>
-          Chat<Text style={styles.linkText}>Bot</Text>
+          {currentLanguage.language === 'en' ? 'Chat' : 'ቻት'}<Text style={styles.linkText}>{currentLanguage.language === 'en' ? 'Bot': 'ቦት'}</Text>
         </Text>
-        <Text style={styles.subText}>Talk with our chatbot</Text>
+        <Text style={styles.subText}>{currentLanguage.language === 'en' ? 'Talk with our chatbot' : 'ከቻት ቦታችን ጋር ይነጋገሩ'}</Text>
       </View>
 
       <Image source={require("../../assets/image2.png")} style={styles.image} />

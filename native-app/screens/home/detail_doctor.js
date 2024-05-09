@@ -8,6 +8,7 @@ import {
   ScrollView,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+
 const Detaildoctor = () => {
   const { data, isLoading, error, isSuccess } = useHospitalQuery();
 
@@ -15,7 +16,6 @@ const Detaildoctor = () => {
     return <Text>IS LOADING</Text>;
   }
   const hospital = data.value;
-  console.log(hospital);
   return (
     <View style={styles.container}>
       <Image source={{ uri: hospital.photo }} style={styles.image} />

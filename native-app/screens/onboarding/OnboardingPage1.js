@@ -1,8 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { useSelector } from "react-redux";
 
 const OnboardingPage1 = ({ navigation }) => {
+  const currentLanguage = useSelector((state) => state.auth.language);
+
+  useEffect(() => {
+    const checkToken = async () => {
+      const user = await AsyncStorage.getItem("userData");
+      if (user) {
+        navigation.navigate("MainApp");
+      }
+    };
+
+    checkToken();
+  }, []);
+
   const handleSkipPress = () => {
     navigation.navigate("Onboarding_two");
   };
@@ -29,7 +44,11 @@ const OnboardingPage1 = ({ navigation }) => {
         <Text style={styles.careLinkText}>
           Care<Text style={styles.linkText}>Link</Text>
         </Text>
-        <Text style={styles.subText}>Find hospitals near you</Text>
+        <Text style={styles.subText}>
+          {currentLanguage.language === "en"
+            ? "Find hospitals near you"
+            : "በአቅራቢያዎ የሚገኙ ሆስፒታሎችን ያግኙ"}
+        </Text>
       </View>
 
       <Image source={require("../../assets/image1.png")} style={styles.image} />

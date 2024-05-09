@@ -10,9 +10,11 @@ import {
 } from "react-native";
 
 import { useDoctorQuery } from "../../services/Doctors/doctor-api";
+import { useDispatch, useSelector } from 'react-redux';
 
 const DoctorItem = ({ item }) => {
   const { data: doctorData, isLoading, error } = useDoctorQuery(item);
+  const currentLanguage = useSelector(state => state.auth.language);
 
   if (isLoading) {
     return <Text>IS LOADING</Text>;
@@ -28,9 +30,9 @@ const DoctorItem = ({ item }) => {
     <View style={styles.doctorCard}>
       <Image source={{ uri: doctor.value.photo }} style={styles.doctorImage} />
       <View style={styles.doctorData}>
-        <Text style={styles.doctorName}>{doctor.value.firstName}</Text>
+        <Text style={styles.doctorName}>{currentLanguage.language === 'en' ? doctor.value.firstName : doctor.value.amhFirstName}</Text>
         <Text style={styles.doctorSpecialty}>
-          {doctor.value.specialization}
+          {currentLanguage.language === 'en' ? doctor.value.specialization : doctor.value.amhSpecialization}
         </Text>
       </View>
     </View>
@@ -63,7 +65,6 @@ const styles = StyleSheet.create({
   doctorData: {
     flexDirection: "col",
     justifyContent: "center",
-    // alignItems: "center",
     marginLeft: 10,
     marginBottom: 10,
   },

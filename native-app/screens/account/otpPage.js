@@ -5,31 +5,22 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Alert,
   ScrollView,
   Image,
   ActivityIndicator,
 } from "react-native";
-import { SvgXml } from "react-native-svg";
-import { SvgContent } from "../svg_content/otpSvg";
-import { useRoute } from "@react-navigation/native";
 import { useOtpMutation } from "../../services/Auth/auth-api";
+import { useSelector } from "react-redux";
 
 const OTPVerificationPage = ({ navigation }) => {
+  const currentLanguage = useSelector((state) => state.auth.language);
+
   const [codeOtp, { isLoading }] = useOtpMutation();
   const [error, setError] = useState();
   const [otp, setOtp] = useState(["", "", "", ""]); // Array to store OTP digits
   const otpInputRefs = Array(4).fill(React.createRef());
   const route = useRoute();
   const { email } = route.params;
-  console.log("passed email", email);
-  // const [formData, setFormData] = useState({
-  //   otp: "",
-  // });
-
-  // const handleInputChange = (field, value) => {
-  //   setFormData((prevData) => ({ ...prevData, [field]: value }));
-  // };
 
   if (isLoading) {
     return (
@@ -67,12 +58,8 @@ const OTPVerificationPage = ({ navigation }) => {
     const prevOtp = otp.join("");
     const enteredotp = parseInt(prevOtp, 10);
 
-    console.log("otp formdata", enteredotp);
     try {
       const response = await codeOtp({ otp: enteredotp, email: email });
-
-      // Handle successful registration response
-      console.log("otp entered successful:", response);
 
       if (response.data.isSuccess === true) {
         navigation.navigate("Reset");
@@ -80,8 +67,6 @@ const OTPVerificationPage = ({ navigation }) => {
         setError(response.data.message);
       }
     } catch (error) {
-      // Handle registration error
-      console.log("otpcode error:", error);
       setError(error.data.message);
     }
   };
@@ -93,9 +78,15 @@ const OTPVerificationPage = ({ navigation }) => {
           style={styles.avatar}
           source={require("../../assets/logo.jpg")}
         />
-        <Text style={styles.title}>Check your email</Text>
+        <Text style={styles.title}>
+          {currentLanguage.language === "en"
+            ? "Check your email"
+            : "ኢሜልዎን ያረጋግጡ"}
+        </Text>
         <Text style={styles.subTitle}>
-          We've sent an otp code to the email on your device
+          {currentLanguage.language === "en"
+            ? "We've sent an otp code to the email on your device"
+            : "በኢሜይል አድራሻዎ ላይ otp ኮድ ልከናል"}
         </Text>
         <Image
           style={styles.image}
@@ -145,12 +136,19 @@ const OTPVerificationPage = ({ navigation }) => {
         }}
       >
         <Text style={styles.footerText}>
-          Didn't receive a code?{" "}
-          <Text style={styles.logincolor}>Resend code</Text>
+          {currentLanguage.language === "en"
+            ? "Didnt received code "
+            : "ኮድ አልተቀበለም"}{" "}
+          ?{" "}
+          <Text style={styles.logincolor}>
+            {currentLanguage.language === "en" ? "Resend code" : "ኮዱን እንደገና ላክ"}
+          </Text>
         </Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Verify</Text>
+        <Text style={styles.buttonText}>
+          {currentLanguage.language === "en" ? "Verify" : "አረጋግጥ"}
+        </Text>
       </TouchableOpacity>
     </ScrollView>
   );
