@@ -16,7 +16,7 @@ import { SvgContent } from "../../screens/svg_content/loginSvg";
 import { useForgotMutation } from "../../services/Auth/auth-api";
 
 const Forgotpassword = ({ navigation }) => {
-  const currentLanguage = useSelector(state => state.auth.language);
+  const currentLanguage = useSelector((state) => state.auth.language);
 
   const [forgot, { isLoading }] = useForgotMutation();
   const [error, setError] = useState();
@@ -29,20 +29,12 @@ const Forgotpassword = ({ navigation }) => {
   };
 
   const handleLogin = async () => {
-    console.log(formData);
-    // Handle the login logic here with formData
     try {
       const response = await forgot(formData).unwrap();
-      console.log("email entered successful:", response);
-
       navigation.navigate("OTP", { email: formData.email });
-      // Navigate to another screen or perform any other necessary action
     } catch (error) {
-      // Handle registration error
-      console.log("forgot error:", error);
       setError(error.data.message);
     }
-    console.log("forgot Form Data:", formData.email);
   };
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
@@ -51,9 +43,13 @@ const Forgotpassword = ({ navigation }) => {
           style={styles.avatar}
           source={require("../../assets/logo.jpg")}
         />
-        <Text style={styles.title}>{currentLanguage.language === 'en' ? 'Enter your email' : 'ኢሜይል ያስገቡ'}</Text>
+        <Text style={styles.title}>
+          {currentLanguage.language === "en" ? "Enter your email" : "ኢሜይል ያስገቡ"}
+        </Text>
         <Text style={styles.subTitle}>
-          {currentLanguage.language === 'en' ? 'we will sent you an otp on your email address' : 'በኢሜል አድራሻዎ ላይ otp እንልክልዎታለን'}
+          {currentLanguage.language === "en"
+            ? "we will sent you an otp on your email address"
+            : "በኢሜል አድራሻዎ ላይ otp እንልክልዎታለን"}
         </Text>
 
         <SvgXml xml={SvgContent} height={300} width={700} style={styles.svg} />
@@ -74,10 +70,16 @@ const Forgotpassword = ({ navigation }) => {
       ) : null}
       <View style={styles.formScrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.form}>
-          <Text style={styles.label}>{currentLanguage.language === 'en' ?'Email': 'ኢሜይል' }</Text>
+          <Text style={styles.label}>
+            {currentLanguage.language === "en" ? "Email" : "ኢሜይል"}
+          </Text>
           <TextInput
             style={styles.input}
-            placeholder={currentLanguage.language === 'en' ? "Enter your Email" : 'ኢሜይል ያስገቡ'}
+            placeholder={
+              currentLanguage.language === "en"
+                ? "Enter your Email"
+                : "ኢሜይል ያስገቡ"
+            }
             keyboardType="email-address"
             value={formData.email}
             onChangeText={(text) => handleInputChange("email", text)}
@@ -86,7 +88,9 @@ const Forgotpassword = ({ navigation }) => {
       </View>
       <View style={styles.bottombutton}>
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>{currentLanguage.language === 'en' ? 'Send code': 'ኮድ ላክ'}</Text>
+          <Text style={styles.buttonText}>
+            {currentLanguage.language === "en" ? "Send code" : "ኮድ ላክ"}
+          </Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

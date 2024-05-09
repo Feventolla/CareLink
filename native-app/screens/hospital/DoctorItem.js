@@ -15,7 +15,6 @@ import { useDispatch, useSelector } from 'react-redux';
 const DoctorItem = ({ item }) => {
   const { data: doctorData, isLoading, error } = useDoctorQuery(item);
   const currentLanguage = useSelector(state => state.auth.language);
-  const dispatch = useDispatch();
 
   if (isLoading) {
     return <Text>IS LOADING</Text>;
@@ -66,7 +65,6 @@ const styles = StyleSheet.create({
   doctorData: {
     flexDirection: "col",
     justifyContent: "center",
-    // alignItems: "center",
     marginLeft: 10,
     marginBottom: 10,
   },

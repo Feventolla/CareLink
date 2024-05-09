@@ -56,7 +56,6 @@ const Landingpage = ({ navigation }) => {
 
   const handleFabPress = () => {
     navigation.navigate("Chatbot");
-    console.log("Floating Action Button Pressed!");
   };
 
   if (loading) {
@@ -111,7 +110,7 @@ const Landingpage = ({ navigation }) => {
             : "በአቅራቢያዎ ያሉ ሆስፒታሎችን ያግኙ"}
         </Text>
 
-        <View style={styles.searchContainer}>
+        {/* <View style={styles.searchContainer}>
           <TextInput
             style={styles.searchInput}
             placeholder={
@@ -126,12 +125,12 @@ const Landingpage = ({ navigation }) => {
             color="#C276F0"
             style={styles.searchIcon}
           />
-        </View>
-        <Text style={styles.hosp_aval}>
+        </View> */}
+        {/* <Text style={styles.hosp_aval}>
           {currentLanguage.language === "en"
             ? "Hospitals Available here"
             : "እዚህ የሚገኙ ሆስፒታሎች "}
-        </Text>
+        </Text> */}
         <Text style={styles.hosp_avaldesc}>
           {currentLanguage.language === "en"
             ? "Find various articles about health here"

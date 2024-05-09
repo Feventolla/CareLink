@@ -11,10 +11,8 @@ import {
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useRoute } from "@react-navigation/native";
 import { useHospitalQuery } from "../../services/Hospital/hospital-api";
-import { useDoctorQuery } from "../../services/Doctors/doctor-api";
 import DoctorItem from "./DoctorItem";
 import { useSelector, useDispatch } from "react-redux";
-import { setLanguage } from "../../services/Auth/auth_slice";
 
 const HospitalDetailPage = ({ navigation }) => {
   const route = useRoute();

@@ -1,40 +1,55 @@
+import React, { useState, useEffect } from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-const ProfilePage = () => {
-  const user = useSelector((state) => state.auth.user);
+const ProfilePage = ({ navigation }) => {
   const currentLanguage = useSelector((state) => state.auth.language);
 
-  const handleEditProfile = () => {
-    // Logic for navigating to the profile editing screen
-    console.log("Edit Profile");
-  };
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const userData = await AsyncStorage.getItem("userData");
+        setUser(JSON.parse(userData));
+      } catch (error) {
+        console.error("Error retrieving user data:", error);
+      }
+    };
+    getUser();
+  }, []);
 
-  const handleViewPosts = () => {
-    // Logic for navigating to the user's posts or activity
-    console.log("View Posts");
-  };
+  const handleEditProfile = () => {};
 
-  const handleLogout = () => {
-    // Logic for logging out
-    console.log("Logout");
+  const handleViewPosts = () => {};
+
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem("userData");
+    setUser(null);
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Signin" }],
+    });
   };
 
   return (
     <View style={styles.container}>
-      {/* Profile Header */}
       <View style={styles.profileHeader}>
         <Image
           source={require("../../assets/hospital-hero.jpg")}
           style={styles.coverPhoto}
         />
         <Image
-          source={{ uri: user.patient.photo }} // Replace with your profile image source
+          source={{ uri: user?.patient?.photo || "assets/doc1-hero.jpg" }}
           style={styles.profileImage}
         />
-        <Text style={styles.profileName}>{user.patient.firstname}</Text>
-        <Text style={styles.profileDetails}>{user.patient.lastname}</Text>
+        <Text style={styles.profileName}>
+          {user?.patient?.firstname || "Firstname"}
+        </Text>
+        <Text style={styles.profileDetails}>
+          {user?.patient?.lastname || "Lastname"}
+        </Text>
       </View>
 
       <View style={styles.actionButtons}>
@@ -72,15 +87,12 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 350,
     resizeMode: "cover",
-    // backgroundColor: "#C276F0",
-    // borderBottomLeftRadius: 70,
-    // borderBottomRightRadius: 70,
   },
   profileImage: {
     width: 200,
     height: 200,
     borderRadius: 50,
-    marginTop: -50, // Adjust as needed to overlap with the cover photo
+    marginTop: -50,
     marginBottom: 10,
   },
   profileName: {
@@ -94,7 +106,6 @@ const styles = StyleSheet.create({
   actionButtons: {
     flexDirection: "row",
     justifyContent: "space-around",
-    // marginTop: 20,
   },
   actionButton: {
     alignItems: "center",
