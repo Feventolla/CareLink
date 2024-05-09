@@ -8,15 +8,13 @@ import {
   Image,
   ScrollView,
 } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
-// import ImagePicker from "react-native-image-picker";
 import { SvgXml } from "react-native-svg";
 import { SvgContent } from "../../screens/svg_content/resetSvg";
 import { useResetMutation } from "../../services/Auth/auth-api";
 import { useSelector } from "react-redux";
 
 const Resetpassword = ({ navigation }) => {
-  const currentLanguage = useSelector(state => state.auth.language);
+  const currentLanguage = useSelector((state) => state.auth.language);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -48,12 +46,8 @@ const Resetpassword = ({ navigation }) => {
 
   const handleLogin = async () => {
     if (validateForm()) {
-      console.log("reset Form Data:", formData);
       try {
         const response = await reset(formData).unwrap();
-
-        // Handle successful registration response
-        console.log("password reset successfully:", response);
 
         if (response.isSuccess === true) {
           navigation.navigate("Signin");
@@ -61,8 +55,6 @@ const Resetpassword = ({ navigation }) => {
           setError(response.data.message);
         }
       } catch (error) {
-        // Handle registration error
-        console.log("reset error:", error);
         setError(error.data.message);
       }
     }
@@ -74,7 +66,11 @@ const Resetpassword = ({ navigation }) => {
           style={styles.avatar}
           source={require("../../assets/logo.jpg")}
         />
-        <Text style={styles.title}>{currentLanguage.language === 'en' ? 'Reset your password' : 'የይለፍ ቃልዎን ይቀይሩ'}</Text>
+        <Text style={styles.title}>
+          {currentLanguage.language === "en"
+            ? "Reset your password"
+            : "የይለፍ ቃልዎን ይቀይሩ"}
+        </Text>
         <SvgXml xml={SvgContent} height={250} width={600} style={styles.svg} />
       </View>
       {error ? (
@@ -93,9 +89,15 @@ const Resetpassword = ({ navigation }) => {
       ) : null}
       <View style={styles.formScrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.form}>
-          <Text style={styles.label}>{currentLanguage.language === 'en' ? 'Email': 'ኢሜይል'}</Text>
+          <Text style={styles.label}>
+            {currentLanguage.language === "en" ? "Email" : "ኢሜይል"}
+          </Text>
           <TextInput
-            placeholder={currentLanguage.language === 'en' ? 'Enter your Email' : 'ኢሜይል ያስገቡ'}
+            placeholder={
+              currentLanguage.language === "en"
+                ? "Enter your Email"
+                : "ኢሜይል ያስገቡ"
+            }
             keyboardType="email-address"
             value={formData.email}
             onChangeText={(text) => handleInputChange("email", text)}
@@ -105,7 +107,9 @@ const Resetpassword = ({ navigation }) => {
             <Text style={styles.errorText}>{validationErrors.email}</Text>
           )}
 
-          <Text style={styles.label}>{currentLanguage.language === 'en' ? 'New password' : 'አዲስ የይለፍ ቃል'}</Text>
+          <Text style={styles.label}>
+            {currentLanguage.language === "en" ? "New password" : "አዲስ የይለፍ ቃል"}
+          </Text>
           <TextInput
             placeholder="Enter your Password"
             secureTextEntry={true}
@@ -123,7 +127,9 @@ const Resetpassword = ({ navigation }) => {
       </View>
       <View style={styles.bottombutton}>
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>{currentLanguage.language === 'en' ? 'Reset' : 'ቀይር'}</Text>
+          <Text style={styles.buttonText}>
+            {currentLanguage.language === "en" ? "Reset" : "ቀይር"}
+          </Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

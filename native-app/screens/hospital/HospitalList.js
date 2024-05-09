@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -304,7 +304,7 @@ const styles = {
     alignSelf: "flex-end",
   },
   list: {
-    marginBottom: 100,
+    marginBottom: 150,
   },
 };
 

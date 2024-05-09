@@ -72,9 +72,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   container: {
-    // flex: 1,
     padding: 16,
-    // height: 200,
   },
   title: {
     fontSize: 14,

@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from 'react-redux';
-import { setUser } from "../../services/Auth/auth_slice";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   View,
   Text,
@@ -11,31 +11,33 @@ import {
   ScrollView,
   ActivityIndicator,
 } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
-// import ImagePicker from "react-native-image-picker";
+
 import { SvgXml } from "react-native-svg";
 import { SvgContent } from "../../screens/svg_content/loginSvg";
 import { useLoginMutation } from "../../services/Auth/auth-api";
-import { setLanguage } from "../../services/Auth/auth_slice";
+import LanguageDropdown from "../common/langButton";
 
 const Loginpage = ({ navigation }) => {
   const [signin, { isLoading }] = useLoginMutation();
   const [validationErrors, setErrors] = useState({});
   const [EmailError, setEmailError] = useState();
 
-  const currentLanguage = useSelector(state => state.auth.language);
-  const dispatch = useDispatch();
-
-  const toggleLanguage = () => {
-    const newLanguage = currentLanguage.language === 'en' ? 'am' : 'en';
-    dispatch(setLanguage({ language: newLanguage }));
-
-  };
+  const currentLanguage = useSelector((state) => state.auth.language);
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  useEffect(() => {
+    const checkToken = async () => {
+      const user = await AsyncStorage.getItem("userData");
+      if (user) {
+        navigation.navigate("MainApp");
+      }
+    };
+
+    checkToken();
+  }, []);
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -73,19 +75,11 @@ const Loginpage = ({ navigation }) => {
   const handleLogin = async () => {
     if (validateForm()) {
       try {
-        console.log("formdata", formData);
-
         const response = await signin(formData).unwrap();
-        dispatch(setUser(response.value));
-        // Handle successful registration response
-        console.log("login successful:", response);
+        await AsyncStorage.setItem("userData", JSON.stringify(response.value));
         navigation.navigate("MainApp");
-
-        // Navigate to another screen or perform any other necessary action
       } catch (error) {
-        // Handle registration error
-        console.log("login error:", error);
-        setEmailError(error.data.message);
+        setEmailError(error.message);
       }
     }
   };
@@ -96,17 +90,12 @@ const Loginpage = ({ navigation }) => {
           style={styles.avatar}
           source={require("../../assets/logo.jpg")}
         />
-        <TouchableOpacity
-          onPress={toggleLanguage}
-          style={styles.dropdownButton}
-        >
-          <Text>
-            {currentLanguage.language === "en" ? "English" : "Amharic"}
-          </Text>
-        </TouchableOpacity>
+        <LanguageDropdown />
 
         <Text style={styles.title}>
-          {currentLanguage.language === "en" ? "Login to your account" : "ወደ መለያዎ ይግቡ"}
+          {currentLanguage.language === "en"
+            ? "Login to your account"
+            : "ወደ መለያዎ ይግቡ"}
         </Text>
         <SvgXml xml={SvgContent} height={300} width={700} style={styles.svg} />
       </View>
@@ -130,7 +119,11 @@ const Loginpage = ({ navigation }) => {
             {currentLanguage.language === "en" ? "Email" : "ኢሜይል"}
           </Text>
           <TextInput
-            placeholder={currentLanguage.language === "en" ? "Enter your Email" : "ኢሜይል ያስገቡ"}
+            placeholder={
+              currentLanguage.language === "en"
+                ? "Enter your Email"
+                : "ኢሜይል ያስገቡ"
+            }
             keyboardType="email-address"
             value={formData.email}
             onChangeText={(text) => handleInputChange("email", text)}
@@ -143,7 +136,11 @@ const Loginpage = ({ navigation }) => {
             {currentLanguage.language === "en" ? "Password" : "የይለፍ ቃል"}
           </Text>
           <TextInput
-            placeholder={currentLanguage.language === "en" ? "Enter your Password" : "የይለፍ ቃል ያስገቡ"}
+            placeholder={
+              currentLanguage.language === "en"
+                ? "Enter your Password"
+                : "የይለፍ ቃል ያስገቡ"
+            }
             secureTextEntry={true}
             value={formData.password}
             onChangeText={(text) => handleInputChange("password", text)}
@@ -161,7 +158,11 @@ const Loginpage = ({ navigation }) => {
             navigation.navigate("Forgot");
           }}
         >
-          <Text style={styles.forgot}>{currentLanguage.language === "en" ? "forgot password?" : "የይለፍ ቃል ረስተዋል?"}</Text>
+          <Text style={styles.forgot}>
+            {currentLanguage.language === "en"
+              ? "forgot password?"
+              : "የይለፍ ቃል ረስተዋል?"}
+          </Text>
         </TouchableOpacity>
       </View>
       <View style={styles.bottombutton}>
@@ -178,7 +179,10 @@ const Loginpage = ({ navigation }) => {
           }}
         >
           <Text style={styles.footerText}>
-            {currentLanguage.language === "en" ? "Don't have an account" : "መለያ የለዎትም"}?{" "}
+            {currentLanguage.language === "en"
+              ? "Don't have an account"
+              : "መለያ የለዎትም"}
+            ?{" "}
             <Text style={styles.logincolor}>
               {currentLanguage.language === "en" ? "Register" : "ይመዝገቡ"}
             </Text>
