@@ -11,7 +11,7 @@ const LanguageDropdown = ({ top = 50, right = 20 }) => {
     dispatch(setLanguage({ language: newLanguage }));
   };
   return (
-    <View style={[styles.container, { top, right }]}>
+    <View style={[styles.container, { top, right, zIndex: 1000 }]}>
       <TouchableOpacity onPress={toggleLanguage}>
         <Text style={styles.langButton}>
           {currentLanguage.language === "en" ? "Am" : "En"}
@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     paddingHorizontal: 4,
     borderRadius: 4,
+    zIndex: 1,
   },
   langButton: {
     textAlign: "right",
