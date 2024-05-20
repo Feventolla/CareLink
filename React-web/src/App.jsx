@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { getCookie } from "./utils/cookie";
 import Admindashboard from "./components/dashboard/hospital/adminDashboard";
 import Login from "./components/auth/login";
-import DoctorDetail from "./components/dashboard/Doctor/DoctorDetail";
+import DoctorDetail from "./components/dashboard/doctor/DoctorDetail";
 import RegisterHospitals from "./components/dashboard/hospital/RegisterHospital";
 import AddDoctors from "./components/dashboard/doctor/RegisterDoctor";
 import EditDoctor from "./components/dashboard/doctor/EditDoctor";
@@ -18,7 +18,7 @@ function App() {
       setIsAuthenticated(false);
     }
   }, []);
- 
+
   return (
     <Routes>
       {isAuthenticated ? (
