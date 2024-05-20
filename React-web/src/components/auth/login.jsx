@@ -119,7 +119,7 @@ function Login() {
         >
           {errors.fromBackEnd && (
             <div>
-              <p className="text-red-500 font-bold">{errors.fromBackEnd}</p>
+              <p className="text-red-500 font-bold">User not found</p>
             </div>
           )}
           {errors.isAuthorized && (

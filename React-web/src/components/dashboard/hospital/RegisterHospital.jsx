@@ -523,7 +523,7 @@ function RegisterHospital() {
                 onChange={handleFileChange}
                 className="py-2 px-2 focus:outline-none focus:ring-1 focus:border-[#035ECF] rounded-lg border max-w-lg mb-6"
                 type="file"
-                required
+                // required
               />
             </div>
           </div>
