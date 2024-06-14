@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     borderRadius: 4,
     zIndex: 1,
+    marginTop: 15,
   },
   langButton: {
     textAlign: "right",
