@@ -69,6 +69,11 @@ const RootStack = ({ navigation }) => (
       component={HospitalDetailPage}
       options={{ headerShown: false }}
     />
+    {/* <Stack.Screen
+      name="Recommanded"
+      component={RecommandedHospitalPage}
+      options={{ headerShown: false }}
+    /> */}
     <Stack.Screen
       name="Reset"
       component={Resetpassword}
@@ -77,6 +82,7 @@ const RootStack = ({ navigation }) => (
     <Stack.Screen
       name="Chatbot"
       component={ChatScreen}
+      options={{ headerShown: false }}
       // options={{
       //   headerLeft: () => (
       //     <Icon2
