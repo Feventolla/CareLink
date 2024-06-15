@@ -33,7 +33,7 @@ const DoctorDetail = () => {
   };
 
   const handleLanguageToggle = () => {
-    const newLanguage = currLanguage === "am" ? "en" : "am";
+    const newLanguage = currLanguage === "en" ? "am" : "en";
     dispatch(setLanguage({ language: newLanguage }));
     setCurrLanguage(newLanguage);
   };
@@ -94,11 +94,11 @@ const DoctorDetail = () => {
             onClick={handleLanguageToggle}
             className="flex justify-self-end bg-[#C276F0] hover:bg-[#c7a0df] text-white font-bold py-1 px-4 rounded transition duration-300"
           >
-            {currLanguage === "am" ? "English" : "Amharic"}
+            {currLanguage === "en" ? "Amharic" : "English"}
           </button>
         </div>
         <h2 className="text-xl sm:text-2xl mb-4 font-semibold">
-          {currLanguage === "am" ? "የሆስፒታል መረጃ" : "Hospital Information"} -
+          {currLanguage === "en" ? "Hospital Information" : "የሆስፒታል መረጃ"} -
           {currLanguage === "en" ? hospitalData.name : hospitalData.amhName}
         </h2>
         <h3 className="text-xl sm:text-2xl mb-16 text-center font-semibold mt-16">
@@ -109,7 +109,7 @@ const DoctorDetail = () => {
             className="bg-[#C276F0] text-white font-bold py-2 px-10 rounded"
             onClick={() => handleAddDoctor(hospitalData._id)}
           >
-            {currLanguage === "am" ? "ዶክተር ጨምር" : "Add Doctor"}
+            {currLanguage === "en" ? "Add Doctor" : "ዶክተር ጨምር"}
           </button>
         </div>
         {doctorsId.length >= 1 ? (
