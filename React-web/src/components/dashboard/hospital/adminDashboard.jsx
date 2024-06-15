@@ -113,10 +113,8 @@ const Admindashboard = () => {
   };
 
   const handleEdit = (id) => {
-
     navigate(`/editHospital/${id}`);
   };
-  
 
   // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -162,7 +160,7 @@ const Admindashboard = () => {
               {currLanguage === "en" ? "Welcome" : "እንኳን ደህና መጡ"}
             </div>
             <div className="text-xl font-semibold pb-4 md:pb-7">
-              {currLanguage === "am" ? "የሆስፒታል መረጃ" : "Hospital Information"}
+              {currLanguage === "en" ? "Hospital Information" : "የሆስፒታል መረጃ"}
             </div>
             <div className="flex flex-col md:flex-row justify-between md:space-x-4 mb-5">
               <div className="mb-4 md:mb-0">
@@ -170,7 +168,7 @@ const Admindashboard = () => {
                   className="bg-[#C276F0] text-white font-bold py-2 px-10 rounded"
                   onClick={handleAddHospital}
                 >
-                  {currLanguage === "am" ? "ሆስፒታል ጨምር" : "Add Hospital"}
+                  {currLanguage === "en" ? "Add Hospital" : "ሆስፒታል ጨምር"}
                 </button>
               </div>
               <div>
@@ -221,17 +219,13 @@ const Admindashboard = () => {
                         className="py-5 cursor-pointer text-sm mb-4"
                         onClick={() => handleDetailHospital(card._id)}
                       >
-                        {card.description.length > 150 ? (
-                          <>{`${
-                            currLanguage === "en"
-                              ? card.description.slice(0, 150)
-                              : card.amhDescription
-                          }...`}</>
-                        ) : currLanguage === "en" ? (
-                          card.description
-                        ) : (
-                          card.amhDescription
-                        )}
+                        {currLanguage === "en"
+                          ? card.description.length > 150
+                            ? `${card.description.slice(0, 150)}...`
+                            : card.description
+                          : card.amhDescription.length > 150
+                          ? `${card.amhDescription.slice(0, 150)}...`
+                          : card.amhDescription}
                       </div>
                       <div className="bottom-4 right-3 absolute">
                         <button

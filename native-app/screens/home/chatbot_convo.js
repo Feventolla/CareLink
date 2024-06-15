@@ -375,12 +375,14 @@ const ChatScreen = ({ navigation }) => {
 
   const API_ENDPOINTS = {
     en: {
+
       symptoms: "http://192.168.0.101:8000/symptoms",
       chat: "http://192.168.0.101:8000/chat",
     },
     am: {
       symptoms: "http://192.168.0.101:5000/symptoms",
       chat: "http://192.168.0.101:5000/conversation",
+
     },
   };
 
@@ -481,7 +483,9 @@ const ChatScreen = ({ navigation }) => {
               headers: { "Content-Type": "application/json" },
             }
           );
+
           console.log(hospitalResponse.status)
+
 
           if (hospitalResponse.status === 200) {
             const hospitalData = await hospitalResponse.json();
@@ -527,6 +531,7 @@ const ChatScreen = ({ navigation }) => {
             //   ])
             // );
           } else {
+
             const errorMessage = {
               _id: Date.now(),
               text: "i am unable to retrive a hospital for you. please try another approach",
@@ -536,6 +541,7 @@ const ChatScreen = ({ navigation }) => {
             setMessages((prevMessages) =>
               GiftedChat.append(prevMessages, errorMessage)
             );
+
           }
         } else {
           setMessages((prevMessages) =>

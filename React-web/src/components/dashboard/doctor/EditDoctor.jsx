@@ -81,14 +81,8 @@ function EditDoctor() {
   const handleEditDoctor = async (e) => {
     e.preventDefault();
 
-    const {
-      firstName,
-      lastName,
-      specialization,
-      gender,
-      photo,
-      hospitalId,
-    } = formData;
+    const { firstName, lastName, specialization, gender, photo, hospitalId } =
+      formData;
     const formDataToSend = new FormData();
     const careerStartTimeParts = careerStartTime.split("-");
     formDataToSend.append("firstName", firstName);
@@ -152,13 +146,13 @@ function EditDoctor() {
           {currLanguage === "en" ? "Doctors Information" : "የዶክተር መረጃ"}
         </h1>
         <h2 className="pb-10 text-xl font-bold">
-          {currLanguage === "am" ? "ዶክተር ቀይር" : "Edit Doctor"}
+          {currLanguage === "en" ? "Edit Doctor" : "ዶክተር ቀይር"}
         </h2>
         <form onSubmit={handleEditDoctor}>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="flex flex-col">
               <label htmlFor="name" className="text-sm font-semibold mb-2">
-                {currLanguage === "am" ? "ስም" : "First Name"}
+                {currLanguage === "en" ? "First Name" : "ስም"}
               </label>
               <input
                 name="firstName"
@@ -171,7 +165,7 @@ function EditDoctor() {
               />
 
               <label className="text-sm font-semibold mb-2" htmlFor="lastName">
-                {currLanguage === "am" ? "የአባት ስም" : "Last Name"}
+                {currLanguage === "en" ? "Last Name" : "የአባት ስም"}
               </label>
               <input
                 name="lastName"
@@ -187,7 +181,7 @@ function EditDoctor() {
                 className="text-sm font-semibold mb-2"
                 htmlFor="specialization"
               >
-                {currLanguage === "am" ? "ስፔሻላይዜሽን" : "Specialization"}
+                {currLanguage === "en" ? "Specialization" : "ስፔሻላይዜሽን"}
               </label>
               <input
                 name="specialization"
@@ -199,7 +193,7 @@ function EditDoctor() {
               />
 
               <label className="text-sm font-semibold mb-2" htmlFor="gender">
-                {currLanguage === "am" ? "ጾታ" : "Gender"}
+                {currLanguage === "en" ? "Gender" : "ጾታ"}
               </label>
               <select
                 name="gender"
@@ -209,13 +203,13 @@ function EditDoctor() {
                 required
               >
                 <option value="" disabled selected>
-                  {currLanguage === "am" ? "ጾታ ይምረጡ" : "Select Gender"}
+                  {currLanguage === "en" ? "Select Gender" : "ጾታ ይምረጡ"}
                 </option>
                 <option value="Female">
-                  {currLanguage === "am" ? "ሴት" : "Female"}
+                  {currLanguage === "en" ? "Female" : "ሴት"}
                 </option>
                 <option value="Male">
-                  {currLanguage === "am" ? "ወንድ" : "Male"}
+                  {currLanguage === "en" ? "Male" : "ወንድ"}
                 </option>
               </select>
             </div>
@@ -224,7 +218,7 @@ function EditDoctor() {
                 className="text-sm font-semibold mb-2"
                 htmlFor="careerStartTime"
               >
-                {currLanguage === "am" ? "የስራ መነሻ ቀን" : "Career Start Time"}
+                {currLanguage === "en" ? "Career Start Time" : "የስራ መነሻ ቀን"}
               </label>
               <input
                 name="careerStartTime"
@@ -236,7 +230,7 @@ function EditDoctor() {
               />
 
               <label className="text-sm font-semibold mb-2" htmlFor="photo">
-                {currLanguage === "am" ? "ፎቶ" : "Photo"}
+                {currLanguage === "en" ? "Photo" : "ፎቶ"}
               </label>
               <input
                 name="photo"
@@ -273,7 +267,7 @@ function EditDoctor() {
             ) : (
               (() => {
                 const contentToDisplay =
-                  currLanguage === "am" ? "ዶክተር ቀይር" : "Edit Doctor";
+                  currLanguage === "en" ? "Edit Doctor" : "ዶክተር ቀይር";
                 return <span>{contentToDisplay}</span>;
               })()
             )}
