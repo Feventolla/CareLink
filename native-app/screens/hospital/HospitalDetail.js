@@ -38,95 +38,77 @@ const HospitalDetailPage = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={styles.backButton}
-      >
-        <Icon name="arrow-back" size={30} color="black" />
-      </TouchableOpacity>
-      <Image source={{ uri: hospital.photo }} style={styles.image} />
-      <View style={styles.overlayContainer}>
-        <View style={styles.hospitalCard}>
-          <Text style={styles.hospitalTitle}>
+  <TouchableOpacity
+    onPress={() => navigation.goBack()}
+    style={styles.backButton}
+  >
+    <Icon name="arrow-back" size={30} color="black" />
+  </TouchableOpacity>
+  <Image source={{ uri: hospital.photo }} style={styles.image} />
+  <View style={styles.overlayContainer}>
+    <View style={styles.hospitalCard}>
+        
+      <Text style={styles.hospitalTitle}>
+        {currentLanguage.language === "en"
+          ? hospital.name
+          : hospital.amhName}
+      </Text>
+      <View style={styles.location}>
+        <View style={{ flexDirection: "row" }}>
+          <Icon name="location-on" size={15} color="#C276F0" />
+          <Text style={styles.addressText}>
             {currentLanguage.language === "en"
-              ? hospital.name
-              : hospital.amhName}
+              ? hospital.address
+              : hospital.amhAddress}
           </Text>
-          <View style={styles.location}>
-            <View style={{ flexDirection: "row" }}>
-              <Icon name="location-on" size={15} color="#C276F0" />
-              <Text style={styles.addressText}>
-                {currentLanguage.language === "en"
-                  ? hospital.address
-                  : hospital.amhAddress}
-              </Text>
-            </View>
-          </View>
-          <>
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              // style={{ flex: 1 }}
-            >
-              <Text style={styles.descriptionText}>
-                {showFullDescription
-                  ? currentLanguage.language === "en"
-                    ? hospital.description
-                    : hospital.amhDescription
-                  : currentLanguage.language === "en"
-                  ? `${hospital.description.slice(0, 150)}...`
-                  : `${hospital.amhDescription.slice(0, 150)}...`}
-
-                {!showFullDescription && (
-                  <Text
-                    style={styles.seeMoreButton}
-                    onPress={toggleDescription}
-                  >
-                    {currentLanguage.language === "en"
-                      ? "..See More"
-                      : "ተጨማሪ ይመልከቱ"}
-                  </Text>
-                )}
-                {showFullDescription && (
-                  <Text
-                    style={styles.seeMoreButton}
-                    onPress={toggleDescription}
-                  >
-                    {currentLanguage.language === "en"
-                      ? "show less"
-                      : "ያነሰ አሳይ"}
-                  </Text>
-                )}
-              </Text>
-              <Text style={styles.sectionTitle}>
-                {currentLanguage.language === "en"
-                  ? " Available Doctors"
-                  : "የሚገኙ ዶክተሮች"}
-              </Text>
-              {hospital.doctors.length > 0 ? (
-                <FlatList
-                  data={hospital.doctors}
-                  keyExtractor={(item) => item.id}
-                  renderItem={({ item }) => (
-                    <DoctorItem key={item.id} item={item} />
-                  )}
-                  horizontal={false}
-                  showsVerticalScrollIndicator={false}
-                  // ListHeaderComponent={() => (
-
-                  // )}
-                />
-              ) : (
-                <Text style={styles.noDoctor}>
-                  {currentLanguage.language === "en"
-                    ? "No Doctors Available"
-                    : "ምንም ዶክተሮች አይገኙም"}
-                </Text>
-              )}
-            </ScrollView>
-          </>
         </View>
       </View>
+      <ScrollView>
+      <Text style={styles.descriptionText}>
+        {showFullDescription
+          ? currentLanguage.language === "en"
+            ? hospital.description
+            : hospital.amhDescription
+          : currentLanguage.language === "en"
+          ? `${hospital.description.slice(0, 150)}...`
+          : `${hospital.amhDescription.slice(0, 150)}...`}
+      </Text>
+      <Text style={styles.seeMoreButton} onPress={toggleDescription}>
+        {showFullDescription
+          ? currentLanguage.language === "en"
+          ? "show less"
+          : "ያነሰ አሳይ"
+          : currentLanguage.language === "en"
+          ? "..See More"
+          : "ተጨማሪ ይመልከቱ"}
+      </Text>
+          
+      <Text style={styles.sectionTitle}>
+        {currentLanguage.language === "en"
+          ? " Available Doctors"
+          : "የሚገኙ ዶክተሮች"}
+      </Text>
+      </ScrollView>
+      {hospital.doctors.length > 0 ? (
+        <FlatList
+        data={hospital.doctors}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <DoctorItem key={item._id} item={item} />}
+        horizontal={false}
+        showsVerticalScrollIndicator={false}
+        />
+      ) : (
+        <Text style={styles.noDoctor}>
+          {currentLanguage.language === "en"
+            ? "No Doctors Available"
+            : "ምንም ዶክተሮች አይገኙም"}
+        </Text>
+      )}
+      
     </View>
+  </View>
+</View>
+
   );
 };
 

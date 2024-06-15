@@ -375,12 +375,14 @@ const ChatScreen = ({ navigation }) => {
 
   const API_ENDPOINTS = {
     en: {
-      symptoms: "http://192.168.0.103:8000/symptoms",
-      chat: "http://192.168.0.103:8000/chat",
+
+      symptoms: "http://192.168.0.101:8000/symptoms",
+      chat: "http://192.168.0.101:8000/chat",
     },
     am: {
-      symptoms: "http://192.168.0.103:5000/symptoms",
-      chat: "http://192.168.0.103:5000/conversation",
+      symptoms: "http://192.168.0.101:5000/symptoms",
+      chat: "http://192.168.0.101:5000/conversation",
+
     },
   };
 
@@ -482,6 +484,9 @@ const ChatScreen = ({ navigation }) => {
             }
           );
 
+          console.log(hospitalResponse.status)
+
+
           if (hospitalResponse.status === 200) {
             const hospitalData = await hospitalResponse.json();
             const hospitalMessage = {
@@ -526,7 +531,17 @@ const ChatScreen = ({ navigation }) => {
             //   ])
             // );
           } else {
-            throw new Error("Failed to retrieve hospitals");
+
+            const errorMessage = {
+              _id: Date.now(),
+              text: "i am unable to retrive a hospital for you. please try another approach",
+              createdAt: new Date(),
+              user: { _id: 2, name: "CareLink Bot" },
+            };
+            setMessages((prevMessages) =>
+              GiftedChat.append(prevMessages, errorMessage)
+            );
+
           }
         } else {
           setMessages((prevMessages) =>
