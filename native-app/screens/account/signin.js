@@ -79,7 +79,8 @@ const Loginpage = ({ navigation }) => {
         await AsyncStorage.setItem("userData", JSON.stringify(response.value));
         navigation.navigate("MainApp");
       } catch (error) {
-        setEmailError(error.message);
+        setEmailError(error.data.message);
+        console.log(error.data.message);
       }
     }
   };
@@ -100,6 +101,7 @@ const Loginpage = ({ navigation }) => {
         <SvgXml xml={SvgContent} height={300} width={700} style={styles.svg} />
       </View>
       {EmailError ? (
+        
         <Text
           style={{
             color: "red",
